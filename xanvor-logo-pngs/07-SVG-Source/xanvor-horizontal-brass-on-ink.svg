@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 140" width="540" height="140">
+  <rect width="100%" height="100%" fill="#0A0908"/>
+  <g transform="translate(20, 0)">
+    <g fill="#C69755">
+      <rect x="24" y="20" width="11" height="100"/>
+      <polygon points="35,20 50,20 108,120 94,120"/>
+      <rect x="96" y="20" width="11" height="30"/>
+      <polygon points="164,20 178,20 124,120 110,120"/>
+      <rect x="107" y="20" width="57" height="11"/>
+    </g>
+    <circle cx="102" cy="70" r="4" fill="#F3EBD6"/>
+  </g>
+  <text x="240" y="84" text-anchor="start"
+        font-family="Fraunces, Georgia, serif" font-weight="300"
+        font-size="44" letter-spacing="22"
+        fill="#F3EBD6">XANVOR</text>
+</svg>
