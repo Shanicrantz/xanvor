@@ -174,7 +174,7 @@
   .cat-jump a:hover span{color:var(--brass-soft);}
 
   .cat-pages{
-    max-width:920px; margin:0 auto; padding-top:clamp(56px,7vw,90px);
+    max-width:1180px; margin:0 auto; padding-top:clamp(56px,7vw,90px);
   }
   .cat-group{margin-bottom:clamp(64px,8vw,110px); scroll-margin-top:90px;}
   .cat-group:last-child{margin-bottom:0;}
@@ -195,14 +195,75 @@
     font-family:'JetBrains Mono',monospace; font-size:10.5px;
     letter-spacing:.18em; text-transform:uppercase; color:#8A7359;
   }
-  .cat-page{
-    margin:0 0 clamp(22px,3vw,36px);
+  .cat-subhead{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--rust);
+    text-align:center; margin:0 0 28px;
   }
-  .cat-page img{
-    width:100%; height:auto; display:block;
+  .cat-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+    margin-bottom:36px;
+  }
+  @media(max-width:860px){ .cat-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:520px){ .cat-grid{grid-template-columns:1fr;} }
+  .cat-item{
     background:#FBF7EA;
-    box-shadow:0 26px 50px -22px rgba(10,9,8,.45), 0 4px 14px rgba(10,9,8,.16);
+    border:1px solid rgba(74,15,27,.14);
+    padding:26px 22px 22px;
+    display:flex; flex-direction:column; min-height:236px;
+    transition:border-color .25s ease, transform .35s ease, box-shadow .35s ease;
+    position:relative;
   }
+  .cat-item:hover{
+    border-color:var(--claret);
+    transform:translateY(-3px);
+    box-shadow:0 18px 38px -22px rgba(74,15,27,.4);
+  }
+  .cat-item .ornament{
+    font-family:'Fraunces',serif; font-style:italic; font-weight:400;
+    font-size:22px; color:var(--brass); line-height:1;
+    margin-bottom:14px;
+  }
+  .cat-item h4{
+    font-family:'Fraunces',serif; font-weight:400; font-size:21px;
+    color:var(--claret); line-height:1.2; margin-bottom:10px;
+  }
+  .cat-item .desc{
+    font-size:14.5px; line-height:1.55; color:#43352B; flex:1;
+    margin-bottom:18px;
+  }
+  .cat-item .foot{
+    display:flex; justify-content:space-between; gap:12px;
+    padding-top:14px; border-top:1px solid rgba(74,15,27,.16);
+  }
+  .cat-item .code{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    letter-spacing:.12em; color:var(--ink); font-weight:500;
+  }
+  .cat-item .mat{
+    font-family:'JetBrains Mono',monospace; font-size:9.5px;
+    letter-spacing:.16em; text-transform:uppercase; color:#8A7359;
+    text-align:right;
+  }
+  .cat-item.signature{
+    grid-column:span 3;
+    background:linear-gradient(135deg,#FBF7EA 0%,#F3E9D2 100%);
+    border-color:var(--brass);
+    padding:38px 36px;
+    min-height:auto;
+  }
+  @media(max-width:860px){ .cat-item.signature{grid-column:span 2;} }
+  @media(max-width:520px){ .cat-item.signature{grid-column:span 1;} }
+  .cat-item.signature .sig-label{
+    font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--rust);
+    margin-bottom:10px;
+  }
+  .cat-item.signature h4{
+    font-size:clamp(26px,3vw,34px); margin-bottom:14px;
+  }
+  .cat-item.signature h4 em{font-style:italic;color:var(--rust);}
+  .cat-item.signature .desc{font-size:16px;max-width:640px;}
 
   /* ============ COLLECTIONS ============ */
   .collections{
@@ -403,10 +464,178 @@
         <h3>Silver &amp; Gold Decor</h3>
         <p>Agate trays · metal trays · bowls &amp; objects · jar sets</p>
       </header>
-      <figure class="cat-page reveal"><img src="assets/catalogue/page-04.jpg" alt="Silver & Gold Decor — Agate Trays" loading="lazy" decoding="async"></figure>
-      <figure class="cat-page reveal"><img src="assets/catalogue/page-05.jpg" alt="Silver & Gold Decor — Metal Trays" loading="lazy" decoding="async"></figure>
-      <figure class="cat-page reveal"><img src="assets/catalogue/page-06.jpg" alt="Silver & Gold Decor — Bowls, Centrepieces & Objects" loading="lazy" decoding="async"></figure>
-      <figure class="cat-page reveal"><img src="assets/catalogue/page-07.jpg" alt="Silver & Gold Decor — Jar Sets & Canisters" loading="lazy" decoding="async"></figure>
+
+      <p class="cat-subhead reveal">Agate Trays · Each one unique, no two alike</p>
+      <div class="cat-grid reveal">
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Verde Agate Tray</h4>
+          <p class="desc">A single slice of natural green agate set within a hand-gilded scalloped rim.</p>
+          <div class="foot"><span class="code">XV·SG·201</span><span class="mat">Agate · Gold-Gilt</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Amethyst Agate Tray</h4>
+          <p class="desc">Banded violet agate framed in gold leaf, finished with cut handles.</p>
+          <div class="foot"><span class="code">XV·SG·202</span><span class="mat">Agate · Gold-Gilt</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Cobalt Agate Tray</h4>
+          <p class="desc">Layered blue-and-rust agate set with a brass handle and gilt edge.</p>
+          <div class="foot"><span class="code">XV·SG·203</span><span class="mat">Agate · Brass</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Crystal Agate Tray</h4>
+          <p class="desc">Translucent white agate centred within a gold scalloped border.</p>
+          <div class="foot"><span class="code">XV·SG·204</span><span class="mat">Agate · Gold-Gilt</span></div>
+        </div>
+      </div>
+
+      <p class="cat-subhead reveal">Metal Trays · Hammered, fluted &amp; textured by hand</p>
+      <div class="cat-grid reveal">
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Hammered Hexagon Tray</h4>
+          <p class="desc">Hand-hammered metal in a warm gold finish with an agate-tipped cone.</p>
+          <div class="foot"><span class="code">XV·SG·211</span><span class="mat">Metal · Gold</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Gilded Rectangle Tray</h4>
+          <p class="desc">A textured gold-finish base carried by a polished agate handle.</p>
+          <div class="foot"><span class="code">XV·SG·212</span><span class="mat">Metal · Gold</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Sunburst Platter</h4>
+          <p class="desc">A fluted radial form in gold finish with twin agate handles.</p>
+          <div class="foot"><span class="code">XV·SG·213</span><span class="mat">Metal · Gold</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Silver Textured Tray Set</h4>
+          <p class="desc">A nesting pair, hand-textured in silver finish with agate detail.</p>
+          <div class="foot"><span class="code">XV·SG·214</span><span class="mat">Metal · Silver</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Chip &amp; Dip Platter</h4>
+          <p class="desc">A silver-finish oval with an integrated dipping bowl.</p>
+          <div class="foot"><span class="code">XV·SG·215</span><span class="mat">Metal · Silver</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Silver Oval Tray</h4>
+          <p class="desc">A lightly hammered silver finish with an agate accent at the rim.</p>
+          <div class="foot"><span class="code">XV·SG·216</span><span class="mat">Metal · Silver</span></div>
+        </div>
+      </div>
+
+      <p class="cat-subhead reveal">Bowls, Centrepieces &amp; Objects · Raised on rose-quartz, embossed and pierced</p>
+      <div class="cat-grid reveal">
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Songbird Bowl</h4>
+          <p class="desc">An embossed silver-finish bowl with a perched-bird accent on a rose-quartz foot.</p>
+          <div class="foot"><span class="code">XV·SG·301</span><span class="mat">Metal · Quartz</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Heritage Fruit Bowl</h4>
+          <p class="desc">A deep filigree bowl raised upon a rose-quartz pedestal.</p>
+          <div class="foot"><span class="code">XV·SG·302</span><span class="mat">Metal · Quartz</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Canoe Centrepiece</h4>
+          <p class="desc">A sculptural boat form in silver finish, resting on quartz feet.</p>
+          <div class="foot"><span class="code">XV·SG·303</span><span class="mat">Metal · Quartz</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Two-Tier Stand</h4>
+          <p class="desc">A silver-finish serving tier on a polished quartz base.</p>
+          <div class="foot"><span class="code">XV·SG·304</span><span class="mat">Metal · Quartz</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Fluted Dry-Fruit Bowl</h4>
+          <p class="desc">A ribbed silver-finish bowl on a looped stand with malachite.</p>
+          <div class="foot"><span class="code">XV·SG·305</span><span class="mat">Metal · Malachite</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Leaf-Embossed Bowl</h4>
+          <p class="desc">Botanical relief in silver finish, set on a lacquered foot.</p>
+          <div class="foot"><span class="code">XV·SG·306</span><span class="mat">Metal · Lacquer</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Lotus Tealight Holder</h4>
+          <p class="desc">A pierced silver-finish lotus opening from a petalled base.</p>
+          <div class="foot"><span class="code">XV·SG·311</span><span class="mat">Metal · Silver</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Mosaic Photo Frame</h4>
+          <p class="desc">Mother-of-pearl tile inlay set on a standing table easel.</p>
+          <div class="foot"><span class="code">XV·SG·321</span><span class="mat">Shell Inlay</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Botanical Photo Frame</h4>
+          <p class="desc">A hand-painted floral relief framing a four-by-six print.</p>
+          <div class="foot"><span class="code">XV·SG·322</span><span class="mat">Metal · Enamel</span></div>
+        </div>
+      </div>
+
+      <p class="cat-subhead reveal">Jar Sets &amp; Canisters · Gifting sets — canister, tray and finial, paired</p>
+      <div class="cat-grid reveal">
+        <div class="cat-item signature">
+          <span class="sig-label">&#x25C6; Signature Piece</span>
+          <h4>Sunburst <em>Canister Set</em></h4>
+          <p class="desc">A fluted gold canister, paired with slice-of-natural agate, raised upon a radial inlay tray — a centrepiece for the table of vanity.</p>
+          <div class="foot"><span class="code">XV·SG·401</span><span class="mat">Metal · Agate</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Rose-Quartz Jar Set</h4>
+          <p class="desc">A pair of gilt canisters with quartz bud picks on a leaf tray.</p>
+          <div class="foot"><span class="code">XV·SG·402</span><span class="mat">Metal · Quartz</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Plumed Canister Set</h4>
+          <p class="desc">Gold canisters crowned with silver plumes on a linked-ring tray.</p>
+          <div class="foot"><span class="code">XV·SG·403</span><span class="mat">Metal · Gold</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Agate-Lid Storage Set</h4>
+          <p class="desc">Gilt jars capped with natural agate, set on a sheesham tray.</p>
+          <div class="foot"><span class="code">XV·SG·404</span><span class="mat">Metal · Wood</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Hammered Gold Jar Pair</h4>
+          <p class="desc">Hand-hammered canisters in a warm gold finish on a round tray.</p>
+          <div class="foot"><span class="code">XV·SG·405</span><span class="mat">Metal · Gold</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Coral-Finial Jar Set</h4>
+          <p class="desc">Silver-finish jars with coral-tipped lids upon a wood tray.</p>
+          <div class="foot"><span class="code">XV·SG·406</span><span class="mat">Metal · Wood</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Filigree Lantern Jar</h4>
+          <p class="desc">A pierced silver jar-lit form from within, with a gilt-and-quartz lid.</p>
+          <div class="foot"><span class="code">XV·SG·407</span><span class="mat">Metal · Quartz</span></div>
+        </div>
+      </div>
     </article>
 
     <article class="cat-group" id="c-copper">
@@ -415,7 +644,45 @@
         <h3>The Copper Collection</h3>
         <p>Bottles · jugs · bar</p>
       </header>
-      <figure class="cat-page reveal"><img src="assets/catalogue/page-08.jpg" alt="The Copper Collection — Drinkware & Bar" loading="lazy" decoding="async"></figure>
+      <p class="cat-subhead reveal">Copper Drinkware &amp; Bar · Bottles, jugs, vases &amp; cocktail tools in pure copper</p>
+      <div class="cat-grid reveal">
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Diamond-Cut Copper Bottle</h4>
+          <p class="desc">Pure hammered copper with a fitted tumbler cap. Holds 950 ml.</p>
+          <div class="foot"><span class="code">XV·CU·101</span><span class="mat">Pure Copper</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Copper Bottle Range</h4>
+          <p class="desc">Dimpled and diamond-cut copper bottles with matching tumblers.</p>
+          <div class="foot"><span class="code">XV·CU·102</span><span class="mat">Pure Copper</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Enamel Copper Vase</h4>
+          <p class="desc">Hand-hammered copper banded with a deep forest-green enamel.</p>
+          <div class="foot"><span class="code">XV·CU·103</span><span class="mat">Copper · Enamel</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Copper Jug Trio</h4>
+          <p class="desc">Offered in hammered copper, polished silver and enamel-floral finishes.</p>
+          <div class="foot"><span class="code">XV·CU·104</span><span class="mat">Copper</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Rose-Gold Pitcher</h4>
+          <p class="desc">A mirror-polished copper jug with a hand-cut crystal handle.</p>
+          <div class="foot"><span class="code">XV·CU·105</span><span class="mat">Pure Copper</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Copper Bar Tool Set</h4>
+          <p class="desc">Shaker, strainer, jigger and bar spoon, presented gift-boxed.</p>
+          <div class="foot"><span class="code">XV·CU·106</span><span class="mat">Copper · Gift</span></div>
+        </div>
+      </div>
     </article>
 
     <article class="cat-group" id="c-brass">
@@ -424,7 +691,33 @@
         <h3>The Brass Collection</h3>
         <p>Singing bowls &amp; heritage sets</p>
       </header>
-      <figure class="cat-page reveal"><img src="assets/catalogue/page-09.jpg" alt="The Brass Collection — Singing Bowls & Heritage Sets" loading="lazy" decoding="async"></figure>
+      <p class="cat-subhead reveal">Singing Bowls &amp; Heritage Sets · Etched, gilded &amp; hand-tuned</p>
+      <div class="cat-grid reveal">
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Antique Bottle &amp; Tumbler Set</h4>
+          <p class="desc">An etched antique-finish bottle with two tumblers in a fitted gift box.</p>
+          <div class="foot"><span class="code">XV·BR·101</span><span class="mat">Brass · Antique</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Gilt Bowl &amp; Spoon Set</h4>
+          <p class="desc">A silver-finish brass bowl with a gold interior, velvet-cased.</p>
+          <div class="foot"><span class="code">XV·BR·102</span><span class="mat">Brass · Gilt</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Polished Singing Bowl</h4>
+          <p class="desc">A hand-tuned brass singing bowl with a turned wooden mallet.</p>
+          <div class="foot"><span class="code">XV·BR·103</span><span class="mat">Brass</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Flower-of-Life Singing Bowl</h4>
+          <p class="desc">Sacred geometry engraving, complete with cushion and mallet.</p>
+          <div class="foot"><span class="code">XV·BR·104</span><span class="mat">Brass · Engraved</span></div>
+        </div>
+      </div>
     </article>
 
     <article class="cat-group" id="c-wood">
@@ -433,7 +726,33 @@
         <h3>The Wood Collection</h3>
         <p>Sheesham trays &amp; spice boxes</p>
       </header>
-      <figure class="cat-page reveal"><img src="assets/catalogue/page-10.jpg" alt="The Wood Collection — Sheesham Trays & Spice Boxes" loading="lazy" decoding="async"></figure>
+      <p class="cat-subhead reveal">Sheesham Trays &amp; Spice Boxes · Rosewood joined with brass — for the kitchen and table</p>
+      <div class="cat-grid reveal">
+        <div class="cat-item signature">
+          <span class="sig-label">&#x25C6; Signature Piece</span>
+          <h4>Masala <em>Spice Box</em></h4>
+          <p class="desc">A round sheesham box, turned from solid rosewood, fitted with seven brass-cased cups and a revealing spoon — the kitchen heirloom, made in our own workshop.</p>
+          <div class="foot"><span class="code">XV·WD·101</span><span class="mat">Sheesham · Brass</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Wood &amp; Brass Casserole</h4>
+          <p class="desc">An insulated rosewood casserole beneath a sun-burst lid.</p>
+          <div class="foot"><span class="code">XV·WD·102</span><span class="mat">Sheesham · Brass</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Sheesham Serving Tray</h4>
+          <p class="desc">Solid rosewood, fitted with hand-hammered metal handles.</p>
+          <div class="foot"><span class="code">XV·WD·103</span><span class="mat">Sheesham · Metal</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>The Craft, In Parts</h4>
+          <p class="desc">Sheesham, brass and silver-finish elements, each finished by hand.</p>
+          <div class="foot"><span class="code">XV·WD·104</span><span class="mat">Mixed Materials</span></div>
+        </div>
+      </div>
     </article>
 
     <article class="cat-group" id="c-furniture">
@@ -442,7 +761,33 @@
         <h3>Metal Furniture</h3>
         <p>The Wireform series</p>
       </header>
-      <figure class="cat-page reveal"><img src="assets/catalogue/page-11.jpg" alt="Metal Furniture — The Wireform Series" loading="lazy" decoding="async"></figure>
+      <p class="cat-subhead reveal">The Wireform Series · Powder-coated steel — baskets, tables &amp; seating · Graphite · Copper · Saffron · Cobalt · Verde</p>
+      <div class="cat-grid reveal">
+        <div class="cat-item signature">
+          <span class="sig-label">&#x25C6; Signature Piece</span>
+          <h4>Geometric Wire <em>Basket</em></h4>
+          <p class="desc">A faceted fruit basket in powder-coated steel, offered in five standing colourways — and any shade to order.</p>
+          <div class="foot"><span class="code">XV·MF·101</span><span class="mat">Powder-Coat Steel</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Mirror-Top Nesting Tables</h4>
+          <p class="desc">A set of two side tables on a champagne-finish metal frame.</p>
+          <div class="foot"><span class="code">XV·MF·102</span><span class="mat">Metal · Glass</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Wireform Accent Chair</h4>
+          <p class="desc">A sculptural lounge chair drawn in powder-coated steel.</p>
+          <div class="foot"><span class="code">XV·MF·103</span><span class="mat">Powder-Coat Steel</span></div>
+        </div>
+        <div class="cat-item">
+          <span class="ornament">&#x2767;</span>
+          <h4>Folding Tray Table</h4>
+          <p class="desc">A lift-off serving tray on slim folding gilt legs.</p>
+          <div class="foot"><span class="code">XV·MF·104</span><span class="mat">Metal · Gilt</span></div>
+        </div>
+      </div>
     </article>
   </div>
 </section>
