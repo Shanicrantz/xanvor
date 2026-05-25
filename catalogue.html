@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="XANVOR Catalogue — Copper, brass, wood and decor objects, manufactured in Moradabad, India." />
+  <meta name="theme-color" content="#0A0908" />
+
+  <meta property="og:title" content="XANVOR · Catalogue" />
+  <meta property="og:description" content="A working catalogue of XANVOR objects — copper, brass, wood, silver & gold decor — bound by hand in Moradabad." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://xanvor.com/catalogue.html" />
+
+  <title>XANVOR · Catalogue</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --claret: #4A0F1B;
+      --storm: #1B2432;
+      --ink: #0A0908;
+      --bone: #F3EBD6;
+      --parchment: #DCCFB0;
+      --brass: #C69755;
+      --rust: #8B2E1C;
+
+      --display: 'Fraunces', 'Times New Roman', serif;
+      --editorial: 'Cormorant Garamond', 'Times New Roman', serif;
+      --ui: 'Space Grotesk', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'Courier New', monospace;
+
+      --gutter: clamp(1.25rem, 4vw, 4rem);
+      --section: clamp(4rem, 10vw, 8rem);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--bone);
+      font-family: var(--editorial);
+      font-size: 18px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--brass); color: var(--ink); }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brass);
+      display: inline-block;
+    }
+
+    .display {
+      font-family: var(--display);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+    }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      padding: 1.5rem var(--gutter);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: rgba(10, 9, 8, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(243, 235, 214, 0.05);
+    }
+    .nav-mark { width: 38px; height: auto; display: block; color: var(--brass); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--ui);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--bone);
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+    .nav-links a:hover { opacity: 0.6; }
+    .nav-links a.active { color: var(--brass); }
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+    }
+
+    /* ─── HERO ─── */
+    .cat-hero {
+      min-height: 60vh;
+      padding: 10rem var(--gutter) var(--section);
+      text-align: center;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .cat-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at center top, rgba(198, 151, 85, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at center bottom, rgba(74, 15, 27, 0.4) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cat-hero-inner { position: relative; z-index: 1; max-width: 60rem; }
+    .cat-hero .eyebrow { color: var(--brass); margin-bottom: 2rem; }
+    .cat-hero h1 {
+      font-family: var(--display);
+      font-weight: 300;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+    }
+    .cat-hero h1 em { font-style: italic; color: var(--brass); }
+    .cat-hero p {
+      font-family: var(--editorial);
+      font-style: italic;
+      font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+      color: var(--parchment);
+      max-width: 38rem;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .cat-hero-meta {
+      margin-top: 3rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--parchment);
+      opacity: 0.6;
+    }
+    .cat-hero-meta .dot {
+      display: inline-block;
+      width: 3px;
+      height: 3px;
+      background: var(--brass);
+      border-radius: 50%;
+      margin: 0 0.8rem;
+      vertical-align: middle;
+    }
+
+    /* ─── MATERIAL SECTION ─── */
+    .material {
+      padding: var(--section) var(--gutter);
+      border-top: 1px solid rgba(243, 235, 214, 0.08);
+    }
+    .material-inner { max-width: 1280px; margin: 0 auto; }
+
+    .material-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(198, 151, 85, 0.2);
+    }
+    .material-header h2 {
+      font-family: var(--display);
+      font-weight: 300;
+      font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+    .material-header h2 em { font-style: italic; color: var(--brass); }
+    .material-header .count {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--parchment);
+      opacity: 0.7;
+    }
+
+    /* ─── SUBCATEGORY ─── */
+    .subcat { margin-bottom: 4.5rem; }
+    .subcat:last-child { margin-bottom: 0; }
+
+    .subcat-head {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .subcat-head .num {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      color: var(--brass);
+      opacity: 0.8;
+    }
+    .subcat-head h3 {
+      font-family: var(--display);
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+      color: var(--bone);
+      letter-spacing: 0.01em;
+    }
+    .subcat-head .rule {
+      flex: 1;
+      height: 1px;
+      background: rgba(243, 235, 214, 0.12);
+      margin-left: 0.5rem;
+    }
+
+    .subcat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .piece {
+      background: rgba(243, 235, 214, 0.02);
+      border: 1px solid rgba(243, 235, 214, 0.06);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.6s ease;
+      cursor: zoom-in;
+    }
+    .piece:hover {
+      transform: translateY(-4px);
+      border-color: rgba(198, 151, 85, 0.35);
+    }
+    .piece-frame {
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--storm);
+      position: relative;
+    }
+    .piece-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.6s ease;
+      filter: saturate(0.92) contrast(1.02);
+    }
+    .piece:hover .piece-frame img {
+      transform: scale(1.05);
+      filter: saturate(1.05) contrast(1.04);
+    }
+
+    .piece-meta {
+      padding: 1rem 1.2rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    .piece-meta .name {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1rem;
+      color: var(--bone);
+    }
+    .piece-meta .ref {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: var(--brass);
+      opacity: 0.75;
+    }
+
+    /* ─── COMING SOON ─── */
+    .coming {
+      padding: 2.5rem 2rem;
+      border: 1px dashed rgba(243, 235, 214, 0.12);
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--parchment);
+      opacity: 0.55;
+    }
+
+    /* ─── ENQUIRE ─── */
+    .enquire {
+      padding: var(--section) var(--gutter);
+      text-align: center;
+      background: var(--claret);
+      color: var(--bone);
+      position: relative;
+      overflow: hidden;
+    }
+    .enquire::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(198, 151, 85, 0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .enquire-inner { max-width: 40rem; margin: 0 auto; position: relative; }
+    .enquire h2 {
+      font-family: var(--display);
+      font-weight: 300;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      margin: 1rem 0 2rem;
+    }
+    .enquire h2 em { font-style: italic; color: var(--brass); }
+    .enquire .eyebrow { color: var(--brass); }
+    .enquire a {
+      display: inline-block;
+      font-family: var(--display);
+      font-weight: 300;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      color: var(--bone);
+      text-decoration: none;
+      border-bottom: 1px solid var(--brass);
+      padding-bottom: 0.3rem;
+      transition: color 0.3s ease;
+    }
+    .enquire a:hover { color: var(--brass); }
+    .enquire p.note {
+      margin-top: 2rem;
+      font-family: var(--editorial);
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--parchment);
+      opacity: 0.85;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--ink);
+      color: var(--parchment);
+      padding: 3rem var(--gutter) 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(243, 235, 214, 0.06);
+    }
+    .footer-meta {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--parchment);
+      opacity: 0.5;
+      line-height: 2;
+    }
+
+    /* ─── LIGHTBOX ─── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 9, 8, 0.96);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: var(--gutter);
+      cursor: zoom-out;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .lightbox.open { display: flex; opacity: 1; }
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 88vh;
+      width: auto;
+      height: auto;
+      display: block;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    }
+    .lightbox-caption {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brass);
+      opacity: 0.85;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(243, 235, 214, 0.3);
+      background: transparent;
+      color: var(--bone);
+      cursor: pointer;
+      font-family: var(--ui);
+      font-size: 1.2rem;
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+    .lightbox-close:hover { border-color: var(--brass); color: var(--brass); }
+
+    /* ─── REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="nav">
+    <a href="index.html" aria-label="XANVOR home">
+      <svg version="1.0" class="nav-mark" xmlns="http://www.w3.org/2000/svg"
+        width="1312.000000pt" height="912.000000pt" viewBox="0 0 1312.000000 912.000000"
+        preserveAspectRatio="xMidYMid meet">
+        <g transform="translate(0.000000,912.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none">
+          <path d="M1564 7821 c-2 -2 -4 -1482 -4 -3288 l0 -3283 360 0 360 0 0 3282 c0 2758 2 3280 14 3268 7 -8 82 -132 166 -275 84 -143 217 -368 295 -500 78 -132 181 -305 227 -385 47 -80 211 -356 363 -615 153 -258 293 -495 310 -525 18 -30 61 -104 97 -165 36 -60 257 -436 493 -835 481 -815 630 -1068 721 -1220 84 -142 346 -586 404 -685 26 -44 76 -129 112 -190 306 -518 533 -902 600 -1017 80 -138 80 -138 539 -138 252 0 459 3 459 6 0 5 -210 369 -541 934 -121 208 -321 554 -359 620 -42 76 -677 1168 -885 1525 -49 83 -131 224 -183 315 -112 194 -147 255 -359 620 -88 151 -258 444 -377 650 -338 581 -434 748 -491 845 -29 50 -103 178 -165 285 -62 107 -134 231 -160 275 -26 44 -100 173 -166 287 -119 207 -119 207 -609 208 -269 1 -653 2 -853 3 -200 1 -366 0 -368 -2z"/>
+          <path d="M8988 7822 l-2688 -2 0 -985 0 -985 360 0 360 0 0 625 0 625 1680 0 c1680 0 1680 0 1643 -67 -19 -38 -62 -115 -93 -173 -32 -58 -106 -195 -166 -305 -59 -110 -134 -249 -167 -310 -33 -60 -90 -166 -127 -235 -150 -279 -684 -1268 -710 -1315 -15 -27 -59 -108 -97 -180 -72 -134 -348 -644 -808 -1495 -75 -140 -152 -282 -170 -315 -18 -33 -78 -145 -135 -250 -56 -104 -133 -246 -170 -315 -37 -69 -130 -240 -206 -380 -75 -140 -168 -311 -206 -380 -68 -125 -68 -125 389 -128 251 -1 460 1 464 5 4 5 78 139 164 298 86 160 204 378 262 485 209 385 243 448 373 690 73 135 163 301 200 370 37 69 127 235 200 370 73 135 163 301 200 370 38 69 114 211 170 315 57 105 195 361 308 570 113 209 233 432 267 495 160 297 292 540 460 850 35 63 159 293 276 510 116 217 225 420 242 450 16 30 61 114 100 185 38 72 109 202 157 290 145 266 169 314 162 317 -4 2 -1216 2 -2694 0z"/>
+          <path d="M6607 4786 c-113 -41 -177 -133 -177 -255 0 -190 210 -318 379 -231 50 25 115 98 132 146 33 99 -1 230 -79 294 -68 56 -173 75 -255 46z"/>
+        </g>
+      </svg>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#manifesto">Manifesto</a></li>
+      <li><a href="index.html#mark">The Mark</a></li>
+      <li><a href="catalogue.html" class="active">Catalogue</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header class="cat-hero">
+    <div class="cat-hero-inner">
+      <span class="eyebrow">007 · The Catalogue</span>
+      <h1>Objects,<br /><em>bound by hand.</em></h1>
+      <p>
+        A working catalogue of XANVOR pieces — copper, brass, wood, and silver &amp; gold decor — forged, hammered and finished in our Moradabad atelier.
+      </p>
+      <div class="cat-hero-meta">
+        <span>Vol. I</span><span class="dot"></span>
+        <span>MMXXVI</span><span class="dot"></span>
+        <span>Wholesale &amp; Export</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- COPPER -->
+  <section class="material" id="copper">
+    <div class="material-inner">
+      <div class="material-header reveal">
+        <h2>Copper<em>.</em></h2>
+        <span class="count">— Vessels &middot; Bottles &middot; Bar</span>
+      </div>
+
+      <div class="subcat reveal">
+        <div class="subcat-head">
+          <span class="num">— I</span>
+          <h3>Bottles</h3>
+          <span class="rule"></span>
+        </div>
+        <div class="subcat-grid">
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/copper/bottles/01.jpg" alt="XANVOR hand-hammered copper bottle" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Hammered bottle</span><span class="ref">XV·CU·B01</span></figcaption>
+          </figure>
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/copper/bottles/02.jpg" alt="XANVOR copper bottle, polished finish" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Polished bottle</span><span class="ref">XV·CU·B02</span></figcaption>
+          </figure>
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/copper/bottles/03.jpg" alt="XANVOR copper bottle, slim form" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Slim bottle</span><span class="ref">XV·CU·B03</span></figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="subcat reveal">
+        <div class="subcat-head">
+          <span class="num">— II</span>
+          <h3>Jugs</h3>
+          <span class="rule"></span>
+        </div>
+        <div class="subcat-grid">
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/copper/jugs/01.jpg" alt="XANVOR copper jug" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Atelier jug</span><span class="ref">XV·CU·J01</span></figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="subcat reveal">
+        <div class="subcat-head">
+          <span class="num">— III</span>
+          <h3>Bar sets</h3>
+          <span class="rule"></span>
+        </div>
+        <div class="subcat-grid">
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/copper/bar-sets/01.jpg" alt="XANVOR copper bar set" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Bar set</span><span class="ref">XV·CU·S01</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WOOD -->
+  <section class="material" id="wood">
+    <div class="material-inner">
+      <div class="material-header reveal">
+        <h2>Wood<em>.</em></h2>
+        <span class="count">— Boxes &middot; Trays</span>
+      </div>
+
+      <div class="subcat reveal">
+        <div class="subcat-head">
+          <span class="num">— I</span>
+          <h3>Spice &amp; casserole boxes</h3>
+          <span class="rule"></span>
+        </div>
+        <div class="subcat-grid">
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/wood/spice-casserole-boxes/01.jpg" alt="XANVOR wood spice and casserole box" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Spice box</span><span class="ref">XV·WD·B01</span></figcaption>
+          </figure>
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/wood/spice-casserole-boxes/02.jpg" alt="XANVOR carved wood casserole box" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Casserole box</span><span class="ref">XV·WD·B02</span></figcaption>
+          </figure>
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/wood/spice-casserole-boxes/03.jpg" alt="XANVOR compartmented wood spice box" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Compartment box</span><span class="ref">XV·WD·B03</span></figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="subcat reveal">
+        <div class="subcat-head">
+          <span class="num">— II</span>
+          <h3>Trays</h3>
+          <span class="rule"></span>
+        </div>
+        <div class="subcat-grid">
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/wood/trays/01.jpg" alt="XANVOR carved wood tray" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Carved tray</span><span class="ref">XV·WD·T01</span></figcaption>
+          </figure>
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/wood/trays/02.jpg" alt="XANVOR inlaid wood tray" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Inlay tray</span><span class="ref">XV·WD·T02</span></figcaption>
+          </figure>
+          <figure class="piece">
+            <div class="piece-frame"><img src="catalogue/wood/trays/03.jpg" alt="XANVOR finished wood tray" loading="lazy" decoding="async" /></div>
+            <figcaption class="piece-meta"><span class="name">Atelier tray</span><span class="ref">XV·WD·T03</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRASS -->
+  <section class="material" id="brass">
+    <div class="material-inner">
+      <div class="material-header reveal">
+        <h2>Brass<em>.</em></h2>
+        <span class="count">— The mother metal of Moradabad</span>
+      </div>
+
+      <div class="subcat reveal">
+        <div class="subcat-head">
+          <span class="num">— I</span>
+          <h3>Singing bowls &middot; Bowl &amp; spoon sets &middot; Antique bottle sets</h3>
+          <span class="rule"></span>
+        </div>
+        <div class="coming">— Photographing the atelier · catalogue volume forthcoming —</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SILVER & GOLD DECOR -->
+  <section class="material" id="decor">
+    <div class="material-inner">
+      <div class="material-header reveal">
+        <h2>Silver &amp; gold <em>decor.</em></h2>
+        <span class="count">— Trays &middot; Frames &middot; Furniture</span>
+      </div>
+
+      <div class="subcat reveal">
+        <div class="subcat-head">
+          <span class="num">— I</span>
+          <h3>Jar sets &middot; Trays &middot; Furniture &middot; Tealight holders &middot; Photo frames &middot; Bowls &amp; stands</h3>
+          <span class="rule"></span>
+        </div>
+        <div class="coming">— Photographing the atelier · catalogue volume forthcoming —</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENQUIRE -->
+  <section class="enquire">
+    <div class="enquire-inner">
+      <span class="eyebrow">— Wholesale &middot; Export &middot; Bespoke</span>
+      <h2>Enquire for the <em>full catalogue.</em></h2>
+      <a href="mailto:hello@xanvor.com?subject=Catalogue%20Enquiry">hello@xanvor.com</a>
+      <p class="note">Quote the reference code (e.g. XV·CU·B01) when writing in.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-meta">
+      © MMXXVI Azenko Inc · All rights reserved<br />
+      Manufacturer · Exporter · Ecommerce
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="Image viewer" aria-modal="true">
+    <button class="lightbox-close" aria-label="Close">×</button>
+    <img alt="" />
+    <div class="lightbox-caption"></div>
+  </div>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach((el) => io.observe(el));
+
+    // Lightbox
+    const lb = document.getElementById('lightbox');
+    const lbImg = lb.querySelector('img');
+    const lbCap = lb.querySelector('.lightbox-caption');
+    const lbClose = lb.querySelector('.lightbox-close');
+
+    function openLightbox(src, alt, ref) {
+      lbImg.src = src;
+      lbImg.alt = alt || '';
+      lbCap.textContent = ref || '';
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      lb.classList.remove('open');
+      lbImg.src = '';
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.piece').forEach((p) => {
+      p.addEventListener('click', () => {
+        const img = p.querySelector('img');
+        const ref = p.querySelector('.ref')?.textContent || '';
+        openLightbox(img.src, img.alt, ref);
+      });
+    });
+
+    lb.addEventListener('click', (e) => {
+      if (e.target === lb || e.target === lbImg) closeLightbox();
+    });
+    lbClose.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
+    });
+  </script>
+</body>
+</html>
