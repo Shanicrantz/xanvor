@@ -1,1059 +1,529 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="XANVOR — Fine objects, bound by hand. Metal handicrafts manufactured in Moradabad, India. Manufacturer, Exporter, Ecommerce." />
-  <meta name="theme-color" content="#0A0908" />
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="XANVOR · Fine objects, bound by hand" />
-  <meta property="og:description" content="Metal handicrafts manufactured in Moradabad, India. Two letters. One gesture. A bond unbroken." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://xanvor.com" />
-  <meta name="twitter:card" content="summary_large_image" />
-
-  <title>XANVOR · Fine objects, bound by hand</title>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
-
-  <style>
-    /* ═══════════════════════════════════════════════════════════
-       XANVOR · BRAND IDENTITY · IDENTITY SYSTEM
-       ═══════════════════════════════════════════════════════════ */
-
-    :root {
-      /* Palette — Primary dark */
-      --claret: #4A0F1B;
-      --storm: #1B2432;
-      --ink: #0A0908;
-
-      /* Palette — Primary light */
-      --bone: #F3EBD6;
-      --parchment: #DCCFB0;
-
-      /* Palette — Accents */
-      --brass: #C69755;
-      --rust: #8B2E1C;
-
-      /* Type system */
-      --display: 'Fraunces', 'Times New Roman', serif;
-      --editorial: 'Cormorant Garamond', 'Times New Roman', serif;
-      --ui: 'Space Grotesk', system-ui, sans-serif;
-      --mono: 'JetBrains Mono', 'Courier New', monospace;
-
-      /* Spacing */
-      --gutter: clamp(1.25rem, 4vw, 4rem);
-      --section: clamp(5rem, 12vw, 10rem);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--ink);
-      color: var(--bone);
-      font-family: var(--editorial);
-      font-size: 18px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
-    }
-
-    ::selection { background: var(--brass); color: var(--ink); }
-
-    /* ─────────────────────────────────────────────
-       TYPOGRAPHY · UTILITIES
-       ───────────────────────────────────────────── */
-    .eyebrow {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--brass);
-      display: inline-block;
-    }
-
-    .display {
-      font-family: var(--display);
-      font-weight: 300;
-      letter-spacing: -0.01em;
-      line-height: 1.05;
-    }
-
-    .display-italic {
-      font-style: italic;
-      font-family: var(--display);
-      font-weight: 300;
-    }
-
-    .editorial-body p {
-      font-family: var(--editorial);
-      font-size: clamp(1.1rem, 1.5vw, 1.4rem);
-      line-height: 1.6;
-      margin-bottom: 1.4rem;
-    }
-
-    .ui-label {
-      font-family: var(--ui);
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .mono { font-family: var(--mono); }
-
-    /* ─────────────────────────────────────────────
-       NAVIGATION
-       ───────────────────────────────────────────── */
-    .nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      padding: 1.5rem var(--gutter);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-      pointer-events: none;
-    }
-
-    .nav-mark, .nav-links {
-      pointer-events: auto;
-    }
-
-    .nav-mark {
-      width: 38px;
-      height: auto;
-      display: block;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2.5rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: var(--ui);
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--bone);
-      text-decoration: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .nav-links a:hover { opacity: 0.6; }
-
-    @media (max-width: 720px) {
-      .nav-links { display: none; }
-    }
-
-    /* ─────────────────────────────────────────────
-       SECTION 01 · HERO
-       ───────────────────────────────────────────── */
-    .hero {
-      min-height: 100vh;
-      background: var(--ink);
-      color: var(--bone);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: var(--gutter);
-      position: relative;
-      text-align: center;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at center top, rgba(198, 151, 85, 0.08) 0%, transparent 60%),
-        radial-gradient(ellipse at center bottom, rgba(74, 15, 27, 0.4) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      animation: heroFade 1.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    @keyframes heroFade {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero-stacked {
-      width: clamp(280px, 42vw, 520px);
-      height: auto;
-      display: block;
-      margin-bottom: 2.5rem;
-      animation: markDraw 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
-    }
-
-    @keyframes markDraw {
-      from { opacity: 0; transform: scale(0.94); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .hero-tagline {
-      font-family: var(--editorial);
-      font-style: italic;
-      font-size: clamp(1rem, 1.5vw, 1.25rem);
-      color: var(--parchment);
-      letter-spacing: 0.02em;
-      max-width: 30rem;
-      line-height: 1.5;
-      text-align: center;
-    }
-
-    .hero-tagline .dot {
-      display: inline-block;
-      width: 4px;
-      height: 4px;
-      background: var(--brass);
-      border-radius: 50%;
-      margin: 0 1rem;
-      vertical-align: middle;
-    }
-
-    .hero-meta {
-      position: absolute;
-      bottom: 2rem;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-between;
-      padding: 0 var(--gutter);
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--parchment);
-      opacity: 0.6;
-    }
-
-    @media (max-width: 600px) {
-      .hero-meta { font-size: 0.6rem; }
-    }
-
-    /* ─────────────────────────────────────────────
-       SECTION 02 · MANIFESTO
-       ───────────────────────────────────────────── */
-    .manifesto {
-      background: var(--bone);
-      color: var(--ink);
-      padding: var(--section) var(--gutter);
-    }
-
-    .manifesto-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(2rem, 6vw, 6rem);
-      align-items: start;
-    }
-
-    @media (max-width: 800px) {
-      .manifesto-grid { grid-template-columns: 1fr; }
-    }
-
-    .manifesto-heading {
-      font-size: clamp(3rem, 7vw, 5.5rem);
-      color: var(--claret);
-    }
-
-    .manifesto-heading em {
-      font-style: italic;
-      font-weight: 300;
-      color: var(--rust);
-    }
-
-    .manifesto-body {
-      padding-top: 1.5rem;
-    }
-
-    .manifesto-body p {
-      color: var(--ink);
-      opacity: 0.85;
-    }
-
-    .manifesto-body p:first-of-type::first-letter {
-      font-family: var(--display);
-      font-size: 4em;
-      float: left;
-      line-height: 0.9;
-      padding: 0.1em 0.15em 0 0;
-      color: var(--claret);
-      font-weight: 400;
-    }
-
-    /* ─────────────────────────────────────────────
-       SECTION 03 · THE MARK · CONSTRUCTION
-       ───────────────────────────────────────────── */
-    .mark-section {
-      background: var(--storm);
-      color: var(--bone);
-      padding: var(--section) var(--gutter);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .mark-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(3rem, 8vw, 6rem);
-      align-items: center;
-    }
-
-    @media (max-width: 800px) {
-      .mark-grid { grid-template-columns: 1fr; }
-    }
-
-    .mark-display {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-    }
-
-    .mark-svg, .mark-image {
-      width: 100%;
-      max-width: 380px;
-      height: auto;
-      display: block;
-    }
-
-    .mark-content .eyebrow { color: var(--brass); }
-
-    .mark-heading {
-      font-family: var(--display);
-      font-weight: 300;
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      line-height: 1.1;
-      margin: 1rem 0 2rem;
-    }
-
-    .mark-heading em {
-      font-style: italic;
-      color: var(--brass);
-    }
-
-    .mark-description {
-      font-family: var(--editorial);
-      font-size: 1.15rem;
-      line-height: 1.6;
-      color: var(--parchment);
-      margin-bottom: 3rem;
-      max-width: 32rem;
-    }
-
-    .spec-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem 2rem;
-      padding-top: 2rem;
-      border-top: 1px solid rgba(243, 235, 214, 0.15);
-    }
-
-    .spec-item .label {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--brass);
-      opacity: 0.7;
-      margin-bottom: 0.4rem;
-    }
-
-    .spec-item .value {
-      font-family: var(--display);
-      font-weight: 300;
-      font-size: 1.4rem;
-      color: var(--bone);
-    }
-
-    /* ─────────────────────────────────────────────
-       SECTION 04 · PROVENANCE · MORADABAD
-       ───────────────────────────────────────────── */
-    .provenance {
-      background: var(--bone);
-      color: var(--ink);
-      padding: var(--section) var(--gutter);
-      text-align: center;
-    }
-
-    .provenance-inner {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .provenance-eyebrow {
-      color: var(--rust);
-      margin-bottom: 2rem;
-    }
-
-    .provenance-heading {
-      font-family: var(--display);
-      font-weight: 300;
-      font-size: clamp(3rem, 8vw, 6rem);
-      line-height: 1;
-      color: var(--claret);
-      margin-bottom: 3rem;
-    }
-
-    .provenance-heading em {
-      font-style: italic;
-    }
-
-    .provenance-body {
-      font-family: var(--editorial);
-      font-size: clamp(1.15rem, 1.6vw, 1.4rem);
-      line-height: 1.7;
-      color: var(--ink);
-      opacity: 0.85;
-      margin-bottom: 3rem;
-    }
-
-    .provenance-coords {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--rust);
-      padding-top: 2.5rem;
-      border-top: 1px solid rgba(74, 15, 27, 0.2);
-      display: inline-block;
-    }
-
-    /* ─────────────────────────────────────────────
-       SECTION 05 · CRAFT
-       ───────────────────────────────────────────── */
-    .craft {
-      background: var(--claret);
-      color: var(--bone);
-      padding: var(--section) var(--gutter);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .craft::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 80% 20%, rgba(198, 151, 85, 0.12) 0%, transparent 50%);
-      pointer-events: none;
-    }
-
-    .craft-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    .craft-heading {
-      font-family: var(--display);
-      font-weight: 300;
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      line-height: 1.1;
-      margin-bottom: 4rem;
-      max-width: 22ch;
-    }
-
-    .craft-heading em {
-      font-style: italic;
-      color: var(--brass);
-    }
-
-    .craft-pillars {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: clamp(1.5rem, 4vw, 3rem);
-      margin-top: 4rem;
-      padding-top: 3rem;
-      border-top: 1px solid rgba(243, 235, 214, 0.2);
-    }
-
-    @media (max-width: 700px) {
-      .craft-pillars { grid-template-columns: 1fr; }
-    }
-
-    .pillar .number {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      color: var(--brass);
-      margin-bottom: 0.8rem;
-    }
-
-    .pillar .title {
-      font-family: var(--display);
-      font-weight: 300;
-      font-size: 1.6rem;
-      color: var(--bone);
-      margin-bottom: 0.8rem;
-    }
-
-    .pillar .desc {
-      font-family: var(--editorial);
-      font-size: 1rem;
-      line-height: 1.6;
-      color: var(--parchment);
-      opacity: 0.85;
-    }
-
-    /* ─────────────────────────────────────────────
-       SECTION 06 · CONTACT
-       ───────────────────────────────────────────── */
-    .contact {
-      background: var(--bone);
-      color: var(--ink);
-      padding: var(--section) var(--gutter);
-      text-align: center;
-    }
-
-    .contact-inner {
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .contact-eyebrow { color: var(--rust); margin-bottom: 2rem; }
-
-    .contact-heading {
-      font-family: var(--display);
-      font-weight: 300;
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      line-height: 1;
-      color: var(--claret);
-      margin-bottom: 3rem;
-    }
-
-    .contact-heading em { font-style: italic; }
-
-    .contact-email {
-      display: inline-block;
-      font-family: var(--display);
-      font-weight: 300;
-      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-      color: var(--ink);
-      text-decoration: none;
-      border-bottom: 1px solid var(--brass);
-      padding-bottom: 0.3rem;
-      transition: color 0.3s ease;
-      margin-bottom: 3rem;
-    }
-
-    .contact-email:hover { color: var(--rust); }
-
-    .contact-address {
-      font-family: var(--editorial);
-      font-style: italic;
-      font-size: 1.1rem;
-      line-height: 1.7;
-      color: var(--ink);
-      opacity: 0.75;
-      margin-top: 2rem;
-    }
-
-    .contact-coming-soon {
-      margin-top: 4rem;
-      padding-top: 3rem;
-      border-top: 1px solid rgba(74, 15, 27, 0.2);
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--rust);
-    }
-
-    /* ─────────────────────────────────────────────
-       FOOTER
-       ───────────────────────────────────────────── */
-    footer {
-      background: var(--ink);
-      color: var(--parchment);
-      padding: 3rem var(--gutter) 2rem;
-      text-align: center;
-    }
-
-    .footer-mark {
-      width: 36px;
-      height: auto;
-      display: block;
-      margin: 0 auto 1.5rem;
-    }
-
-    .footer-wordmark {
-      width: 140px;
-      height: auto;
-      display: block;
-      margin: 0 auto 1.5rem;
-    }
-
-    .footer-meta {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--parchment);
-      opacity: 0.5;
-      line-height: 2;
-    }
-
-    /* ─────────────────────────────────────────────
-       SCROLL REVEAL ANIMATIONS
-       ───────────────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .reveal.delay-1 { transition-delay: 0.1s; }
-    .reveal.delay-2 { transition-delay: 0.2s; }
-    .reveal.delay-3 { transition-delay: 0.3s; }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-      }
-      .reveal { opacity: 1; transform: none; }
-    }
-  
-    /* Inline SVG logos use fill="currentColor" — CSS controls the color */
-    .nav-mark, .hero-stacked, .mark-image, .footer-mark, .footer-wordmark {
-      color: var(--brass);
-    }
-    .mark-image {
-      width: 100%;
-      max-width: 380px;
-      height: auto;
-      display: block;
-    }
-
-  </style>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XANVOR — Metal Handicrafts of Moradabad</title>
+<meta name="description" content="XANVOR — premium hand-finished metal handicrafts from Moradabad, India. Manufacturer, exporter and ecommerce house of brass, copper, silver-gilt and sheesham décor. A house brand of Zenko Inc.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta property="og:title" content="XANVOR — Metal Handicrafts of Moradabad">
+<meta property="og:description" content="Premium hand-finished metal handicrafts — brass, copper, silver-gilt and sheesham. Manufacturer · Exporter · Ecommerce.">
+<meta property="og:image" content="assets/catalogue_cover.jpg">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --claret:#4A0F1B; --claret-deep:#380A14; --storm:#1B2432; --ink:#0A0908;
+    --brass:#C69755; --brass-soft:#D8B07E; --bone:#F3EBD6; --parchment:#DCCFB0;
+    --rust:#8B2E1C; --bone-warm:#FBF7EA;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink); color:var(--bone);
+    font-family:'Cormorant Garamond',serif; font-size:19px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  /* grain overlay */
+  body::after{
+    content:""; position:fixed; inset:0; z-index:9999; pointer-events:none;
+    opacity:.045; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  a{color:inherit;text-decoration:none;}
+  img{display:block;max-width:100%;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:500;
+    letter-spacing:.34em; text-transform:uppercase;
+  }
+  .display{font-family:'Fraunces',serif;font-weight:300;line-height:1.04;}
+
+  /* ============ NAV ============ */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 6vw; transition:background .4s ease, padding .4s ease, border-color .4s ease;
+    border-bottom:1px solid transparent;
+  }
+  nav.scrolled{
+    background:rgba(10,9,8,.92); backdrop-filter:blur(10px);
+    padding:13px 6vw; border-bottom:1px solid rgba(198,151,85,.22);
+  }
+  nav .brand{
+    font-family:'Fraunces',serif; font-weight:400; font-size:21px;
+    letter-spacing:.16em; color:var(--bone);
+  }
+  nav .links{display:flex;gap:34px;}
+  nav .links a{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:400;
+    letter-spacing:.2em; text-transform:uppercase; color:var(--parchment);
+    padding-bottom:3px; border-bottom:1px solid transparent; transition:all .25s;
+  }
+  nav .links a:hover{color:var(--brass);border-bottom-color:var(--brass);}
+  @media(max-width:680px){ nav .links{gap:18px;} nav .links a:nth-child(1){display:none;} }
+
+  /* ============ HERO ============ */
+  .hero{
+    min-height:100vh; position:relative; display:flex;
+    align-items:center; justify-content:center; text-align:center;
+    padding:140px 6vw 90px;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 38%, rgba(139,46,28,.34), transparent 70%),
+      linear-gradient(180deg, var(--claret) 0%, var(--claret-deep) 100%);
+  }
+  .hero-frame{
+    position:absolute; inset:20px; border:1px solid rgba(198,151,85,.32);
+    pointer-events:none;
+  }
+  @media(max-width:680px){ .hero-frame{inset:11px;} }
+  .hero-inner{position:relative;max-width:760px;}
+  .hero .stacked{
+    width:min(290px,64vw); margin:0 auto 30px;
+    opacity:0; animation:rise 1s ease .2s forwards;
+  }
+  .hero .tagline{
+    color:var(--brass); margin-bottom:34px;
+    opacity:0; animation:rise 1s ease .45s forwards;
+  }
+  .hero h1{
+    font-size:clamp(34px,5.4vw,62px); color:var(--bone-warm);
+    margin-bottom:22px; opacity:0; animation:rise 1s ease .6s forwards;
+  }
+  .hero h1 em{font-style:italic;color:var(--brass-soft);font-weight:300;}
+  .hero .lead{
+    font-size:20px; color:#E4D9C0; max-width:480px; margin:0 auto 40px;
+    opacity:0; animation:rise 1s ease .75s forwards;
+  }
+  .hero .cta-row{
+    display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+    opacity:0; animation:rise 1s ease .9s forwards;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+  .btn{
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
+    letter-spacing:.2em; text-transform:uppercase;
+    padding:16px 30px; border:1px solid var(--brass); transition:all .3s ease;
+    display:inline-flex; align-items:center; gap:10px; cursor:pointer;
+  }
+  .btn-primary{background:var(--brass);color:var(--claret-deep);}
+  .btn-primary:hover{background:var(--brass-soft);border-color:var(--brass-soft);transform:translateY(-2px);}
+  .btn-ghost{background:transparent;color:var(--brass);}
+  .btn-ghost:hover{background:rgba(198,151,85,.12);transform:translateY(-2px);}
+  .btn svg{width:13px;height:13px;}
+
+  .scroll-cue{
+    position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.28em;
+    color:rgba(198,151,85,.7); text-transform:uppercase;
+    opacity:0; animation:rise 1s ease 1.2s forwards;
+  }
+  .scroll-cue::after{
+    content:""; display:block; width:1px; height:42px; margin:12px auto 0;
+    background:linear-gradient(var(--brass),transparent);
+    animation:cue 2s ease-in-out infinite;
+  }
+  @keyframes cue{0%,100%{opacity:.3;transform:scaleY(.6);}50%{opacity:1;transform:scaleY(1);}}
+
+  /* ============ reveal ============ */
+  .reveal{transition:opacity 1s ease,transform 1s ease;}
+  .js .reveal{opacity:0;transform:translateY(34px);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  .reveal.d1{transition-delay:.12s;} .reveal.d2{transition-delay:.24s;}
+  .reveal.d3{transition-delay:.36s;} .reveal.d4{transition-delay:.48s;}
+
+  /* ============ CATALOGUE ============ */
+  .catalogue{
+    background:var(--bone); color:var(--ink);
+    padding:clamp(80px,11vw,150px) 6vw;
+  }
+  .cat-wrap{
+    max-width:1140px; margin:0 auto;
+    display:grid; grid-template-columns:0.92fr 1.08fr; gap:clamp(40px,7vw,96px);
+    align-items:center;
+  }
+  @media(max-width:860px){ .cat-wrap{grid-template-columns:1fr;gap:48px;} }
+  .cat-visual{position:relative;}
+  .cat-visual::before{
+    content:""; position:absolute; inset:-22px -22px 18px 26px;
+    border:1px solid rgba(74,15,27,.32); z-index:0;
+  }
+  .cat-visual img{
+    position:relative; z-index:1; width:100%;
+    box-shadow:0 32px 60px -22px rgba(10,9,8,.55), 0 6px 16px rgba(10,9,8,.22);
+    transition:transform .6s cubic-bezier(.2,.7,.2,1);
+  }
+  .cat-visual:hover img{transform:translateY(-8px) rotate(-.6deg);}
+  .cat-tag{
+    position:absolute; z-index:2; bottom:-16px; right:-10px;
+    background:var(--claret); color:var(--bone);
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.2em;
+    text-transform:uppercase; padding:11px 18px;
+  }
+  .cat-text .eyebrow{color:var(--rust);}
+  .cat-text h2{
+    font-size:clamp(33px,4.6vw,52px); color:var(--claret);
+    margin:16px 0 8px;
+  }
+  .cat-text h2 em{font-style:italic;color:var(--rust);}
+  .cat-rule{width:54px;height:2px;background:var(--brass);margin:20px 0 22px;}
+  .cat-text p{color:#43352B;max-width:440px;margin-bottom:14px;}
+  .cat-specs{
+    list-style:none; margin:24px 0 32px; border-top:1px solid rgba(74,15,27,.18);
+  }
+  .cat-specs li{
+    display:flex; justify-content:space-between; gap:20px;
+    padding:11px 0; border-bottom:1px solid rgba(74,15,27,.18);
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.06em;
+    text-transform:uppercase; color:#5A4636;
+  }
+  .cat-specs li span:last-child{color:var(--claret);font-weight:500;}
+  .btn-claret{background:var(--claret);border-color:var(--claret);color:var(--bone);}
+  .btn-claret:hover{background:var(--claret-deep);border-color:var(--claret-deep);transform:translateY(-2px);}
+  .cat-note{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.08em;
+    color:#8A7359; margin-top:14px;
+  }
+
+  /* ============ COLLECTIONS ============ */
+  .collections{
+    background:linear-gradient(180deg,var(--storm) 0%,var(--ink) 100%);
+    padding:clamp(80px,11vw,140px) 6vw;
+  }
+  .sec-head{max-width:1180px;margin:0 auto 54px;text-align:center;}
+  .sec-head .eyebrow{color:var(--brass);}
+  .sec-head h2{
+    font-size:clamp(30px,4.4vw,48px); color:var(--bone-warm); margin-top:14px;
+  }
+  .sec-head h2 em{font-style:italic;color:var(--brass-soft);}
+  .col-grid{
+    max-width:1180px; margin:0 auto;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+  }
+  @media(max-width:860px){ .col-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:520px){ .col-grid{grid-template-columns:1fr;} }
+  .col-card{
+    position:relative; overflow:hidden; aspect-ratio:1/1.16;
+    border:1px solid rgba(198,151,85,.22); cursor:default;
+  }
+  .col-card:nth-child(4),.col-card:nth-child(5){aspect-ratio:1/0.92;}
+  @media(max-width:860px){ .col-card,.col-card:nth-child(n){aspect-ratio:1/1;} }
+  .col-card img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:saturate(.94) brightness(.82); transition:transform 1s cubic-bezier(.2,.7,.2,1),filter .6s;
+  }
+  .col-card:hover img{transform:scale(1.07);filter:saturate(1.05) brightness(.92);}
+  .col-card::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg,rgba(10,9,8,.05) 30%,rgba(10,9,8,.86) 100%);
+  }
+  .col-meta{
+    position:absolute; z-index:2; left:0; right:0; bottom:0; padding:24px;
+  }
+  .col-meta .num{
+    font-family:'Fraunces',serif; font-style:italic; font-weight:300;
+    font-size:30px; color:var(--brass); line-height:1; display:block; margin-bottom:6px;
+  }
+  .col-meta h3{
+    font-family:'Fraunces',serif; font-weight:400; font-size:23px;
+    color:var(--bone-warm); margin-bottom:5px;
+  }
+  .col-meta p{
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--parchment);
+  }
+
+  /* ============ HOUSE + CONTACT ============ */
+  .house{
+    background:var(--bone); color:var(--ink);
+    padding:clamp(80px,11vw,140px) 6vw;
+  }
+  .house-wrap{max-width:1100px;margin:0 auto;}
+  .house-intro{
+    max-width:680px; margin:0 auto 70px; text-align:center;
+  }
+  .house-intro .eyebrow{color:var(--rust);}
+  .house-intro h2{
+    font-size:clamp(30px,4.4vw,46px); color:var(--claret); margin:14px 0 20px;
+  }
+  .house-intro h2 em{font-style:italic;color:var(--rust);}
+  .house-intro p{color:#43352B;font-size:20px;}
+  .pillars{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:0;
+    border-top:1px solid rgba(74,15,27,.2); border-bottom:1px solid rgba(74,15,27,.2);
+    margin-bottom:70px;
+  }
+  @media(max-width:680px){ .pillars{grid-template-columns:1fr;} }
+  .pillar{
+    padding:30px 26px; text-align:center;
+    border-right:1px solid rgba(74,15,27,.2);
+  }
+  .pillar:last-child{border-right:none;}
+  @media(max-width:680px){
+    .pillar{border-right:none;border-bottom:1px solid rgba(74,15,27,.2);}
+    .pillar:last-child{border-bottom:none;}
+  }
+  .pillar .p-num{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;
+    color:var(--brass);
+  }
+  .pillar h4{
+    font-family:'Fraunces',serif;font-weight:400;font-size:22px;
+    color:var(--claret);margin:10px 0 8px;
+  }
+  .pillar p{font-size:16px;color:#5A4636;line-height:1.5;}
+
+  /* contact */
+  .contact{
+    background:var(--claret); color:var(--bone);
+    position:relative; padding:clamp(70px,9vw,110px) 6vw;
+  }
+  .contact::before{
+    content:""; position:absolute; inset:18px;
+    border:1px solid rgba(198,151,85,.3); pointer-events:none;
+  }
+  .contact-wrap{max-width:1000px;margin:0 auto;position:relative;}
+  .contact-top{text-align:center;margin-bottom:56px;}
+  .contact-top .eyebrow{color:var(--brass);}
+  .contact-top h2{
+    font-size:clamp(30px,4.4vw,48px);color:var(--bone-warm);margin-top:14px;
+  }
+  .contact-top h2 em{font-style:italic;color:var(--brass-soft);}
+  .contact-grid{
+    display:grid; grid-template-columns:1.1fr 1fr; gap:46px;
+    border-top:1px solid rgba(198,151,85,.28); padding-top:46px;
+  }
+  @media(max-width:760px){ .contact-grid{grid-template-columns:1fr;gap:38px;} }
+  .c-block .c-label{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--brass);margin-bottom:16px;
+  }
+  .c-block .c-line{display:block;font-size:18px;color:#E7DCC4;margin-bottom:5px;}
+  .c-block .c-line strong{color:var(--bone-warm);font-weight:500;}
+  .c-block a.c-line:hover{color:var(--brass-soft);}
+  .partners{margin-top:8px;}
+  .partner{
+    display:flex;justify-content:space-between;gap:16px;
+    padding:13px 0;border-bottom:1px solid rgba(198,151,85,.2);
+  }
+  .partner:first-of-type{border-top:1px solid rgba(198,151,85,.2);}
+  .partner .pn{font-family:'Fraunces',serif;font-size:19px;color:var(--bone-warm);}
+  .partner .pp{
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;
+    color:var(--brass-soft);align-self:center;
+  }
+  .contact-cta{margin-top:34px;}
+
+  /* ============ FOOTER ============ */
+  footer{
+    background:var(--ink); padding:56px 6vw 40px; text-align:center;
+  }
+  footer .f-mark{width:74px;margin:0 auto 22px;opacity:.92;}
+  footer .f-rule{
+    width:40px;height:1px;background:var(--brass);margin:0 auto 22px;
+  }
+  footer .f-tag{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--brass);margin-bottom:10px;
+  }
+  footer .f-legal{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;
+    color:#6A6157;line-height:1.7;
+  }
+  footer .f-legal a:hover{color:var(--brass);}
+</style>
 </head>
-
 <body>
 
-  <!-- ─────────────────────────────────────────────
-       NAVIGATION
-       ───────────────────────────────────────────── -->
-  <nav class="nav">
-    <a href="#hero" aria-label="XANVOR home">
-      <svg version="1.0" class="nav-mark" xmlns="http://www.w3.org/2000/svg"
- width="1312.000000pt" height="912.000000pt" viewBox="0 0 1312.000000 912.000000"
- preserveAspectRatio="xMidYMid meet">
-<g transform="translate(0.000000,912.000000) scale(0.100000,-0.100000)"
-fill="currentColor" stroke="none">
-<path d="M1564 7821 c-2 -2 -4 -1482 -4 -3288 l0 -3283 360 0 360 0 0 3282 c0
-2758 2 3280 14 3268 7 -8 82 -132 166 -275 84 -143 217 -368 295 -500 78 -132
-181 -305 227 -385 47 -80 211 -356 363 -615 153 -258 293 -495 310 -525 18
--30 61 -104 97 -165 36 -60 257 -436 493 -835 481 -815 630 -1068 721 -1220
-84 -142 346 -586 404 -685 26 -44 76 -129 112 -190 306 -518 533 -902 600
--1017 80 -138 80 -138 539 -138 252 0 459 3 459 6 0 5 -210 369 -541 934 -121
-208 -321 554 -359 620 -42 76 -677 1168 -885 1525 -49 83 -131 224 -183 315
--112 194 -147 255 -359 620 -88 151 -258 444 -377 650 -338 581 -434 748 -491
-845 -29 50 -103 178 -165 285 -62 107 -134 231 -160 275 -26 44 -100 173 -166
-287 -119 207 -119 207 -609 208 -269 1 -653 2 -853 3 -200 1 -366 0 -368 -2z"/>
-<path d="M8988 7822 l-2688 -2 0 -985 0 -985 360 0 360 0 0 625 0 625 1680 0
-c1680 0 1680 0 1643 -67 -19 -38 -62 -115 -93 -173 -32 -58 -106 -195 -166
--305 -59 -110 -134 -249 -167 -310 -33 -60 -90 -166 -127 -235 -150 -279 -684
--1268 -710 -1315 -15 -27 -59 -108 -97 -180 -72 -134 -348 -644 -808 -1495
--75 -140 -152 -282 -170 -315 -18 -33 -78 -145 -135 -250 -56 -104 -133 -246
--170 -315 -37 -69 -130 -240 -206 -380 -75 -140 -168 -311 -206 -380 -68 -125
--68 -125 389 -128 251 -1 460 1 464 5 4 5 78 139 164 298 86 160 204 378 262
-485 209 385 243 448 373 690 73 135 163 301 200 370 37 69 127 235 200 370 73
-135 163 301 200 370 38 69 114 211 170 315 57 105 195 361 308 570 113 209
-233 432 267 495 160 297 292 540 460 850 35 63 159 293 276 510 116 217 225
-420 242 450 16 30 61 114 100 185 38 72 109 202 157 290 145 266 169 314 162
-317 -4 2 -1216 2 -2694 0z"/>
-<path d="M6607 4786 c-113 -41 -177 -133 -177 -255 0 -190 210 -318 379 -231
-50 25 115 98 132 146 33 99 -1 230 -79 294 -68 56 -173 75 -255 46z"/>
-</g>
-</svg>
-    </a>
-    <ul class="nav-links">
-      <li><a href="#manifesto">Manifesto</a></li>
-      <li><a href="#mark">The Mark</a></li>
-      <li><a href="#provenance">Provenance</a></li>
-      <li><a href="catalogue.html">Catalogue</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+<nav id="nav">
+  <a href="#top" class="brand">XANVOR</a>
+  <div class="links">
+    <a href="#collections">Collections</a>
+    <a href="#catalogue">Catalogue</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
 
-  <!-- ─────────────────────────────────────────────
-       SECTION 01 · HERO
-       ───────────────────────────────────────────── -->
-  <section class="hero" id="hero">
-    <div class="hero-content">
-      <!-- The Binding · official brand mark + wordmark, stacked -->
-      <svg version="1.0" class="hero-stacked" xmlns="http://www.w3.org/2000/svg"
- width="1312.000000pt" height="908.000000pt" viewBox="0 0 1312.000000 908.000000"
- preserveAspectRatio="xMidYMid meet">
-<g transform="translate(0.000000,908.000000) scale(0.100000,-0.100000)"
-fill="currentColor" stroke="none">
-<path d="M3463 7452 c-33 -3 -33 -3 -33 -2058 l0 -2054 230 0 230 0 2 2051 c3
-2050 3 2050 34 1997 17 -29 84 -143 149 -253 65 -110 170 -288 233 -395 63
--107 143 -242 177 -300 35 -58 167 -283 295 -500 127 -217 253 -431 280 -475
-42 -71 465 -787 590 -1000 26 -44 174 -296 330 -560 156 -264 294 -499 308
--522 24 -43 24 -43 308 -43 159 0 284 4 284 9 0 5 -54 103 -121 217 -67 115
--169 292 -229 394 -59 102 -173 300 -255 440 -81 140 -180 311 -220 380 -88
-152 -261 449 -505 870 -101 173 -214 369 -252 435 -39 66 -104 179 -144 250
--41 72 -204 352 -362 623 -287 494 -287 494 -792 495 -278 1 -520 1 -537 -1z"/>
-<path d="M6396 7450 c-1 -3 -1 -11 0 -17 1 -7 2 -283 3 -613 1 -600 1 -600
-226 -600 225 0 225 0 225 390 l0 390 1045 0 c575 0 1045 -3 1045 -6 0 -5 -108
--208 -180 -339 -15 -27 -60 -111 -100 -185 -40 -74 -101 -187 -135 -250 -34
--63 -173 -321 -308 -572 -136 -251 -258 -476 -271 -500 -13 -24 -135 -250
--271 -503 -136 -253 -271 -503 -300 -555 -29 -52 -121 -223 -205 -380 -84
--157 -163 -304 -177 -327 -24 -43 -24 -43 266 -43 289 0 289 0 349 113 33 61
-71 132 84 157 14 25 44 81 68 125 24 44 55 103 70 130 15 28 60 111 100 185
-76 140 301 556 363 670 19 36 130 243 247 460 117 217 240 447 275 510 60 110
-299 552 505 935 53 99 174 323 269 498 94 174 171 321 171 325 0 8 -3361 10
--3364 2z"/>
-<path d="M6556 5537 c-50 -28 -76 -77 -76 -143 0 -171 235 -223 310 -68 26 52
-25 89 -2 144 -45 88 -145 117 -232 67z"/>
-<path d="M8294 2010 c-54 -17 -128 -73 -162 -124 -50 -76 -65 -141 -60 -266 5
--124 29 -188 99 -260 63 -64 116 -84 229 -85 84 0 101 3 152 28 132 65 199
-220 177 414 -14 123 -76 220 -174 271 -41 21 -66 26 -140 28 -49 2 -104 -1
--121 -6z m205 -93 c172 -90 172 -453 1 -542 -109 -56 -248 -2 -301 117 -19 44
--23 70 -23 153 0 110 19 173 72 229 62 66 172 85 251 43z"/>
-<path d="M3180 2000 c0 -5 46 -78 102 -162 56 -84 102 -160 102 -168 0 -8 -55
--97 -122 -197 -67 -101 -122 -185 -122 -188 0 -3 24 -5 53 -5 52 0 52 0 151
-150 54 83 102 150 105 150 3 0 50 -68 104 -150 99 -150 99 -150 149 -150 37 0
-49 3 45 13 -3 7 -57 93 -121 191 -116 177 -116 177 -3 344 61 92 114 170 115
-175 2 4 -20 7 -50 7 -53 0 -53 0 -137 -125 -46 -69 -88 -128 -92 -131 -5 -3
--47 54 -95 126 -87 130 -87 130 -136 130 -26 0 -48 -4 -48 -10z"/>
-<path d="M4595 1998 c-2 -7 -63 -168 -135 -356 -71 -189 -130 -348 -130 -353
-0 -6 23 -9 51 -7 51 3 51 3 84 93 32 90 32 90 192 93 160 2 160 2 194 -93 33
--95 33 -95 81 -95 32 0 48 4 48 13 0 11 -94 262 -234 627 -32 85 -32 85 -89
-88 -40 2 -59 -1 -62 -10z m129 -277 c31 -85 56 -158 56 -162 0 -5 -57 -9 -126
--9 -97 0 -125 3 -122 13 59 171 124 334 129 324 4 -6 32 -81 63 -166z"/>
-<path d="M5620 1645 c0 -365 0 -365 50 -365 50 0 50 0 52 298 l3 297 134 -255
-c197 -376 171 -340 247 -340 64 0 64 0 64 365 0 365 0 365 -50 365 -50 0 -50
-0 -50 -297 l0 -298 -156 298 c-156 297 -156 297 -225 297 -69 0 -69 0 -69
--365z"/>
-<path d="M6810 2006 c0 -3 52 -141 116 -308 64 -167 125 -329 136 -360 20 -58
-20 -58 78 -58 58 0 58 0 73 43 8 23 70 185 136 360 67 176 121 321 121 323 0
-3 -23 4 -52 2 -52 -3 -52 -3 -162 -295 -60 -161 -112 -293 -116 -293 -4 0 -56
-132 -116 293 -109 292 -109 292 -162 295 -28 2 -52 1 -52 -2z"/>
-<path d="M9420 1645 c0 -365 0 -365 50 -365 50 0 50 0 50 155 0 155 0 155 58
-155 73 0 119 -13 151 -44 15 -14 53 -79 86 -146 59 -120 59 -120 112 -120 29
-0 53 3 53 6 0 21 -138 271 -167 301 -23 26 -30 39 -21 42 7 2 27 18 45 36 78
-77 64 241 -26 300 -52 35 -109 44 -258 45 -133 0 -133 0 -133 -365z m326 243
-c35 -34 44 -110 19 -157 -22 -44 -67 -61 -165 -61 -80 0 -80 0 -80 126 0 126
-0 126 100 122 92 -3 102 -5 126 -30z"/>
-</g>
-</svg>
-      <p class="hero-tagline">
-        Two letters<span class="dot"></span>One gesture<span class="dot"></span>A bond unbroken
-      </p>
-    </div>
-
-    <div class="hero-meta">
-      <span>MMXXVI</span>
-      <span>Moradabad · IN</span>
-    </div>
-  </section>
-
-  <!-- ─────────────────────────────────────────────
-       SECTION 02 · MANIFESTO
-       ───────────────────────────────────────────── -->
-  <section class="manifesto" id="manifesto">
-    <div class="manifesto-grid">
-      <div class="reveal">
-        <span class="eyebrow" style="color: var(--rust);">002 · Manifesto</span>
-        <h2 class="manifesto-heading display" style="margin-top: 1.5rem;">
-          Two letters,<br />
-          <em>one gesture.</em>
-        </h2>
-      </div>
-      <div class="manifesto-body editorial-body reveal delay-1">
-        <p>
-          XANVOR draws its identity from the heart of its own name — the letters N and V, drawn as a single inseparable form. Where one stroke ends, the next begins. One gesture doing the work of two.
-        </p>
-        <p>
-          The Binding is a bespoke glyph. It exists in no font, no catalog, no archive. It belongs only to XANVOR.
-        </p>
-        <p style="font-style: italic; color: var(--rust);">
-          That is the promise.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─────────────────────────────────────────────
-       SECTION 03 · THE MARK · CONSTRUCTION
-       ───────────────────────────────────────────── -->
-  <section class="mark-section" id="mark">
-    <div class="mark-grid">
-      <div class="mark-display reveal">
-        <svg version="1.0" class="mark-image" xmlns="http://www.w3.org/2000/svg"
- width="1312.000000pt" height="912.000000pt" viewBox="0 0 1312.000000 912.000000"
- preserveAspectRatio="xMidYMid meet">
-<g transform="translate(0.000000,912.000000) scale(0.100000,-0.100000)"
-fill="currentColor" stroke="none">
-<path d="M1564 7821 c-2 -2 -4 -1482 -4 -3288 l0 -3283 360 0 360 0 0 3282 c0
-2758 2 3280 14 3268 7 -8 82 -132 166 -275 84 -143 217 -368 295 -500 78 -132
-181 -305 227 -385 47 -80 211 -356 363 -615 153 -258 293 -495 310 -525 18
--30 61 -104 97 -165 36 -60 257 -436 493 -835 481 -815 630 -1068 721 -1220
-84 -142 346 -586 404 -685 26 -44 76 -129 112 -190 306 -518 533 -902 600
--1017 80 -138 80 -138 539 -138 252 0 459 3 459 6 0 5 -210 369 -541 934 -121
-208 -321 554 -359 620 -42 76 -677 1168 -885 1525 -49 83 -131 224 -183 315
--112 194 -147 255 -359 620 -88 151 -258 444 -377 650 -338 581 -434 748 -491
-845 -29 50 -103 178 -165 285 -62 107 -134 231 -160 275 -26 44 -100 173 -166
-287 -119 207 -119 207 -609 208 -269 1 -653 2 -853 3 -200 1 -366 0 -368 -2z"/>
-<path d="M8988 7822 l-2688 -2 0 -985 0 -985 360 0 360 0 0 625 0 625 1680 0
-c1680 0 1680 0 1643 -67 -19 -38 -62 -115 -93 -173 -32 -58 -106 -195 -166
--305 -59 -110 -134 -249 -167 -310 -33 -60 -90 -166 -127 -235 -150 -279 -684
--1268 -710 -1315 -15 -27 -59 -108 -97 -180 -72 -134 -348 -644 -808 -1495
--75 -140 -152 -282 -170 -315 -18 -33 -78 -145 -135 -250 -56 -104 -133 -246
--170 -315 -37 -69 -130 -240 -206 -380 -75 -140 -168 -311 -206 -380 -68 -125
--68 -125 389 -128 251 -1 460 1 464 5 4 5 78 139 164 298 86 160 204 378 262
-485 209 385 243 448 373 690 73 135 163 301 200 370 37 69 127 235 200 370 73
-135 163 301 200 370 38 69 114 211 170 315 57 105 195 361 308 570 113 209
-233 432 267 495 160 297 292 540 460 850 35 63 159 293 276 510 116 217 225
-420 242 450 16 30 61 114 100 185 38 72 109 202 157 290 145 266 169 314 162
-317 -4 2 -1216 2 -2694 0z"/>
-<path d="M6607 4786 c-113 -41 -177 -133 -177 -255 0 -190 210 -318 379 -231
-50 25 115 98 132 146 33 99 -1 230 -79 294 -68 56 -173 75 -255 46z"/>
-</g>
-</svg>
-      </div>
-
-      <div class="mark-content reveal delay-1">
-        <span class="eyebrow">003 · The Binding</span>
-        <h2 class="mark-heading">
-          Where N ends,<br /><em>V begins.</em>
-        </h2>
-        <p class="mark-description">
-          The N's right diagonal continues into the V's left stroke — a single unbroken line doing the work of two. A brass bead marks the shared vertex.
-        </p>
-
-        <div class="spec-grid">
-          <div class="spec-item">
-            <div class="label">Aspect Ratio</div>
-            <div class="value">10 : 7</div>
-          </div>
-          <div class="spec-item">
-            <div class="label">Strokes</div>
-            <div class="value">4 <span style="opacity: 0.5; font-size: 0.85em;">not 6</span></div>
-          </div>
-          <div class="spec-item">
-            <div class="label">Stem Weight</div>
-            <div class="value">11 / 200u</div>
-          </div>
-          <div class="spec-item">
-            <div class="label">Apex Vertex</div>
-            <div class="value">Shared · Ø 8u</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─────────────────────────────────────────────
-       SECTION 04 · PROVENANCE · MORADABAD
-       ───────────────────────────────────────────── -->
-  <section class="provenance" id="provenance">
-    <div class="provenance-inner">
-      <span class="eyebrow provenance-eyebrow reveal">004 · Provenance</span>
-      <h2 class="provenance-heading reveal delay-1">
-        Made in<br /><em>Moradabad.</em>
-      </h2>
-      <div class="provenance-body reveal delay-2">
-        <p>
-          For three centuries, the brass city of India has shaped metal into objects of devotion, of craft, of the everyday made beautiful. XANVOR is born of that lineage — fine objects, bound by hand, signed in brass.
-        </p>
-      </div>
-      <span class="provenance-coords reveal delay-3">
-        28.8386° N · 78.7733° E · Uttar Pradesh, India
-      </span>
-    </div>
-  </section>
-
-  <!-- ─────────────────────────────────────────────
-       SECTION 05 · CRAFT
-       ───────────────────────────────────────────── -->
-  <section class="craft">
-    <div class="craft-inner">
-      <span class="eyebrow reveal">005 · Discipline</span>
-      <h2 class="craft-heading reveal delay-1" style="margin-top: 1.5rem;">
-        Fine objects,<br /><em>bound by hand.</em>
-      </h2>
-
-      <div class="craft-pillars">
-        <div class="pillar reveal">
-          <div class="number">— I</div>
-          <div class="title">Manufacturer</div>
-          <div class="desc">Forged, hammered, and finished in our Moradabad atelier. Every piece carries the hand of a maker.</div>
-        </div>
-        <div class="pillar reveal delay-1">
-          <div class="number">— II</div>
-          <div class="title">Exporter</div>
-          <div class="desc">Shipped from the brass city to homes worldwide. Each consignment, signed and sealed.</div>
-        </div>
-        <div class="pillar reveal delay-2">
-          <div class="number">— III</div>
-          <div class="title">Ecommerce</div>
-          <div class="desc">A direct conversation between the maker and the keeper. No middleman, no compromise.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─────────────────────────────────────────────
-       SECTION 06 · CONTACT
-       ───────────────────────────────────────────── -->
-  <section class="contact" id="contact">
-    <div class="contact-inner">
-      <span class="eyebrow contact-eyebrow reveal">006 · Begin a conversation</span>
-      <h2 class="contact-heading reveal delay-1">
-        Write to <em>us.</em>
-      </h2>
-      <a href="mailto:hello@xanvor.com" class="contact-email reveal delay-2">
-        hello@xanvor.com
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="hero-frame"></div>
+  <div class="hero-inner">
+    <img class="stacked" src="assets/logo_stacked_brass.png" alt="XANVOR">
+    <div class="tagline eyebrow">Manufacturer &nbsp;·&nbsp; Exporter &nbsp;·&nbsp; Ecommerce</div>
+    <h1 class="display">Metal handicrafts,<br>hand-finished in <em>Moradabad</em></h1>
+    <p class="lead">Brass, copper, silver-gilt and sheesham — cast, hammered and engraved for the modern table.</p>
+    <div class="cta-row">
+      <a href="XANVOR-Catalogue.pdf" target="_blank" rel="noopener" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+        Download Catalogue
       </a>
-      <div class="contact-address reveal delay-3">
-        Lal Bagh · Moradabad 244001<br />
-        Uttar Pradesh · India
+      <a href="#collections" class="btn btn-ghost">Explore Collections</a>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</header>
+
+<!-- ============ CATALOGUE ============ -->
+<section class="catalogue" id="catalogue">
+  <div class="cat-wrap">
+    <div class="cat-visual reveal">
+      <img src="assets/catalogue_cover.jpg" alt="XANVOR Catalogue — Volume One">
+      <div class="cat-tag">Volume One</div>
+    </div>
+    <div class="cat-text">
+      <div class="eyebrow reveal">The Collection · MMXXVI</div>
+      <h2 class="display reveal d1">The XANVOR <em>Catalogue</em></h2>
+      <div class="cat-rule reveal d1"></div>
+      <p class="reveal d2">A twelve-page edition of our hand-finished metalware — agate trays, copper drinkware, brass singing bowls, sheesham boxes and the Wireform furniture series.</p>
+      <p class="reveal d2">Photographed, coded and ready to share with buyers and partners worldwide.</p>
+      <ul class="cat-specs reveal d3">
+        <li><span>Format</span><span>PDF · A4 · 12 pp</span></li>
+        <li><span>Collections</span><span>Five</span></li>
+        <li><span>File size</span><span>1.4 MB</span></li>
+        <li><span>Pricing</span><span>On request</span></li>
+      </ul>
+      <a href="XANVOR-Catalogue.pdf" target="_blank" rel="noopener" class="btn btn-claret reveal d3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+        Download Catalogue
+      </a>
+      <div class="cat-note reveal d3">For the confidential trade price list, write to hello@xanvor.com</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLLECTIONS ============ -->
+<section class="collections" id="collections">
+  <div class="sec-head reveal">
+    <div class="eyebrow">Five Collections</div>
+    <h2 class="display">An <em>inventory</em> of metal</h2>
+  </div>
+  <div class="col-grid">
+    <article class="col-card reveal">
+      <img src="assets/col_silvergold.jpg" alt="Silver & Gold Decor">
+      <div class="col-meta">
+        <span class="num">I</span>
+        <h3>Silver &amp; Gold Decor</h3>
+        <p>Agate trays · bowls · jar sets</p>
       </div>
-      <div class="contact-coming-soon reveal delay-3">
-        — The atelier · launching soon —
+    </article>
+    <article class="col-card reveal d1">
+      <img src="assets/col_copper.jpg" alt="The Copper Collection">
+      <div class="col-meta">
+        <span class="num">II</span>
+        <h3>Copper</h3>
+        <p>Drinkware &amp; bar</p>
+      </div>
+    </article>
+    <article class="col-card reveal d2">
+      <img src="assets/col_brass.jpg" alt="The Brass Collection">
+      <div class="col-meta">
+        <span class="num">III</span>
+        <h3>Brass</h3>
+        <p>Singing bowls &amp; heritage sets</p>
+      </div>
+    </article>
+    <article class="col-card reveal d1">
+      <img src="assets/col_wood.jpg" alt="The Wood Collection">
+      <div class="col-meta">
+        <span class="num">IV</span>
+        <h3>Wood</h3>
+        <p>Sheesham trays &amp; spice boxes</p>
+      </div>
+    </article>
+    <article class="col-card reveal d2">
+      <img src="assets/col_furniture.jpg" alt="Metal Furniture">
+      <div class="col-meta">
+        <span class="num">V</span>
+        <h3>Metal Furniture</h3>
+        <p>The Wireform series</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ HOUSE ============ -->
+<section class="house">
+  <div class="house-wrap">
+    <div class="house-intro reveal">
+      <div class="eyebrow">The House of XANVOR</div>
+      <h2 class="display">Made in the <em>Brass City</em></h2>
+      <p>XANVOR is the metal-handicrafts house of Zenko Inc, working in the centuries-old workshops of Moradabad. We design, finish and assemble under one roof — and carry each piece outward through export and our own retail.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar reveal">
+        <div class="p-num">01</div>
+        <h4>Manufacturing</h4>
+        <p>An in-house workshop of casting, hammering and hand-engraving.</p>
+      </div>
+      <div class="pillar reveal d1">
+        <div class="p-num">02</div>
+        <h4>Export</h4>
+        <p>Wholesale supply and OEM commissions, shipped worldwide.</p>
+      </div>
+      <div class="pillar reveal d2">
+        <div class="p-num">03</div>
+        <h4>Ecommerce</h4>
+        <p>Retail through our own site and India's leading marketplaces.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─────────────────────────────────────────────
-       FOOTER
-       ───────────────────────────────────────────── -->
-  <footer>
-    <svg version="1.0" class="footer-mark" xmlns="http://www.w3.org/2000/svg"
- width="1312.000000pt" height="912.000000pt" viewBox="0 0 1312.000000 912.000000"
- preserveAspectRatio="xMidYMid meet">
-<g transform="translate(0.000000,912.000000) scale(0.100000,-0.100000)"
-fill="currentColor" stroke="none">
-<path d="M1564 7821 c-2 -2 -4 -1482 -4 -3288 l0 -3283 360 0 360 0 0 3282 c0
-2758 2 3280 14 3268 7 -8 82 -132 166 -275 84 -143 217 -368 295 -500 78 -132
-181 -305 227 -385 47 -80 211 -356 363 -615 153 -258 293 -495 310 -525 18
--30 61 -104 97 -165 36 -60 257 -436 493 -835 481 -815 630 -1068 721 -1220
-84 -142 346 -586 404 -685 26 -44 76 -129 112 -190 306 -518 533 -902 600
--1017 80 -138 80 -138 539 -138 252 0 459 3 459 6 0 5 -210 369 -541 934 -121
-208 -321 554 -359 620 -42 76 -677 1168 -885 1525 -49 83 -131 224 -183 315
--112 194 -147 255 -359 620 -88 151 -258 444 -377 650 -338 581 -434 748 -491
-845 -29 50 -103 178 -165 285 -62 107 -134 231 -160 275 -26 44 -100 173 -166
-287 -119 207 -119 207 -609 208 -269 1 -653 2 -853 3 -200 1 -366 0 -368 -2z"/>
-<path d="M8988 7822 l-2688 -2 0 -985 0 -985 360 0 360 0 0 625 0 625 1680 0
-c1680 0 1680 0 1643 -67 -19 -38 -62 -115 -93 -173 -32 -58 -106 -195 -166
--305 -59 -110 -134 -249 -167 -310 -33 -60 -90 -166 -127 -235 -150 -279 -684
--1268 -710 -1315 -15 -27 -59 -108 -97 -180 -72 -134 -348 -644 -808 -1495
--75 -140 -152 -282 -170 -315 -18 -33 -78 -145 -135 -250 -56 -104 -133 -246
--170 -315 -37 -69 -130 -240 -206 -380 -75 -140 -168 -311 -206 -380 -68 -125
--68 -125 389 -128 251 -1 460 1 464 5 4 5 78 139 164 298 86 160 204 378 262
-485 209 385 243 448 373 690 73 135 163 301 200 370 37 69 127 235 200 370 73
-135 163 301 200 370 38 69 114 211 170 315 57 105 195 361 308 570 113 209
-233 432 267 495 160 297 292 540 460 850 35 63 159 293 276 510 116 217 225
-420 242 450 16 30 61 114 100 185 38 72 109 202 157 290 145 266 169 314 162
-317 -4 2 -1216 2 -2694 0z"/>
-<path d="M6607 4786 c-113 -41 -177 -133 -177 -255 0 -190 210 -318 379 -231
-50 25 115 98 132 146 33 99 -1 230 -79 294 -68 56 -173 75 -255 46z"/>
-</g>
-</svg>
-    <svg version="1.0" class="footer-wordmark" xmlns="http://www.w3.org/2000/svg"
- width="1564.000000pt" height="270.000000pt" viewBox="0 0 1564.000000 270.000000"
- preserveAspectRatio="xMidYMid meet">
-<g transform="translate(0.000000,270.000000) scale(0.100000,-0.100000)"
-fill="currentColor" stroke="none">
-<path d="M10443 1926 c-81 -20 -159 -65 -216 -125 -111 -116 -151 -229 -152
--421 0 -72 6 -148 14 -180 47 -190 176 -330 346 -375 74 -19 213 -19 282 -1
-176 47 305 185 349 372 20 89 20 277 -1 359 -49 192 -174 324 -350 370 -70 18
--199 18 -272 1z m275 -136 c108 -47 181 -162 203 -319 33 -232 -50 -445 -201
--515 -68 -32 -227 -30 -288 2 -94 50 -156 137 -188 262 -23 92 -16 283 15 361
-64 167 171 243 331 235 50 -2 92 -10 128 -26z"/>
-<path d="M2746 1908 c4 -7 79 -120 166 -250 87 -131 158 -242 158 -247 0 -6
--82 -133 -183 -283 -101 -150 -187 -279 -191 -285 -5 -10 11 -13 72 -13 79 0
-79 0 232 230 84 127 154 230 155 230 1 0 71 -103 155 -230 152 -230 152 -230
-231 -230 73 0 79 1 70 18 -6 9 -87 132 -181 272 -94 140 -173 260 -176 266 -3
-6 70 123 161 259 92 137 169 254 172 262 4 10 -11 13 -73 12 -79 -1 -79 -1
--194 -175 -63 -95 -124 -185 -135 -200 -21 -26 -21 -26 -155 175 -134 201
--134 201 -212 201 -61 0 -77 -3 -72 -12z"/>
-<path d="M4880 1917 c0 -2 -90 -240 -201 -528 -110 -288 -203 -532 -206 -542
--5 -16 1 -18 73 -15 79 3 79 3 112 98 72 203 31 180 311 180 246 0 246 0 295
--140 50 -140 50 -140 127 -140 77 0 77 0 23 143 -30 78 -84 219 -119 312 -263
-691 -231 630 -328 633 -48 1 -87 1 -87 -1z m191 -420 c96 -262 96 -262 -99
--265 -107 -1 -197 -1 -199 2 -2 2 40 123 94 269 53 146 100 264 102 261 3 -3
-49 -123 102 -267z"/>
-<path d="M6410 1375 c0 -545 0 -545 75 -545 75 0 75 0 77 451 3 450 3 450 72
-317 38 -73 86 -162 106 -198 21 -36 63 -114 94 -175 30 -60 89 -173 130 -250
-75 -140 75 -140 175 -143 101 -3 101 -3 101 543 0 545 0 545 -70 545 -70 0
--70 0 -70 -452 0 -385 -2 -450 -14 -433 -7 11 -37 65 -66 120 -29 55 -78 147
--108 205 -31 58 -81 152 -112 210 -202 385 -173 350 -287 350 -103 0 -103 0
--103 -545z"/>
-<path d="M8193 1903 c5 -16 83 -222 332 -870 78 -203 78 -203 164 -203 86 0
-86 0 271 487 102 268 195 513 207 545 22 58 22 58 -56 58 -77 0 -77 0 -219
--377 -165 -438 -197 -521 -204 -528 -2 -3 -81 199 -175 448 -170 452 -170 452
--248 455 -71 3 -77 1 -72 -15z"/>
-<path d="M12100 1377 c0 -299 2 -546 4 -548 2 -2 36 -3 75 -1 71 4 71 4 71
-233 0 229 0 229 98 229 128 0 189 -18 235 -69 19 -21 75 -118 123 -215 89
--176 89 -176 167 -176 42 0 77 2 77 5 0 3 -41 86 -92 184 -98 193 -144 262
--197 298 -34 23 -34 23 3 38 99 41 152 146 144 279 -8 119 -54 193 -148 241
--73 37 -139 45 -355 45 -205 0 -205 0 -205 -543z m414 413 c84 -19 128 -74
-134 -164 5 -80 -10 -127 -53 -165 -47 -41 -91 -51 -227 -51 -118 0 -118 0
--118 195 0 195 0 195 113 195 61 0 130 -5 151 -10z"/>
-<path d="M0 55 c0 -55 0 -55 7820 -55 7820 0 7820 0 7820 55 0 55 0 55 -7820
-55 -7820 0 -7820 0 -7820 -55z"/>
-</g>
-</svg>
-    <div class="footer-meta">
-      © MMXXVI Azenko Inc · All rights reserved<br />
-      Manufacturer · Exporter · Ecommerce
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="contact">
+  <div class="contact-wrap">
+    <div class="contact-top reveal">
+      <div class="eyebrow">Trade &amp; Enquiry</div>
+      <h2 class="display">Let us make <em>something together</em></h2>
     </div>
-  </footer>
+    <div class="contact-grid">
+      <div class="c-block reveal">
+        <div class="c-label">The House</div>
+        <p class="c-line"><strong>Zenko Inc.</strong></p>
+        <p class="c-line">Lal Bagh, Moradabad 244001</p>
+        <p class="c-line">Uttar Pradesh, India</p>
+        <p class="c-line" style="margin-top:18px;"><strong>Web</strong></p>
+        <a class="c-line" href="https://xanvor.com">xanvor.com</a>
+        <a class="c-line" href="mailto:hello@xanvor.com">hello@xanvor.com</a>
+        <a href="mailto:hello@xanvor.com" class="btn btn-ghost contact-cta">Send a Trade Enquiry</a>
+      </div>
+      <div class="c-block reveal d1">
+        <div class="c-label">Speak to a Partner</div>
+        <div class="partners">
+          <div class="partner"><span class="pn">Sana Adiba</span><span class="pp">+91 70172 20063</span></div>
+          <div class="partner"><span class="pn">Zaid Rehman</span><span class="pp">+91 98377 60615</span></div>
+          <div class="partner"><span class="pn">Samira Zainab</span><span class="pp">+91 70600 60829</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <script>
-    // ─────────────────────────────────────────────
-    // SCROLL REVEAL · IntersectionObserver
-    // ─────────────────────────────────────────────
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+<!-- ============ FOOTER ============ -->
+<footer>
+  <img class="f-mark" src="assets/logo_mark.png" alt="XANVOR">
+  <div class="f-rule"></div>
+  <div class="f-tag">Manufacturer · Exporter · Ecommerce</div>
+  <div class="f-legal">
+    XANVOR is a house brand of Zenko Inc · Moradabad, India<br>
+    © 2026 Zenko Inc. All rights reserved · <a href="mailto:hello@xanvor.com">hello@xanvor.com</a>
+  </div>
+</footer>
 
-    reveals.forEach((el) => observer.observe(el));
-  </script>
+<script>
+  // nav background on scroll
+  const nav=document.getElementById('nav');
+  const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>40);
+  onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
 
+  // scroll reveal
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+  },{threshold:.16,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 </body>
 </html>
