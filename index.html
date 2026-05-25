@@ -138,54 +138,70 @@
   /* ============ CATALOGUE ============ */
   .catalogue{
     background:var(--bone); color:var(--ink);
-    padding:clamp(80px,11vw,150px) 6vw;
+    padding:clamp(80px,11vw,140px) 6vw clamp(70px,9vw,110px);
   }
-  .cat-wrap{
-    max-width:1140px; margin:0 auto;
-    display:grid; grid-template-columns:0.92fr 1.08fr; gap:clamp(40px,7vw,96px);
-    align-items:center;
+  .cat-intro{max-width:760px;margin:0 auto;text-align:center;}
+  .cat-intro .eyebrow{color:var(--rust);}
+  .cat-intro h2{
+    font-size:clamp(33px,4.6vw,54px); color:var(--claret); margin:16px 0 0;
   }
-  @media(max-width:860px){ .cat-wrap{grid-template-columns:1fr;gap:48px;} }
-  .cat-visual{position:relative;}
-  .cat-visual::before{
-    content:""; position:absolute; inset:-22px -22px 18px 26px;
-    border:1px solid rgba(74,15,27,.32); z-index:0;
+  .cat-intro h2 em{font-style:italic;color:var(--rust);}
+  .cat-rule{width:54px;height:2px;background:var(--brass);margin:22px auto;}
+  .cat-intro p{color:#43352B;font-size:18px;line-height:1.7;}
+  .cat-intro p a{color:var(--claret);border-bottom:1px solid var(--brass);}
+  .cat-intro p a:hover{color:var(--rust);}
+
+  .cat-jump{
+    max-width:920px; margin:48px auto 0;
+    display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
   }
-  .cat-visual img{
-    position:relative; z-index:1; width:100%;
-    box-shadow:0 32px 60px -22px rgba(10,9,8,.55), 0 6px 16px rgba(10,9,8,.22);
-    transition:transform .6s cubic-bezier(.2,.7,.2,1);
+  .cat-jump a{
+    display:inline-flex; align-items:center; gap:9px;
+    padding:11px 18px;
+    border:1px solid rgba(74,15,27,.22); background:transparent;
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase; color:#5A4636;
+    transition:all .25s ease;
   }
-  .cat-visual:hover img{transform:translateY(-8px) rotate(-.6deg);}
-  .cat-tag{
-    position:absolute; z-index:2; bottom:-16px; right:-10px;
-    background:var(--claret); color:var(--bone);
-    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.2em;
-    text-transform:uppercase; padding:11px 18px;
+  .cat-jump a span{
+    font-family:'Fraunces',serif; font-style:italic; font-weight:400;
+    font-size:14px; color:var(--brass); letter-spacing:.02em;
   }
-  .cat-text .eyebrow{color:var(--rust);}
-  .cat-text h2{
-    font-size:clamp(33px,4.6vw,52px); color:var(--claret);
-    margin:16px 0 8px;
+  .cat-jump a:hover{
+    background:var(--claret); color:var(--bone-warm);
+    border-color:var(--claret);
   }
-  .cat-text h2 em{font-style:italic;color:var(--rust);}
-  .cat-rule{width:54px;height:2px;background:var(--brass);margin:20px 0 22px;}
-  .cat-text p{color:#43352B;max-width:440px;margin-bottom:14px;}
-  .cat-specs{
-    list-style:none; margin:24px 0 32px; border-top:1px solid rgba(74,15,27,.18);
+  .cat-jump a:hover span{color:var(--brass-soft);}
+
+  .cat-pages{
+    max-width:920px; margin:0 auto; padding-top:clamp(56px,7vw,90px);
   }
-  .cat-specs li{
-    display:flex; justify-content:space-between; gap:20px;
-    padding:11px 0; border-bottom:1px solid rgba(74,15,27,.18);
-    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.06em;
-    text-transform:uppercase; color:#5A4636;
+  .cat-group{margin-bottom:clamp(64px,8vw,110px); scroll-margin-top:90px;}
+  .cat-group:last-child{margin-bottom:0;}
+  .cat-group-head{
+    text-align:center; margin-bottom:clamp(36px,5vw,56px);
+    padding-bottom:30px;
+    border-bottom:1px solid rgba(74,15,27,.18);
   }
-  .cat-specs li span:last-child{color:var(--claret);font-weight:500;}
-  .btn-claret{background:var(--claret);border-color:var(--claret);color:var(--bone);}
-  .btn-claret:hover{background:var(--claret-deep);border-color:var(--claret-deep);transform:translateY(-2px);}
-  .cat-note{
-    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.08em;
-    color:#8A7359; margin-top:14px;
+  .cat-group-head .num{
+    font-family:'Fraunces',serif; font-style:italic; font-weight:400;
+    font-size:30px; color:var(--brass); display:block; margin-bottom:6px;
+  }
+  .cat-group-head h3{
+    font-family:'Fraunces',serif; font-weight:400; font-size:clamp(26px,3.5vw,38px);
+    color:var(--claret); line-height:1.1; margin-bottom:8px;
+  }
+  .cat-group-head p{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    letter-spacing:.18em; text-transform:uppercase; color:#8A7359;
+  }
+  .cat-page{
+    margin:0 0 clamp(22px,3vw,36px);
+  }
+  .cat-page img{
+    width:100%; height:auto; display:block;
+    background:#FBF7EA;
+    box-shadow:0 26px 50px -22px rgba(10,9,8,.45), 0 4px 14px rgba(10,9,8,.16);
   }
 
   /* ============ COLLECTIONS ============ */
@@ -207,7 +223,7 @@
   @media(max-width:520px){ .col-grid{grid-template-columns:1fr;} }
   .col-card{
     position:relative; overflow:hidden; aspect-ratio:1/1.16;
-    border:1px solid rgba(198,151,85,.22); cursor:default;
+    border:1px solid rgba(198,151,85,.22); cursor:pointer; display:block;
   }
   .col-card:nth-child(4),.col-card:nth-child(5){aspect-ratio:1/0.92;}
   @media(max-width:860px){ .col-card,.col-card:nth-child(n){aspect-ratio:1/1;} }
@@ -356,11 +372,8 @@
     <h1 class="display">Metal handicrafts,<br>hand-finished in <em>Moradabad</em></h1>
     <p class="lead">Brass, copper, silver-gilt and sheesham — cast, hammered and engraved for the modern table.</p>
     <div class="cta-row">
-      <a href="XANVOR-Catalogue.pdf" target="_blank" rel="noopener" class="btn btn-primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
-        Download Catalogue
-      </a>
-      <a href="#collections" class="btn btn-ghost">Explore Collections</a>
+      <a href="#catalogue" class="btn btn-primary">View the Collection</a>
+      <a href="#contact" class="btn btn-ghost">Trade Enquiry</a>
     </div>
   </div>
   <div class="scroll-cue">Scroll</div>
@@ -368,29 +381,69 @@
 
 <!-- ============ CATALOGUE ============ -->
 <section class="catalogue" id="catalogue">
-  <div class="cat-wrap">
-    <div class="cat-visual reveal">
-      <img src="assets/catalogue_cover.jpg" alt="XANVOR Catalogue — Volume One">
-      <div class="cat-tag">Volume One</div>
-    </div>
-    <div class="cat-text">
-      <div class="eyebrow reveal">The Collection · MMXXVI</div>
-      <h2 class="display reveal d1">The XANVOR <em>Catalogue</em></h2>
-      <div class="cat-rule reveal d1"></div>
-      <p class="reveal d2">A twelve-page edition of our hand-finished metalware — agate trays, copper drinkware, brass singing bowls, sheesham boxes and the Wireform furniture series.</p>
-      <p class="reveal d2">Photographed, coded and ready to share with buyers and partners worldwide.</p>
-      <ul class="cat-specs reveal d3">
-        <li><span>Format</span><span>PDF · A4 · 12 pp</span></li>
-        <li><span>Collections</span><span>Five</span></li>
-        <li><span>File size</span><span>1.4 MB</span></li>
-        <li><span>Pricing</span><span>On request</span></li>
-      </ul>
-      <a href="XANVOR-Catalogue.pdf" target="_blank" rel="noopener" class="btn btn-claret reveal d3">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
-        Download Catalogue
-      </a>
-      <div class="cat-note reveal d3">For the confidential trade price list, write to hello@xanvor.com</div>
-    </div>
+  <div class="cat-intro reveal">
+    <div class="eyebrow">The Collection · Volume One · MMXXVI</div>
+    <h2 class="display">The XANVOR <em>Catalogue</em></h2>
+    <div class="cat-rule"></div>
+    <p>Every piece, photographed and coded. Five collections — agate trays, copper drinkware, brass singing bowls, sheesham boxes and the Wireform furniture series. For the confidential trade price list, write to <a href="mailto:hello@xanvor.com">hello@xanvor.com</a>.</p>
+  </div>
+
+  <div class="cat-jump reveal d1">
+    <a href="#c-silvergold"><span>I</span>Silver &amp; Gold</a>
+    <a href="#c-copper"><span>II</span>Copper</a>
+    <a href="#c-brass"><span>III</span>Brass</a>
+    <a href="#c-wood"><span>IV</span>Wood</a>
+    <a href="#c-furniture"><span>V</span>Furniture</a>
+  </div>
+
+  <div class="cat-pages">
+    <article class="cat-group" id="c-silvergold">
+      <header class="cat-group-head reveal">
+        <span class="num">I</span>
+        <h3>Silver &amp; Gold Decor</h3>
+        <p>Agate trays · metal trays · bowls &amp; objects · jar sets</p>
+      </header>
+      <figure class="cat-page reveal"><img src="assets/catalogue/page-04.jpg" alt="Silver & Gold Decor — Agate Trays" loading="lazy" decoding="async"></figure>
+      <figure class="cat-page reveal"><img src="assets/catalogue/page-05.jpg" alt="Silver & Gold Decor — Metal Trays" loading="lazy" decoding="async"></figure>
+      <figure class="cat-page reveal"><img src="assets/catalogue/page-06.jpg" alt="Silver & Gold Decor — Bowls, Centrepieces & Objects" loading="lazy" decoding="async"></figure>
+      <figure class="cat-page reveal"><img src="assets/catalogue/page-07.jpg" alt="Silver & Gold Decor — Jar Sets & Canisters" loading="lazy" decoding="async"></figure>
+    </article>
+
+    <article class="cat-group" id="c-copper">
+      <header class="cat-group-head reveal">
+        <span class="num">II</span>
+        <h3>The Copper Collection</h3>
+        <p>Bottles · jugs · bar</p>
+      </header>
+      <figure class="cat-page reveal"><img src="assets/catalogue/page-08.jpg" alt="The Copper Collection — Drinkware & Bar" loading="lazy" decoding="async"></figure>
+    </article>
+
+    <article class="cat-group" id="c-brass">
+      <header class="cat-group-head reveal">
+        <span class="num">III</span>
+        <h3>The Brass Collection</h3>
+        <p>Singing bowls &amp; heritage sets</p>
+      </header>
+      <figure class="cat-page reveal"><img src="assets/catalogue/page-09.jpg" alt="The Brass Collection — Singing Bowls & Heritage Sets" loading="lazy" decoding="async"></figure>
+    </article>
+
+    <article class="cat-group" id="c-wood">
+      <header class="cat-group-head reveal">
+        <span class="num">IV</span>
+        <h3>The Wood Collection</h3>
+        <p>Sheesham trays &amp; spice boxes</p>
+      </header>
+      <figure class="cat-page reveal"><img src="assets/catalogue/page-10.jpg" alt="The Wood Collection — Sheesham Trays & Spice Boxes" loading="lazy" decoding="async"></figure>
+    </article>
+
+    <article class="cat-group" id="c-furniture">
+      <header class="cat-group-head reveal">
+        <span class="num">V</span>
+        <h3>Metal Furniture</h3>
+        <p>The Wireform series</p>
+      </header>
+      <figure class="cat-page reveal"><img src="assets/catalogue/page-11.jpg" alt="Metal Furniture — The Wireform Series" loading="lazy" decoding="async"></figure>
+    </article>
   </div>
 </section>
 
@@ -401,46 +454,46 @@
     <h2 class="display">An <em>inventory</em> of metal</h2>
   </div>
   <div class="col-grid">
-    <article class="col-card reveal">
+    <a class="col-card reveal" href="#c-silvergold">
       <img src="assets/col_silvergold.jpg" alt="Silver & Gold Decor">
       <div class="col-meta">
         <span class="num">I</span>
         <h3>Silver &amp; Gold Decor</h3>
         <p>Agate trays · bowls · jar sets</p>
       </div>
-    </article>
-    <article class="col-card reveal d1">
+    </a>
+    <a class="col-card reveal d1" href="#c-copper">
       <img src="assets/col_copper.jpg" alt="The Copper Collection">
       <div class="col-meta">
         <span class="num">II</span>
         <h3>Copper</h3>
         <p>Drinkware &amp; bar</p>
       </div>
-    </article>
-    <article class="col-card reveal d2">
+    </a>
+    <a class="col-card reveal d2" href="#c-brass">
       <img src="assets/col_brass.jpg" alt="The Brass Collection">
       <div class="col-meta">
         <span class="num">III</span>
         <h3>Brass</h3>
         <p>Singing bowls &amp; heritage sets</p>
       </div>
-    </article>
-    <article class="col-card reveal d1">
+    </a>
+    <a class="col-card reveal d1" href="#c-wood">
       <img src="assets/col_wood.jpg" alt="The Wood Collection">
       <div class="col-meta">
         <span class="num">IV</span>
         <h3>Wood</h3>
         <p>Sheesham trays &amp; spice boxes</p>
       </div>
-    </article>
-    <article class="col-card reveal d2">
+    </a>
+    <a class="col-card reveal d2" href="#c-furniture">
       <img src="assets/col_furniture.jpg" alt="Metal Furniture">
       <div class="col-meta">
         <span class="num">V</span>
         <h3>Metal Furniture</h3>
         <p>The Wireform series</p>
       </div>
-    </article>
+    </a>
   </div>
 </section>
 
