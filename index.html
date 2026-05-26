@@ -418,6 +418,54 @@
   }
   .contact-cta{margin-top:34px;}
 
+  /* visit / map placeholder */
+  .visit-block{
+    margin-top:56px; padding-top:46px;
+    border-top:1px solid rgba(198,151,85,.28);
+    display:grid; grid-template-columns:1fr 1fr; gap:46px; align-items:center;
+  }
+  @media(max-width:760px){ .visit-block{grid-template-columns:1fr;gap:30px;} }
+  .visit-copy .c-label{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--brass);margin-bottom:16px;
+  }
+  .visit-copy h3{
+    font-family:'Fraunces',serif;font-size:clamp(22px,2.6vw,30px);
+    color:var(--bone-warm);font-weight:400;line-height:1.25;margin-bottom:14px;
+  }
+  .visit-copy h3 em{font-style:italic;color:var(--brass-soft);}
+  .visit-copy p{font-size:15.5px;color:#D9CEB5;line-height:1.7;max-width:38ch;}
+  .map-placeholder{
+    position:relative; aspect-ratio:4/3; width:100%;
+    border:1px solid rgba(198,151,85,.35);
+    background:
+      repeating-linear-gradient(45deg, rgba(198,151,85,.06) 0 2px, transparent 2px 14px),
+      rgba(0,0,0,.18);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    padding:24px;
+  }
+  .map-placeholder .pin{
+    width:34px;height:34px;border-radius:50% 50% 50% 0;
+    background:var(--brass);transform:rotate(-45deg);margin-bottom:18px;
+    box-shadow:0 6px 22px rgba(0,0,0,.35);
+  }
+  .map-placeholder .pin::after{
+    content:""; position:absolute; width:12px;height:12px;border-radius:50%;
+    background:var(--claret); top:11px; left:11px;
+  }
+  .map-placeholder .mp-inner{display:flex;flex-direction:column;align-items:center;}
+  .map-placeholder .mp-label{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--brass);margin-bottom:8px;
+  }
+  .map-placeholder .mp-title{
+    font-family:'Fraunces',serif;font-size:20px;color:var(--bone-warm);margin-bottom:6px;
+  }
+  .map-placeholder .mp-sub{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;
+    color:#A89B82;
+  }
+
   /* ============ FOOTER ============ */
   footer{
     background:var(--ink); padding:56px 6vw 40px; text-align:center;
@@ -1050,6 +1098,22 @@
           <div class="partner"><span class="pn">Sana Adiba</span><span class="pp">+91 70172 20063</span></div>
           <div class="partner"><span class="pn">Zaid Rehman</span><span class="pp">+91 98377 60615</span></div>
           <div class="partner"><span class="pn">Samira Zainab</span><span class="pp">+91 70600 60829</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="visit-block reveal">
+      <div class="visit-copy">
+        <div class="c-label">Visit the Workshop</div>
+        <h3>Walk through our <em>Moradabad</em> atelier</h3>
+        <p>Lal Bagh, Moradabad 244001, Uttar Pradesh — by appointment. Our Google Maps listing is being set up; the directions link will live here shortly.</p>
+      </div>
+      <div class="map-placeholder" aria-label="Google Maps location coming soon">
+        <div class="mp-inner">
+          <div class="pin"></div>
+          <div class="mp-label">Location</div>
+          <div class="mp-title">Zenko Inc. · Lal Bagh</div>
+          <div class="mp-sub">Google Maps link coming soon</div>
         </div>
       </div>
     </div>
