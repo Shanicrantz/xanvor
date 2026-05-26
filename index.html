@@ -469,6 +469,51 @@
     color:#A89B82;
   }
 
+  /* enquiry form */
+  .enquiry-form{display:flex;flex-direction:column;gap:18px;}
+  .enquiry-form .field{display:flex;flex-direction:column;gap:6px;}
+  .enquiry-form .field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:520px){ .enquiry-form .field-row{grid-template-columns:1fr;} }
+  .enquiry-form label{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--brass);
+  }
+  .enquiry-form input,
+  .enquiry-form textarea{
+    width:100%; background:rgba(0,0,0,.18); color:var(--bone-warm);
+    border:1px solid rgba(198,151,85,.28); padding:12px 14px;
+    font-family:'Inter',sans-serif; font-size:15px; line-height:1.5;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .enquiry-form textarea{resize:vertical;min-height:110px;}
+  .enquiry-form input:focus,
+  .enquiry-form textarea:focus{
+    outline:none; border-color:var(--brass-soft);
+    background:rgba(0,0,0,.28);
+  }
+  .enquiry-form input::placeholder,
+  .enquiry-form textarea::placeholder{color:#7A7264;}
+  .enquiry-submit{margin-top:8px;align-self:flex-start;}
+  .form-success{
+    display:none;padding:18px 20px;border:1px solid var(--brass);
+    color:var(--bone-warm);background:rgba(198,151,85,.08);
+    font-size:14.5px;line-height:1.6;
+  }
+  .form-success.show{display:block;}
+  .form-success strong{color:var(--brass-soft);}
+  .enquiry-block{
+    margin-top:56px;padding-top:46px;
+    border-top:1px solid rgba(198,151,85,.28);
+    display:grid; grid-template-columns:1fr 1.2fr; gap:56px;
+  }
+  @media(max-width:760px){ .enquiry-block{grid-template-columns:1fr;gap:30px;} }
+  .enquiry-intro h3{
+    font-family:'Fraunces',serif;font-size:clamp(22px,2.6vw,30px);
+    color:var(--bone-warm);font-weight:400;line-height:1.25;margin-bottom:14px;
+  }
+  .enquiry-intro h3 em{font-style:italic;color:var(--brass-soft);}
+  .enquiry-intro p{font-size:15.5px;color:#D9CEB5;line-height:1.7;max-width:38ch;}
+
   /* ============ FOOTER ============ */
   footer{
     background:var(--ink); padding:56px 6vw 40px; text-align:center;
@@ -1093,7 +1138,7 @@
         <p class="c-line" style="margin-top:18px;"><strong>Web</strong></p>
         <a class="c-line" href="https://xanvor.com">xanvor.com</a>
         <a class="c-line" href="mailto:hello@xanvor.com">hello@xanvor.com</a>
-        <a href="mailto:hello@xanvor.com?subject=Trade%20Enquiry%20%E2%80%94%20XANVOR&amp;body=Hello%20XANVOR%20team%2C%0A%0AI%27d%20like%20to%20enquire%20about%3A%0A%0A%E2%80%A2%20Company%20%2F%20Buyer%20name%3A%20%0A%E2%80%A2%20Country%20%2F%20City%3A%20%0A%E2%80%A2%20Pieces%20or%20collection%20of%20interest%3A%20%0A%E2%80%A2%20Approx.%20order%20quantity%3A%20%0A%E2%80%A2%20Timeline%3A%20%0A%0AThank%20you." class="btn btn-ghost contact-cta">Send a Trade Enquiry</a>
+        <a href="#enquiry-form" class="btn btn-ghost contact-cta">Send a Trade Enquiry</a>
       </div>
       <div class="c-block reveal d1">
         <div class="c-label">Speak to a Partner</div>
@@ -1105,6 +1150,50 @@
         </div>
         <p class="c-line" style="margin-top:18px;font-size:13.5px;color:#A89B82;">Mon–Sat · 10:00–18:00 IST</p>
       </div>
+    </div>
+
+    <div class="enquiry-block reveal" id="enquiry-form">
+      <div class="enquiry-intro">
+        <div class="c-label">Trade Enquiry</div>
+        <h3>Tell us what you're <em>looking for</em></h3>
+        <p>Buyers, designers and retailers — share your brief and we'll respond within one working day. For urgent timelines, ring the line on the left.</p>
+      </div>
+
+      <form name="trade-enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?enquiry=sent#enquiry-form" class="enquiry-form">
+        <input type="hidden" name="form-name" value="trade-enquiry">
+        <p hidden><label>Leave blank: <input name="bot-field"></label></p>
+
+        <div class="field">
+          <label for="ef-name">Your Name *</label>
+          <input id="ef-name" type="text" name="name" required autocomplete="name">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="ef-email">Email *</label>
+            <input id="ef-email" type="email" name="email" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="ef-company">Company</label>
+            <input id="ef-company" type="text" name="company" autocomplete="organization">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="ef-country">Country / City</label>
+          <input id="ef-country" type="text" name="country">
+        </div>
+
+        <div class="field">
+          <label for="ef-message">Pieces, quantity, timeline</label>
+          <textarea id="ef-message" name="message" rows="5" placeholder="e.g. 200 pcs brass urli (10&quot;), shipping to Dubai by August"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary enquiry-submit">Send Enquiry</button>
+        <div class="form-success" id="form-success" role="status">
+          <strong>Thank you.</strong> Your enquiry is with our trade desk — we'll reply within one working day at the email you provided.
+        </div>
+      </form>
     </div>
 
     <div class="visit-block reveal">
@@ -1147,6 +1236,12 @@
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
   },{threshold:.16,rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // enquiry-form success state
+  if(new URLSearchParams(location.search).get('enquiry')==='sent'){
+    const ok=document.getElementById('form-success');
+    if(ok){ ok.classList.add('show'); ok.scrollIntoView({behavior:'smooth',block:'center'}); }
+  }
 </script>
 </body>
 </html>
