@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XANVOR — Product</title>
+<meta name="description" content="XANVOR product detail — premium hand-finished metal handicrafts from Moradabad, India.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta property="og:title" content="XANVOR — Product">
+<meta property="og:description" content="Premium hand-finished metal handicrafts — brass, copper, silver-gilt and sheesham.">
+<meta property="og:image" content="assets/catalogue_cover.jpg">
+<meta property="og:type" content="product">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --claret:#4A0F1B; --claret-deep:#380A14; --storm:#1B2432; --ink:#0A0908;
+    --brass:#C69755; --brass-soft:#D8B07E; --bone:#F3EBD6; --parchment:#DCCFB0;
+    --rust:#8B2E1C; --bone-warm:#FBF7EA;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink); color:var(--bone);
+    font-family:'Cormorant Garamond',serif; font-size:19px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  body::after{
+    content:""; position:fixed; inset:0; z-index:9999; pointer-events:none;
+    opacity:.045; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  a{color:inherit;text-decoration:none;}
+  img{display:block;max-width:100%;}
+
+  /* nav */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 6vw; transition:background .4s ease, padding .4s ease, border-color .4s ease;
+    border-bottom:1px solid transparent;
+    background:rgba(10,9,8,.78); backdrop-filter:blur(10px);
+  }
+  nav.scrolled{
+    background:rgba(10,9,8,.94); padding:13px 6vw;
+    border-bottom:1px solid rgba(198,151,85,.22);
+  }
+  nav .brand{
+    font-family:'Fraunces',serif; font-weight:400; font-size:21px;
+    letter-spacing:.16em; color:var(--bone);
+  }
+  nav .links{display:flex;gap:34px;}
+  nav .links a{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:400;
+    letter-spacing:.2em; text-transform:uppercase; color:var(--parchment);
+    padding-bottom:3px; border-bottom:1px solid transparent; transition:all .25s;
+  }
+  nav .links a:hover{color:var(--brass);border-bottom-color:var(--brass);}
+  @media(max-width:680px){ nav .links{gap:18px;} nav .links a:nth-child(1){display:none;} }
+
+  /* product page */
+  .product-section{
+    padding:130px 6vw 96px;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(74,15,27,.42), transparent 70%),
+      linear-gradient(180deg, #14110F 0%, var(--ink) 100%);
+    min-height:100vh;
+  }
+  .product-wrap{max-width:1240px;margin:0 auto;}
+
+  .crumbs{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--parchment);margin-bottom:38px;
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  }
+  .crumbs a{color:var(--parchment);transition:color .2s;}
+  .crumbs a:hover{color:var(--brass);}
+  .crumbs .sep{color:#5a5247;}
+  .crumbs .here{color:var(--brass);}
+
+  .product-grid{
+    display:grid; grid-template-columns:1.05fr 1fr; gap:64px;
+    align-items:start;
+  }
+  @media(max-width:880px){
+    .product-grid{grid-template-columns:1fr;gap:40px;}
+  }
+
+  /* image side */
+  .p-photo{
+    position:relative; background:#1E1B17;
+    border:1px solid rgba(198,151,85,.22);
+    aspect-ratio:4/3; overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .p-photo img{
+    width:100%;height:100%;object-fit:contain;
+    image-rendering:auto;
+    padding:24px;
+  }
+  .p-photo::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.35) 100%);
+    pointer-events:none;
+  }
+  .p-photo-meta{
+    margin-top:14px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;color:#7A7264;text-align:center;
+  }
+
+  /* detail side */
+  .p-detail{padding-top:6px;}
+  .p-eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--brass);margin-bottom:18px;
+  }
+  .p-detail h1{
+    font-family:'Fraunces',serif;font-weight:300;line-height:1.08;
+    font-size:clamp(34px,4.4vw,52px);color:var(--bone-warm);
+    margin-bottom:14px;
+  }
+  .p-detail h1 em{font-style:italic;color:var(--brass-soft);}
+  .p-code{
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;
+    color:var(--brass);margin-bottom:30px;
+  }
+  .p-rule{
+    width:48px;height:1px;background:var(--brass);margin:0 0 28px;opacity:.7;
+  }
+  .p-desc{
+    font-size:19px;line-height:1.7;color:#E4D9C0;max-width:52ch;
+    margin-bottom:36px;
+  }
+
+  .specs{
+    display:grid;grid-template-columns:1fr 1fr;gap:22px 32px;
+    padding:26px 0;border-top:1px solid rgba(198,151,85,.22);
+    border-bottom:1px solid rgba(198,151,85,.22);margin-bottom:32px;
+  }
+  @media(max-width:520px){ .specs{grid-template-columns:1fr;} }
+  .spec dt{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--brass);margin-bottom:6px;
+  }
+  .spec dd{
+    font-family:'Inter','Cormorant Garamond',serif;font-size:15px;
+    color:var(--bone-warm);line-height:1.55;
+  }
+
+  .p-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
+  .btn{
+    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;
+    letter-spacing:.22em;text-transform:uppercase;padding:15px 26px;
+    transition:all .25s;cursor:pointer;border:1px solid transparent;
+  }
+  .btn-primary{background:var(--brass);color:var(--ink);}
+  .btn-primary:hover{background:var(--brass-soft);}
+  .btn-ghost{border-color:var(--brass);color:var(--brass);background:transparent;}
+  .btn-ghost:hover{background:rgba(198,151,85,.08);color:var(--brass-soft);}
+
+  /* related strip */
+  .related{
+    margin-top:96px;padding-top:48px;
+    border-top:1px solid rgba(198,151,85,.22);
+  }
+  .related-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    margin-bottom:30px;flex-wrap:wrap;gap:14px;
+  }
+  .related-head h3{
+    font-family:'Fraunces',serif;font-weight:300;font-size:24px;color:var(--bone-warm);
+  }
+  .related-head a{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--brass);
+  }
+  .related-head a:hover{color:var(--brass-soft);}
+  .related-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:22px;
+  }
+  @media(max-width:880px){ .related-grid{grid-template-columns:repeat(2,1fr);} }
+  .rel-card{
+    background:#1E1B17;border:1px solid rgba(198,151,85,.16);
+    transition:border-color .25s, transform .25s;
+  }
+  .rel-card:hover{border-color:var(--brass);transform:translateY(-2px);}
+  .rel-img{aspect-ratio:1/1;overflow:hidden;background:#14110F;}
+  .rel-img img{width:100%;height:100%;object-fit:cover;}
+  .rel-body{padding:14px 16px 18px;}
+  .rel-body h4{
+    font-family:'Fraunces',serif;font-weight:400;font-size:16px;
+    color:var(--bone-warm);margin-bottom:6px;line-height:1.3;
+  }
+  .rel-body .rc{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;
+    color:var(--brass);
+  }
+
+  /* not-found */
+  .nf{
+    text-align:center;padding:80px 20px;
+  }
+  .nf h2{font-family:'Fraunces',serif;font-weight:300;font-size:34px;color:var(--bone-warm);margin-bottom:14px;}
+  .nf p{color:#A89B82;margin-bottom:28px;}
+
+  /* footer */
+  footer{
+    background:var(--ink); padding:56px 6vw 40px; text-align:center;
+  }
+  footer .f-mark{width:74px;margin:0 auto 22px;opacity:.92;}
+  footer .f-rule{width:40px;height:1px;background:var(--brass);margin:0 auto 22px;}
+  footer .f-tag{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--brass);margin-bottom:10px;
+  }
+  footer .f-legal{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;
+    color:#6A6157;line-height:1.7;
+  }
+  footer .f-legal a:hover{color:var(--brass);}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="index.html" class="brand">XANVOR</a>
+  <div class="links">
+    <a href="index.html#collections">Collections</a>
+    <a href="index.html#catalogue">Catalogue</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<section class="product-section">
+  <div class="product-wrap" id="product-root">
+    <!-- populated by JS -->
+  </div>
+</section>
+
+<footer>
+  <img class="f-mark" src="assets/logo_mark.png" alt="XANVOR">
+  <div class="f-rule"></div>
+  <div class="f-tag">Manufacturer · Exporter · Ecommerce</div>
+  <div class="f-legal">
+    XANVOR is a house brand of Zenko Inc · Moradabad, India<br>
+    © 2026 Zenko Inc. All rights reserved · <a href="mailto:hello@xanvor.com">hello@xanvor.com</a>
+  </div>
+</footer>
+
+<script src="assets/products.js"></script>
+<script>
+  const nav=document.getElementById('nav');
+  const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>40);
+  onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  const root = document.getElementById('product-root');
+  const all = (window.XANVOR_PRODUCTS || []);
+  const product = all.find(p => p.id === id);
+
+  const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  function renderNotFound(){
+    root.innerHTML = `
+      <div class="nf">
+        <h2>Piece not found</h2>
+        <p>The product you're looking for may have been retired or recoded.</p>
+        <a href="index.html#collections" class="btn btn-ghost">Browse the catalogue</a>
+      </div>`;
+  }
+
+  function relatedFor(p){
+    const sameSeries = all.filter(x => x.id !== p.id && x.series === p.series);
+    const sameCollection = all.filter(x => x.id !== p.id && x.collection === p.collection && x.series !== p.series);
+    return [...sameSeries, ...sameCollection].slice(0, 4);
+  }
+
+  function render(p){
+    document.title = `${p.name} — XANVOR`;
+    document.querySelector('meta[name="description"]').setAttribute('content', `${p.name} (${p.code}) — ${p.desc}`);
+    document.querySelector('meta[property="og:title"]').setAttribute('content', `${p.name} — XANVOR`);
+    document.querySelector('meta[property="og:description"]').setAttribute('content', p.desc);
+    document.querySelector('meta[property="og:image"]').setAttribute('content', p.image);
+
+    const enquireHref = `index.html?product=${encodeURIComponent(p.code)}&name=${encodeURIComponent(p.name)}#enquiry-form`;
+
+    const related = relatedFor(p).map(r => `
+      <a class="rel-card" href="product.html?id=${escapeHtml(r.id)}">
+        <div class="rel-img"><img src="${escapeHtml(r.image)}" alt="${escapeHtml(r.name)}" loading="lazy"></div>
+        <div class="rel-body">
+          <h4>${escapeHtml(r.name)}</h4>
+          <div class="rc">${escapeHtml(r.code)}</div>
+        </div>
+      </a>`).join('');
+
+    root.innerHTML = `
+      <div class="crumbs">
+        <a href="index.html">Home</a>
+        <span class="sep">/</span>
+        <a href="index.html#catalogue">${escapeHtml(p.collection)}</a>
+        <span class="sep">/</span>
+        <span class="here">${escapeHtml(p.name)}</span>
+      </div>
+
+      <div class="product-grid">
+        <div>
+          <div class="p-photo">
+            <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}">
+          </div>
+          <div class="p-photo-meta">Photographed at the workshop · Moradabad</div>
+        </div>
+
+        <div class="p-detail">
+          <div class="p-eyebrow">${escapeHtml(p.collection)} · ${escapeHtml((p.series||'').split('·')[0].trim())}</div>
+          <h1>${escapeHtml(p.name)}</h1>
+          <div class="p-code">${escapeHtml(p.code)}</div>
+          <div class="p-rule"></div>
+          <p class="p-desc">${escapeHtml(p.desc)}</p>
+
+          <dl class="specs">
+            <div class="spec"><dt>Materials</dt><dd>${escapeHtml(p.materials)}</dd></div>
+            <div class="spec"><dt>Finish</dt><dd>Hand-applied at the workshop</dd></div>
+            <div class="spec"><dt>Customisation</dt><dd>Size, finish &amp; colourway to order</dd></div>
+            <div class="spec"><dt>Lead time</dt><dd>6–8 weeks for bulk orders</dd></div>
+            <div class="spec"><dt>MOQ</dt><dd>On enquiry</dd></div>
+            <div class="spec"><dt>Trade pricing</dt><dd>Confidential — shared on request</dd></div>
+          </dl>
+
+          <div class="p-actions">
+            <a href="${enquireHref}" class="btn btn-primary">Enquire About This Piece</a>
+            <a href="index.html#catalogue" class="btn btn-ghost">Back to Catalogue</a>
+          </div>
+        </div>
+      </div>
+
+      ${related ? `
+      <div class="related">
+        <div class="related-head">
+          <h3>From the same series</h3>
+          <a href="index.html#catalogue">View all pieces →</a>
+        </div>
+        <div class="related-grid">${related}</div>
+      </div>` : ''}
+    `;
+  }
+
+  if(!product){ renderNotFound(); }
+  else { render(product); }
+</script>
+
+</body>
+</html>
