@@ -416,7 +416,103 @@
     font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;
     color:var(--brass-soft);align-self:center;
   }
+  a.partner{text-decoration:none;transition:background .2s ease;}
+  a.partner:hover{background:rgba(198,151,85,.06);}
+  a.partner:hover .pn{color:var(--brass-soft);}
   .contact-cta{margin-top:34px;}
+
+  /* visit / map placeholder */
+  .visit-block{
+    margin-top:56px; padding-top:46px;
+    border-top:1px solid rgba(198,151,85,.28);
+    display:grid; grid-template-columns:1fr 1fr; gap:46px; align-items:center;
+  }
+  @media(max-width:760px){ .visit-block{grid-template-columns:1fr;gap:30px;} }
+  .visit-copy .c-label{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--brass);margin-bottom:16px;
+  }
+  .visit-copy h3{
+    font-family:'Fraunces',serif;font-size:clamp(22px,2.6vw,30px);
+    color:var(--bone-warm);font-weight:400;line-height:1.25;margin-bottom:14px;
+  }
+  .visit-copy h3 em{font-style:italic;color:var(--brass-soft);}
+  .visit-copy p{font-size:15.5px;color:#D9CEB5;line-height:1.7;max-width:38ch;}
+  .map-placeholder{
+    position:relative; aspect-ratio:4/3; width:100%;
+    border:1px solid rgba(198,151,85,.35);
+    background:
+      repeating-linear-gradient(45deg, rgba(198,151,85,.06) 0 2px, transparent 2px 14px),
+      rgba(0,0,0,.18);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    padding:24px;
+  }
+  .map-placeholder .pin{
+    width:34px;height:34px;border-radius:50% 50% 50% 0;
+    background:var(--brass);transform:rotate(-45deg);margin-bottom:18px;
+    box-shadow:0 6px 22px rgba(0,0,0,.35);
+  }
+  .map-placeholder .pin::after{
+    content:""; position:absolute; width:12px;height:12px;border-radius:50%;
+    background:var(--claret); top:11px; left:11px;
+  }
+  .map-placeholder .mp-inner{display:flex;flex-direction:column;align-items:center;}
+  .map-placeholder .mp-label{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--brass);margin-bottom:8px;
+  }
+  .map-placeholder .mp-title{
+    font-family:'Fraunces',serif;font-size:20px;color:var(--bone-warm);margin-bottom:6px;
+  }
+  .map-placeholder .mp-sub{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;
+    color:#A89B82;
+  }
+
+  /* enquiry form */
+  .enquiry-form{display:flex;flex-direction:column;gap:18px;}
+  .enquiry-form .field{display:flex;flex-direction:column;gap:6px;}
+  .enquiry-form .field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:520px){ .enquiry-form .field-row{grid-template-columns:1fr;} }
+  .enquiry-form label{
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--brass);
+  }
+  .enquiry-form input,
+  .enquiry-form textarea{
+    width:100%; background:rgba(0,0,0,.18); color:var(--bone-warm);
+    border:1px solid rgba(198,151,85,.28); padding:12px 14px;
+    font-family:'Inter',sans-serif; font-size:15px; line-height:1.5;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .enquiry-form textarea{resize:vertical;min-height:110px;}
+  .enquiry-form input:focus,
+  .enquiry-form textarea:focus{
+    outline:none; border-color:var(--brass-soft);
+    background:rgba(0,0,0,.28);
+  }
+  .enquiry-form input::placeholder,
+  .enquiry-form textarea::placeholder{color:#7A7264;}
+  .enquiry-submit{margin-top:8px;align-self:flex-start;}
+  .form-success{
+    display:none;padding:18px 20px;border:1px solid var(--brass);
+    color:var(--bone-warm);background:rgba(198,151,85,.08);
+    font-size:14.5px;line-height:1.6;
+  }
+  .form-success.show{display:block;}
+  .form-success strong{color:var(--brass-soft);}
+  .enquiry-block{
+    margin-top:56px;padding-top:46px;
+    border-top:1px solid rgba(198,151,85,.28);
+    display:grid; grid-template-columns:1fr 1.2fr; gap:56px;
+  }
+  @media(max-width:760px){ .enquiry-block{grid-template-columns:1fr;gap:30px;} }
+  .enquiry-intro h3{
+    font-family:'Fraunces',serif;font-size:clamp(22px,2.6vw,30px);
+    color:var(--bone-warm);font-weight:400;line-height:1.25;margin-bottom:14px;
+  }
+  .enquiry-intro h3 em{font-style:italic;color:var(--brass-soft);}
+  .enquiry-intro p{font-size:15.5px;color:#D9CEB5;line-height:1.7;max-width:38ch;}
 
   /* ============ FOOTER ============ */
   footer{
@@ -1042,14 +1138,76 @@
         <p class="c-line" style="margin-top:18px;"><strong>Web</strong></p>
         <a class="c-line" href="https://xanvor.com">xanvor.com</a>
         <a class="c-line" href="mailto:hello@xanvor.com">hello@xanvor.com</a>
-        <a href="mailto:hello@xanvor.com" class="btn btn-ghost contact-cta">Send a Trade Enquiry</a>
+        <a href="#enquiry-form" class="btn btn-ghost contact-cta">Send a Trade Enquiry</a>
       </div>
       <div class="c-block reveal d1">
         <div class="c-label">Speak to a Partner</div>
         <div class="partners">
-          <div class="partner"><span class="pn">Sana Adiba</span><span class="pp">+91 70172 20063</span></div>
-          <div class="partner"><span class="pn">Zaid Rehman</span><span class="pp">+91 98377 60615</span></div>
-          <div class="partner"><span class="pn">Samira Zainab</span><span class="pp">+91 70600 60829</span></div>
+          <a class="partner" href="tel:+919837760615">
+            <span class="pn">Zaid Rehman</span>
+            <span class="pp">+91 98377 60615</span>
+          </a>
+        </div>
+        <p class="c-line" style="margin-top:18px;font-size:13.5px;color:#A89B82;">Mon–Sat · 10:00–18:00 IST</p>
+      </div>
+    </div>
+
+    <div class="enquiry-block reveal" id="enquiry-form">
+      <div class="enquiry-intro">
+        <div class="c-label">Trade Enquiry</div>
+        <h3>Tell us what you're <em>looking for</em></h3>
+        <p>Buyers, designers and retailers — share your brief and we'll respond within one working day. For urgent timelines, ring the line on the left.</p>
+      </div>
+
+      <form name="trade-enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?enquiry=sent#enquiry-form" class="enquiry-form">
+        <input type="hidden" name="form-name" value="trade-enquiry">
+        <p hidden><label>Leave blank: <input name="bot-field"></label></p>
+
+        <div class="field">
+          <label for="ef-name">Your Name *</label>
+          <input id="ef-name" type="text" name="name" required autocomplete="name">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="ef-email">Email *</label>
+            <input id="ef-email" type="email" name="email" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="ef-company">Company</label>
+            <input id="ef-company" type="text" name="company" autocomplete="organization">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="ef-country">Country / City</label>
+          <input id="ef-country" type="text" name="country">
+        </div>
+
+        <div class="field">
+          <label for="ef-message">Pieces, quantity, timeline</label>
+          <textarea id="ef-message" name="message" rows="5" placeholder="e.g. 200 pcs brass urli (10&quot;), shipping to Dubai by August"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary enquiry-submit">Send Enquiry</button>
+        <div class="form-success" id="form-success" role="status">
+          <strong>Thank you.</strong> Your enquiry is with our trade desk — we'll reply within one working day at the email you provided.
+        </div>
+      </form>
+    </div>
+
+    <div class="visit-block reveal">
+      <div class="visit-copy">
+        <div class="c-label">Visit the Workshop</div>
+        <h3>Walk through our <em>Moradabad</em> atelier</h3>
+        <p>Lal Bagh, Moradabad 244001, Uttar Pradesh — by appointment. Our Google Maps listing is being set up; the directions link will live here shortly.</p>
+      </div>
+      <div class="map-placeholder" aria-label="Google Maps location coming soon">
+        <div class="mp-inner">
+          <div class="pin"></div>
+          <div class="mp-label">Location</div>
+          <div class="mp-title">Zenko Inc. · Lal Bagh</div>
+          <div class="mp-sub">Google Maps link coming soon</div>
         </div>
       </div>
     </div>
@@ -1078,6 +1236,12 @@
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
   },{threshold:.16,rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // enquiry-form success state
+  if(new URLSearchParams(location.search).get('enquiry')==='sent'){
+    const ok=document.getElementById('form-success');
+    if(ok){ ok.classList.add('show'); ok.scrollIntoView({behavior:'smooth',block:'center'}); }
+  }
 </script>
 </body>
 </html>
