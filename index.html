@@ -416,6 +416,9 @@
     font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;
     color:var(--brass-soft);align-self:center;
   }
+  a.partner{text-decoration:none;transition:background .2s ease;}
+  a.partner:hover{background:rgba(198,151,85,.06);}
+  a.partner:hover .pn{color:var(--brass-soft);}
   .contact-cta{margin-top:34px;}
 
   /* visit / map placeholder */
@@ -1090,15 +1093,17 @@
         <p class="c-line" style="margin-top:18px;"><strong>Web</strong></p>
         <a class="c-line" href="https://xanvor.com">xanvor.com</a>
         <a class="c-line" href="mailto:hello@xanvor.com">hello@xanvor.com</a>
-        <a href="mailto:hello@xanvor.com" class="btn btn-ghost contact-cta">Send a Trade Enquiry</a>
+        <a href="mailto:hello@xanvor.com?subject=Trade%20Enquiry%20%E2%80%94%20XANVOR&amp;body=Hello%20XANVOR%20team%2C%0A%0AI%27d%20like%20to%20enquire%20about%3A%0A%0A%E2%80%A2%20Company%20%2F%20Buyer%20name%3A%20%0A%E2%80%A2%20Country%20%2F%20City%3A%20%0A%E2%80%A2%20Pieces%20or%20collection%20of%20interest%3A%20%0A%E2%80%A2%20Approx.%20order%20quantity%3A%20%0A%E2%80%A2%20Timeline%3A%20%0A%0AThank%20you." class="btn btn-ghost contact-cta">Send a Trade Enquiry</a>
       </div>
       <div class="c-block reveal d1">
         <div class="c-label">Speak to a Partner</div>
         <div class="partners">
-          <div class="partner"><span class="pn">Sana Adiba</span><span class="pp">+91 70172 20063</span></div>
-          <div class="partner"><span class="pn">Zaid Rehman</span><span class="pp">+91 98377 60615</span></div>
-          <div class="partner"><span class="pn">Samira Zainab</span><span class="pp">+91 70600 60829</span></div>
+          <a class="partner" href="tel:+919837760615">
+            <span class="pn">Zaid Rehman</span>
+            <span class="pp">+91 98377 60615</span>
+          </a>
         </div>
+        <p class="c-line" style="margin-top:18px;font-size:13.5px;color:#A89B82;">Mon–Sat · 10:00–18:00 IST</p>
       </div>
     </div>
 
