@@ -447,8 +447,17 @@
       repeating-linear-gradient(45deg, rgba(198,151,85,.06) 0 2px, transparent 2px 14px),
       rgba(0,0,0,.18);
     display:flex; align-items:center; justify-content:center; text-align:center;
-    padding:24px;
+    padding:24px; text-decoration:none; color:inherit;
+    transition:border-color .3s ease, background .3s ease, transform .3s ease;
   }
+  a.map-placeholder:hover{
+    border-color:var(--brass);
+    background:
+      repeating-linear-gradient(45deg, rgba(198,151,85,.12) 0 2px, transparent 2px 14px),
+      rgba(0,0,0,.24);
+    transform:translateY(-2px);
+  }
+  a.map-placeholder:hover .mp-sub{ color:var(--brass); }
   .map-placeholder .pin{
     width:34px;height:34px;border-radius:50% 50% 50% 0;
     background:var(--brass);transform:rotate(-45deg);margin-bottom:18px;
@@ -1135,7 +1144,7 @@
       <div class="c-block reveal">
         <div class="c-label">The House</div>
         <p class="c-line"><strong>Zenko Inc.</strong></p>
-        <p class="c-line">Lal Bagh, Moradabad 244001</p>
+        <p class="c-line">32 Mohammad Ali Rd, Faiz Ganj<br>Moradabad 244001</p>
         <p class="c-line">Uttar Pradesh, India</p>
         <p class="c-line" style="margin-top:18px;"><strong>Web</strong></p>
         <a class="c-line" href="https://xanvor.com">xanvor.com</a>
@@ -1202,16 +1211,16 @@
       <div class="visit-copy">
         <div class="c-label">Visit the Workshop</div>
         <h3>Walk through our <em>Moradabad</em> atelier</h3>
-        <p>Lal Bagh, Moradabad 244001, Uttar Pradesh — by appointment. Our Google Maps listing is being set up; the directions link will live here shortly.</p>
+        <p>32 Mohammad Ali Road, Faiz Ganj, Moradabad 244001, Uttar Pradesh — by appointment. Tap the pin to open driving directions in Google Maps.</p>
       </div>
-      <div class="map-placeholder" aria-label="Google Maps location coming soon">
+      <a class="map-placeholder" href="https://www.google.com/maps/dir/?api=1&destination=Cloth+House%2C+32%2C+Mohammad+Ali+Rd%2C+Faiz+Ganj%2C+Moradabad%2C+Uttar+Pradesh+244001&destination_place_id=ChIJlWILlzL7CjkRQoaYlj5-sboG" target="_blank" rel="noopener" aria-label="Open Zenko Inc. workshop in Google Maps">
         <div class="mp-inner">
           <div class="pin"></div>
-          <div class="mp-label">Location</div>
-          <div class="mp-title">Zenko Inc. · Lal Bagh</div>
-          <div class="mp-sub">Google Maps link coming soon</div>
+          <div class="mp-label">Workshop</div>
+          <div class="mp-title">Zenko Inc. · Mohammad Ali Rd</div>
+          <div class="mp-sub">Open in Google Maps →</div>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </section>
