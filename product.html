@@ -16,9 +16,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --claret:#4A0F1B; --claret-deep:#380A14; --storm:#1B2432; --ink:#0A0908;
-    --brass:#C69755; --brass-soft:#D8B07E; --bone:#F3EBD6; --parchment:#DCCFB0;
-    --rust:#8B2E1C; --bone-warm:#FBF7EA;
+    --claret:#1F2226; --claret-deep:#14161A; --storm:#1A1C20; --ink:#0B0C0E;
+    --brass:#B68B5C; --brass-soft:#C9A57E; --bone:#ECE6D9; --parchment:#D2CBBA;
+    --rust:#B68B5C; --bone-warm:#F2EEE4;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -45,7 +45,7 @@
   }
   nav.scrolled{
     background:rgba(10,9,8,.94); padding:13px 6vw;
-    border-bottom:1px solid rgba(198,151,85,.22);
+    border-bottom:1px solid rgba(182,139,92,.22);
   }
   nav .brand{
     font-family:'Fraunces',serif; font-weight:400; font-size:21px;
@@ -64,7 +64,7 @@
   .product-section{
     padding:130px 6vw 96px;
     background:
-      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(74,15,27,.42), transparent 70%),
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(31,34,38,.42), transparent 70%),
       linear-gradient(180deg, #14110F 0%, var(--ink) 100%);
     min-height:100vh;
   }
@@ -91,7 +91,7 @@
   /* image side */
   .p-photo{
     position:relative; background:#1E1B17;
-    border:1px solid rgba(198,151,85,.22);
+    border:1px solid rgba(182,139,92,.22);
     overflow:hidden;
     display:flex;align-items:center;justify-content:center;
     padding:28px; min-height:380px;
@@ -132,8 +132,8 @@
 
   .specs{
     display:grid;grid-template-columns:1fr 1fr;gap:22px 32px;
-    padding:26px 0;border-top:1px solid rgba(198,151,85,.22);
-    border-bottom:1px solid rgba(198,151,85,.22);margin-bottom:32px;
+    padding:26px 0;border-top:1px solid rgba(182,139,92,.22);
+    border-bottom:1px solid rgba(182,139,92,.22);margin-bottom:32px;
   }
   @media(max-width:520px){ .specs{grid-template-columns:1fr;} }
   .spec dt{
@@ -154,12 +154,12 @@
   .btn-primary{background:var(--brass);color:var(--ink);}
   .btn-primary:hover{background:var(--brass-soft);}
   .btn-ghost{border-color:var(--brass);color:var(--brass);background:transparent;}
-  .btn-ghost:hover{background:rgba(198,151,85,.08);color:var(--brass-soft);}
+  .btn-ghost:hover{background:rgba(182,139,92,.08);color:var(--brass-soft);}
 
   /* related strip */
   .related{
     margin-top:96px;padding-top:48px;
-    border-top:1px solid rgba(198,151,85,.22);
+    border-top:1px solid rgba(182,139,92,.22);
   }
   .related-head{
     display:flex;align-items:baseline;justify-content:space-between;
@@ -178,7 +178,7 @@
   }
   @media(max-width:880px){ .related-grid{grid-template-columns:repeat(2,1fr);} }
   .rel-card{
-    background:#1E1B17;border:1px solid rgba(198,151,85,.16);
+    background:#1E1B17;border:1px solid rgba(182,139,92,.16);
     transition:border-color .25s, transform .25s;
   }
   .rel-card:hover{border-color:var(--brass);transform:translateY(-2px);}
