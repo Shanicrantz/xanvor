@@ -93,7 +93,6 @@
       <!-- GALLERY -->
       <div class="gallery">
         <div class="main-shot">
-          <span class="badge-pin">Made to order</span>
           <img src="${esc(product.image)}" alt="${esc(product.name)}">
         </div>
         <div class="shot-meta">Photographed at the workshop · Moradabad</div>
