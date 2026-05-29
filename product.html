@@ -72,6 +72,7 @@
       linear-gradient(180deg, var(--bone) 0%, #EDE2CD 100%);
     min-height:100vh;
   }
+  @media(max-width:760px){ .product-section{padding:100px 5vw 60px;} }
   .product-wrap{max-width:1240px;margin:0 auto;}
 
   .crumbs{
@@ -93,6 +94,7 @@
 
   /* gallery */
   .gallery{position:sticky;top:96px;}
+  @media(max-width:760px){ .gallery{position:static;top:auto;} }
   .main-shot{
     position:relative; background:var(--paper); border:1px solid var(--line-strong);
     border-radius:6px; overflow:hidden; aspect-ratio:1/1;
@@ -440,6 +442,7 @@
 </footer>
 
 <script src="assets/products.js"></script>
+<script src="enquiry-basket.js"></script>
 <script src="product.js"></script>
 </body>
 </html>

@@ -161,11 +161,11 @@
           <div class="row price"><span class="k">Unit price</span><span class="v">disclosed on enquiry</span></div>
         </div>
 
-        <button class="btn btn-primary" id="ctaQuote">
-          ${icon('tag')} Request Formal Quote
+        <button class="btn btn-primary" id="ctaAdd">
+          ${icon('tag')} Add to Enquiry
         </button>
         <button class="btn btn-ink" id="ctaSample">
-          ${icon('box')} Order a Sample
+          ${icon('box')} Add as Sample · 5 pcs
         </button>
         <a class="btn btn-ghost" href="assets/catalogue/" id="ctaSpec" target="_blank" rel="noopener" style="text-decoration:none;">
           ${icon('clock')} Download Spec Sheet
@@ -288,19 +288,33 @@
     });
   });
 
-  /* ---- CTAs route to enquiry form on index.html ---- */
-  const buildEnquiryURL = (extra={}) => {
-    const qp = new URLSearchParams({
-      product: product.code,
+  /* ---- CTAs add to basket and open enquiry drawer ---- */
+  const currentFinish = () =>
+    (document.querySelector('#finishes .finish.on') || {}).dataset?.id || 'antique';
+
+  const addToBasket = (qty) => {
+    if(!window.XanvorBasket){
+      // fallback if script missing — go to homepage enquiry form
+      const qp = new URLSearchParams({
+        product: product.code, name: product.name, qty,
+        finish: currentFinish()
+      });
+      location.href = `index.html?${qp.toString()}#enquiry-form`;
+      return;
+    }
+    window.XanvorBasket.add({
+      code: product.code,
       name: product.name,
-      qty: qtyInput.value,
-      finish: (document.querySelector('#finishes .finish.on') || {}).dataset?.id || 'antique',
-      ...extra
+      image: product.image,
+      qty: qty,
+      finish: currentFinish(),
     });
-    return `index.html?${qp.toString()}#enquiry-form`;
+    // open drawer after small delay so flash animation is visible
+    setTimeout(() => window.XanvorBasket.open(), 280);
   };
-  document.getElementById('ctaQuote' ).addEventListener('click', () => { location.href = buildEnquiryURL({ kind:'quote'  }); });
-  document.getElementById('ctaSample').addEventListener('click', () => { location.href = buildEnquiryURL({ kind:'sample', qty:'5' }); });
+
+  document.getElementById('ctaAdd'   ).addEventListener('click', () => addToBasket(qtyInput.value));
+  document.getElementById('ctaSample').addEventListener('click', () => addToBasket(5));
 
   /* ---- nav scroll ---- */
   const nav = document.getElementById('nav');
