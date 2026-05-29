@@ -16,9 +16,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --claret:#1F2226; --claret-deep:#14161A; --storm:#1A1C20; --ink:#0B0C0E;
-    --brass:#B68B5C; --brass-soft:#C9A57E; --bone:#ECE6D9; --parchment:#D2CBBA;
-    --rust:#B68B5C; --bone-warm:#F2EEE4;
+    /* Warm preview palette — flipped from cool claret/ink to warm coffee/ivory */
+    --claret:#3A2718; --claret-deep:#241510; --storm:#3F2C1B; --ink:#1F140C;
+    --brass:#B68B5C; --brass-soft:#C9A57E; --bone:#F4EEE2; --parchment:#D9CBAE;
+    --rust:#A85D2A; --bone-warm:#FBF6E8;
+    /* preview tokens */
+    --paper:#FCFAF4; --paper-2:#F8F2E6; --band:#5E3F28;
+    --ink-soft:#6E6151; --ink-faint:#9A8E7C;
+    --line:#E6DCC8; --line-strong:#D8CBB0;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -550,6 +555,62 @@
   }
   footer .f-policy a{color:#8B826F;text-decoration:none;transition:color .25s ease;}
   footer .f-policy a:hover{color:var(--brass);}
+
+  /* ====================================================== */
+  /* ===== Warm-light theme overrides — preview style ===== */
+  /* ====================================================== */
+  body{background:var(--bone);color:var(--ink);}
+
+  /* nav: transparent over light hero, ivory when scrolled */
+  nav .brand{color:var(--claret-deep);}
+  nav .links a{color:#5A4636;}
+  nav .links a:hover{color:var(--rust);border-bottom-color:var(--rust);}
+  nav.scrolled{
+    background:rgba(252,250,244,.94);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+
+  /* hero: ivory with subtle brass glow, dark espresso text */
+  .hero{
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 30%, rgba(168,93,42,.18), transparent 72%),
+      linear-gradient(180deg, var(--bone) 0%, #EDE2CD 100%);
+  }
+  .hero-frame{border-color:rgba(94,63,40,.28);}
+  .hero h1{color:var(--claret-deep);}
+  .hero h1 em{color:var(--rust);font-style:italic;}
+  .hero .lead{color:#5A4636;}
+  .hero .tagline{color:var(--rust);}
+  .scroll-cue{color:rgba(94,63,40,.65);}
+  .scroll-cue::after{background:linear-gradient(var(--rust),transparent);}
+
+  /* buttons: rust primary, rust ghost — warm */
+  .btn-primary{background:var(--rust);color:var(--bone-warm);border-color:var(--rust);}
+  .btn-primary:hover{background:#C0712F;border-color:#C0712F;}
+  .btn-ghost{color:var(--rust);border-color:var(--rust);}
+  .btn-ghost:hover{background:rgba(168,93,42,.1);}
+
+  /* collections: was dark gradient — now warm ivory, photos still pop */
+  .collections{
+    background:linear-gradient(180deg, #EDE2CD 0%, var(--bone) 100%);
+  }
+  .sec-head .eyebrow{color:var(--rust);}
+  .sec-head h2{color:var(--claret-deep);}
+  .sec-head h2 em{color:var(--rust);font-style:italic;}
+  .col-card{border-color:rgba(94,63,40,.22);}
+
+  /* contact: stays a deep warm band (premium CTA) */
+  .contact{background:var(--band);}
+  .contact::before{border-color:rgba(217,200,170,.34);}
+
+  /* footer: warm deep band instead of ink black */
+  footer{background:var(--band);}
+  footer .f-mark{filter:brightness(1.15);}
+  footer .f-legal{color:#C5B498;}
+  footer .f-legal a{color:#E7D7B4;}
+  footer .f-policy a{color:#D9CBAE;}
+  footer .f-policy .sep{color:#8C7657;}
   footer .f-policy .sep{color:#3A352D;}
 </style>
 </head>
@@ -1275,10 +1336,23 @@
     }
     const code = qp.get('product');
     const name = qp.get('name');
+    const qty = qp.get('qty');
+    const finish = qp.get('finish');
+    const kind = qp.get('kind');
     if(code){
       const msg = document.getElementById('ef-message');
       if(msg && !msg.value){
-        msg.value = `Enquiring about ${name || ''} (${code}).\n\nQuantity:\nShip-to country / city:\nTarget timeline:\n\nAdditional notes:`;
+        const head = kind === 'sample'
+          ? `Sample request: ${name || ''} (${code}).`
+          : `Bulk quote request: ${name || ''} (${code}).`;
+        msg.value =
+          `${head}\n\n` +
+          `Quantity:        ${qty || ''}\n` +
+          `Finish:          ${finish || ''}\n` +
+          `Ship-to city:    \n` +
+          `Target timeline: \n` +
+          `Packaging:       (plain / retail / branded)\n\n` +
+          `Additional notes:\n`;
       }
     }
   })();
