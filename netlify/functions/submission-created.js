@@ -38,6 +38,10 @@ exports.handler = async (event) => {
     try { if (d.basket) items = JSON.parse(d.basket); }
     catch (_) { /* basket may be absent or malformed; carry on */ }
 
+    /* absolute prefix for product images in the email — Netlify sets
+       process.env.URL automatically to the site's primary URL */
+    const siteUrl = (process.env.SITE_URL || process.env.URL || 'https://xanvor.com').replace(/\/+$/, '');
+
     const itemCount = items.length;
     const customerLabel = d.company || d.name || 'Unknown sender';
     const subject = itemCount
@@ -64,18 +68,25 @@ exports.handler = async (event) => {
         </tr>`;
     }).join('');
 
-    /* ---- basket items ---- */
-    const itemsRows = items.map((it, i) => `
+    /* ---- basket items (with product thumbnail) ---- */
+    const itemsRows = items.map((it, i) => {
+      const imgPath = it.image ? String(it.image).replace(/^\/+/, '') : '';
+      const thumb = imgPath
+        ? `<img src="${esc(siteUrl)}/${esc(imgPath)}" alt="" width="64" height="64" style="display:block;width:64px;height:64px;object-fit:contain;background:#FCFAF4;border:1px solid #E6DCC8;border-radius:4px;">`
+        : `<div style="width:64px;height:64px;background:#FCFAF4;border:1px solid #E6DCC8;border-radius:4px;"></div>`;
+      return `
       <tr>
-        <td style="padding:10px 12px;border-bottom:1px solid #E6DCC8;font-family:'JetBrains Mono',monospace;color:#A85D2A;font-size:12px;width:28px;vertical-align:top;">${i + 1}</td>
-        <td style="padding:10px 12px;border-bottom:1px solid #E6DCC8;font-family:Georgia,serif;color:#241510;vertical-align:top;">
+        <td style="padding:12px 10px 12px 14px;border-bottom:1px solid #E6DCC8;font-family:'JetBrains Mono',monospace;color:#A85D2A;font-size:12px;width:24px;vertical-align:top;">${i + 1}</td>
+        <td style="padding:12px 8px;border-bottom:1px solid #E6DCC8;vertical-align:top;width:76px;">${thumb}</td>
+        <td style="padding:12px 12px;border-bottom:1px solid #E6DCC8;font-family:Georgia,serif;color:#241510;vertical-align:top;">
           <div style="font-size:15px;"><strong>${esc(it.name)}</strong></div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5A4636;letter-spacing:1px;margin-top:2px;">${esc(it.code)}${it.finish ? ' · ' + esc(it.finish) : ''}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5A4636;letter-spacing:1px;margin-top:4px;">${esc(it.code)}${it.finish ? ' · ' + esc(it.finish) : ''}</div>
         </td>
-        <td style="padding:10px 12px;border-bottom:1px solid #E6DCC8;text-align:right;font-family:Georgia,serif;color:#A85D2A;font-size:15px;vertical-align:top;white-space:nowrap;">
+        <td style="padding:12px 14px 12px 8px;border-bottom:1px solid #E6DCC8;text-align:right;font-family:Georgia,serif;color:#A85D2A;font-size:15px;vertical-align:top;white-space:nowrap;">
           ${esc(it.qty)} <span style="font-family:monospace;font-size:10px;color:#9A8E7C;letter-spacing:1px;">PCS</span>
         </td>
-      </tr>`).join('');
+      </tr>`;
+    }).join('');
 
     const itemsBlock = items.length ? `
       <h3 style="font-family:Georgia,serif;font-weight:400;color:#241510;margin:22px 0 8px;font-size:18px;">Pieces in the enquiry</h3>
