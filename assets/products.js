@@ -162,6 +162,16 @@ window.XANVOR_PRODUCTS = [
     "image": "assets/products/sg-306.jpg"
   },
   {
+    "id": "sg-307",
+    "name": "Peacock Feather Serving Dish",
+    "code": "XV·SG·307",
+    "collection": "Silver & Gold",
+    "series": "Bowls, Centrepieces & Objects · Raised on rose-quartz, embossed and pierced",
+    "materials": "Cast Metal · White Enamel · Gold",
+    "desc": "A scalloped serving dish with an integrated peacock and feather-fan relief, finished in ivory enamel with hand-applied gold detailing on the rim, plumage and centre bird.",
+    "image": "assets/products/sg-307.jpg"
+  },
+  {
     "id": "sg-311",
     "name": "Lotus Tealight Holder",
     "code": "XV·SG·311",
