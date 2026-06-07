@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XANVOR — Checkout</title>
+<meta name="description" content="XANVOR retail checkout.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --claret:#3A2718; --claret-deep:#241510; --ink:#1F140C;
+    --brass:#B68B5C; --brass-soft:#C9A57E; --bone:#F4EEE2; --parchment:#D9CBAE;
+    --rust:#A85D2A; --bone-warm:#FBF6E8;
+    --paper:#FCFAF4; --paper-2:#F8F2E6; --band:#5E3F28;
+    --ink-soft:#6E6151; --ink-faint:#9A8E7C;
+    --line:#E6DCC8; --line-strong:#D8CBB0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bone);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  a{color:inherit;text-decoration:none;}
+  img{display:block;max-width:100%;}
+  button{font-family:inherit;cursor:pointer;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;background:rgba(252,250,244,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  nav .brand{font-family:'Fraunces',serif;font-weight:400;font-size:21px;letter-spacing:.16em;color:var(--claret-deep);}
+  nav .links{display:flex;gap:28px;align-items:center;}
+  nav .links a{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#5A4636;padding-bottom:3px;border-bottom:1px solid transparent;transition:all .25s;}
+  nav .links a:hover{color:var(--rust);border-bottom-color:var(--rust);}
+  @media(max-width:640px){ nav .links a.hide-sm{display:none;} }
+
+  .wrap{max-width:1140px;margin:0 auto;padding:120px 6vw 80px;}
+  .co-head{margin-bottom:34px;}
+  .co-head .eyebrow{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--rust);margin-bottom:12px;}
+  .co-head h1{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(30px,4vw,46px);color:var(--claret-deep);}
+  .co-head h1 em{font-style:italic;color:var(--rust);}
+
+  .co-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:38px;align-items:start;}
+  @media(max-width:880px){ .co-grid{grid-template-columns:1fr;gap:26px;} }
+
+  .panel{background:var(--paper);border:1px solid var(--line-strong);border-radius:10px;padding:26px 26px 28px;}
+  .panel + .panel{margin-top:22px;}
+  .panel h2{font-family:'Fraunces',serif;font-weight:400;font-size:22px;color:var(--claret-deep);margin-bottom:4px;}
+  .panel .ph{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:18px;}
+
+  /* form */
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .form-grid .full{grid-column:1 / -1;}
+  @media(max-width:520px){ .form-grid{grid-template-columns:1fr;} }
+  .field label{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#5A4636;margin-bottom:6px;}
+  .field input{width:100%;background:#fff;color:var(--claret-deep);border:1px solid var(--line-strong);padding:12px 13px;font-family:'Cormorant Garamond',serif;font-size:16px;border-radius:6px;transition:border-color .2s;}
+  .field input:focus{outline:none;border-color:var(--rust);}
+  .field input::placeholder{color:#B6A98F;}
+
+  /* payment options */
+  .pay-list{display:flex;flex-direction:column;gap:10px;}
+  .pay{display:flex;align-items:flex-start;gap:13px;border:1px solid var(--line-strong);border-radius:9px;padding:14px 15px;cursor:pointer;transition:all .18s;background:#fff;}
+  .pay:hover{border-color:var(--rust);}
+  .pay.on{border-color:var(--rust);box-shadow:0 0 0 2px rgba(168,93,42,.14);background:#FFFDF8;}
+  .pay .dot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line-strong);flex:none;margin-top:2px;position:relative;transition:border-color .18s;}
+  .pay.on .dot{border-color:var(--rust);}
+  .pay.on .dot::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--rust);}
+  .pay .pt{font-family:'Fraunces',serif;font-size:17px;color:var(--claret-deep);line-height:1.2;}
+  .pay .pd{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8A7359;margin-top:4px;}
+  .pay .pbadge{margin-left:auto;align-self:center;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:#EFE3CB;color:#7A5A2E;padding:3px 8px;border-radius:50px;}
+
+  /* summary */
+  .sum-items{display:flex;flex-direction:column;gap:0;margin-bottom:6px;}
+  .si{display:grid;grid-template-columns:54px 1fr auto;gap:13px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center;}
+  .si:first-child{padding-top:0;}
+  .si-thumb{width:54px;height:54px;border-radius:6px;background:var(--paper-2);border:1px solid var(--line);overflow:hidden;}
+  .si-thumb img{width:100%;height:100%;object-fit:cover;}
+  .si-name{font-family:'Fraunces',serif;font-size:15px;color:var(--claret-deep);line-height:1.2;}
+  .si-q{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:#8A7359;margin-top:3px;}
+  .si-line{font-family:'Fraunces',serif;font-size:15px;color:var(--claret-deep);}
+  .sum-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;}
+  .sum-row .k{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#5A4636;}
+  .sum-row .v{font-family:'Fraunces',serif;font-size:17px;color:var(--claret-deep);}
+  .sum-row.free .v{color:#1F8A5B;font-style:italic;}
+  .sum-div{height:1px;background:var(--line);margin:8px 0;}
+  .sum-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:8px;}
+  .sum-total .k{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--claret-deep);}
+  .sum-total .v{font-family:'Fraunces',serif;font-size:30px;color:var(--rust);}
+  .edit-cart{display:inline-flex;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--rust);background:none;border:none;}
+  .edit-cart:hover{color:#C0712F;}
+
+  .place{width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--rust);color:var(--bone-warm);border:none;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;padding:16px 22px;border-radius:50px;box-shadow:0 8px 24px -8px rgba(168,93,42,.5);transition:background .25s,transform .2s;}
+  .place:hover{background:#C0712F;transform:translateY(-1px);}
+  .place svg{width:15px;height:15px;}
+  .secure{margin-top:12px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);line-height:1.7;}
+  .right-rail{position:sticky;top:92px;}
+  @media(max-width:880px){ .right-rail{position:static;} }
+
+  /* empty + confirmation */
+  .empty,.confirm{max-width:620px;margin:0 auto;text-align:center;background:var(--paper);border:1px solid var(--line-strong);border-radius:12px;padding:54px 34px;}
+  .empty .e{font-family:'Fraunces',serif;font-style:italic;font-size:46px;color:var(--rust);margin-bottom:12px;}
+  .empty h2,.confirm h2{font-family:'Fraunces',serif;font-weight:300;font-size:32px;color:var(--claret-deep);margin-bottom:10px;}
+  .empty h2 em,.confirm h2 em{font-style:italic;color:var(--rust);}
+  .empty p,.confirm p{color:#5A4636;margin:0 auto 24px;max-width:42ch;}
+  .confirm .tick{width:62px;height:62px;border-radius:50%;background:#1F8A5B;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+  .confirm .tick svg{width:30px;height:30px;stroke:#fff;}
+  .confirm .oid{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;color:var(--rust);background:var(--paper-2);border:1px dashed var(--line-strong);border-radius:8px;padding:12px 16px;display:inline-block;margin-bottom:22px;}
+  .confirm .instr{text-align:left;background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:18px 20px;margin:0 auto 22px;font-size:15.5px;color:#43352B;line-height:1.7;}
+  .confirm .instr b{color:var(--claret-deep);}
+  .confirm .instr .mono{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--rust);letter-spacing:.04em;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;padding:14px 24px;border-radius:50px;transition:all .25s;border:1px solid transparent;cursor:pointer;}
+  .btn-wa{background:#1FA855;color:#fff;border-color:#1FA855;}
+  .btn-wa:hover{background:#188e47;transform:translateY(-1px);}
+  .btn-ghost{background:transparent;border-color:var(--rust);color:var(--rust);}
+  .btn-ghost:hover{background:rgba(168,93,42,.08);}
+  .btn svg{width:15px;height:15px;}
+  .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+  footer{background:var(--band);padding:40px 6vw;text-align:center;margin-top:70px;}
+  footer .f-legal{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#C5B498;line-height:1.7;}
+  footer .f-legal a{color:#E7D7B4;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">XANVOR</a>
+  <div class="links">
+    <a href="Hot-Serve Collection.html" class="hide-sm">Continue shopping</a>
+    <a href="index.html#contact" class="hide-sm">Help</a>
+  </div>
+</nav>
+
+<div class="wrap" id="root"></div>
+
+<footer>
+  <div class="f-legal">XANVOR is a house brand of Zenko Inc · Moradabad, India · <a href="mailto:hello@xanvor.com">hello@xanvor.com</a></div>
+</footer>
+
+<script src="shop-cart.js"></script>
+<script>
+(function(){
+  const root = document.getElementById('root');
+  const S = window.XanvorShop;
+  const CFG = S.cfg;
+  const fmt = S.fmt;
+  const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  const PAYMENTS = [
+    { id:'whatsapp', t:'Order on WhatsApp', d:'Send your order to us · confirm & pay', badge:'Fastest' },
+    { id:'cod',      t:'Cash on Delivery',  d:'Pay when it arrives' },
+    // UPI and Bank transfer are hidden until live payment details are set.
+    // Placeholders live in shop-cart.js (UPI 'xanvor@upi', bank XXXX). To
+    // re-enable: put real values in window.XANVOR_SHOPCFG, then restore:
+    // { id:'upi',  t:'UPI / QR',      d:'PhonePe · GPay · Paytm · any UPI app' },
+    // { id:'bank', t:'Bank transfer', d:'NEFT / IMPS · manual confirm' },
+  ];
+  let pay = 'whatsapp';
+
+  const tick = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>`;
+  const waIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.2 1.2-1.7 1.2-.4 0-1 .1-3.2-.9-2.7-1.2-4.4-4-4.5-4.2-.1-.2-1-1.4-1-2.6 0-1.3.7-1.9.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.6-.1l1.9.9c.3.1.4.2.5.3.1.3.1.6-.1 1.1Z"/></svg>`;
+  const bagIcon = `<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h12l-1 12H6L5 7Z"/><path d="M8 7V5a3 3 0 0 1 6 0v2"/></svg>`;
+
+  function totals(){
+    const sub = S.subtotal();
+    const gst = sub * CFG.GST;
+    return { sub, gst, ship:0, total: sub + gst };
+  }
+
+  function renderCheckout(){
+    const items = S.items();
+    if(!items.length){ renderEmpty(); return; }
+    const t = totals();
+    root.innerHTML = `
+      <div class="co-head">
+        <div class="eyebrow">Secure Checkout · Retail</div>
+        <h1>Almost <em>yours</em></h1>
+      </div>
+      <div class="co-grid">
+        <div>
+          <div class="panel">
+            <h2>Delivery details</h2>
+            <div class="ph">Where should we ship it?</div>
+            <form id="co-form" class="form-grid">
+              <div class="field full"><label>Full name *</label><input name="name" required autocomplete="name" placeholder="Your name"></div>
+              <div class="field"><label>Phone / WhatsApp *</label><input name="phone" required inputmode="tel" autocomplete="tel" placeholder="+91 …"></div>
+              <div class="field"><label>Email</label><input name="email" type="email" autocomplete="email" placeholder="optional"></div>
+              <div class="field full"><label>Address *</label><input name="address" required autocomplete="street-address" placeholder="House no, street, area"></div>
+              <div class="field"><label>City *</label><input name="city" required placeholder="City"></div>
+              <div class="field"><label>State *</label><input name="state" required placeholder="State"></div>
+              <div class="field"><label>PIN code *</label><input name="pincode" required inputmode="numeric" placeholder="6-digit PIN"></div>
+              <div class="field"><label>Landmark</label><input name="landmark" placeholder="optional"></div>
+            </form>
+          </div>
+          <div class="panel">
+            <h2>Payment method</h2>
+            <div class="ph">Choose how you'd like to pay</div>
+            <div class="pay-list" id="pay-list">
+              ${PAYMENTS.map(p=>`
+                <div class="pay${p.id===pay?' on':''}" data-pay="${p.id}">
+                  <span class="dot"></span>
+                  <div><div class="pt">${p.t}</div><div class="pd">${p.d}</div></div>
+                  ${p.badge?`<span class="pbadge">${p.badge}</span>`:''}
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+
+        <div class="right-rail">
+          <div class="panel">
+            <h2>Order summary</h2>
+            <div class="ph">${items.length} item${items.length>1?'s':''}</div>
+            <div class="sum-items">
+              ${items.map(it=>`
+                <div class="si">
+                  <div class="si-thumb">${it.image?`<img src="${esc(it.image)}" alt="">`:''}</div>
+                  <div><div class="si-name">${esc(it.name)}</div><div class="si-q">${esc(it.code)} · Qty ${it.qty}</div></div>
+                  <div class="si-line">${fmt(it.price*it.qty)}</div>
+                </div>`).join('')}
+            </div>
+            <button class="edit-cart" id="edit-cart" type="button">Edit cart</button>
+            <div class="sum-div"></div>
+            <div class="sum-row"><span class="k">Subtotal</span><span class="v">${fmt(t.sub)}</span></div>
+            <div class="sum-row"><span class="k">GST (18%)</span><span class="v">${fmt(t.gst)}</span></div>
+            <div class="sum-row free"><span class="k">Shipping</span><span class="v">Free</span></div>
+            <div class="sum-div"></div>
+            <div class="sum-total"><span class="k">Total</span><span class="v">${fmt(t.total)}</span></div>
+            <button class="place" id="place">${bagIcon} Place order · ${fmt(t.total)}</button>
+            <div class="secure">Free shipping across India · GST invoice included<br>No card details stored on this site</div>
+          </div>
+        </div>
+      </div>`;
+
+    document.getElementById('pay-list').addEventListener('click', e=>{
+      const el = e.target.closest('.pay'); if(!el) return;
+      pay = el.dataset.pay;
+      document.querySelectorAll('.pay').forEach(p=>p.classList.toggle('on', p.dataset.pay===pay));
+    });
+    document.getElementById('edit-cart').addEventListener('click', ()=>S.open());
+    document.getElementById('place').addEventListener('click', placeOrder);
+  }
+
+  function placeOrder(){
+    const form = document.getElementById('co-form');
+    if(!form.reportValidity()) return;
+    const d = Object.fromEntries(new FormData(form).entries());
+    const items = S.items();
+    if(!items.length) return;
+    const t = totals();
+    const oid = 'XV' + Date.now().toString().slice(-8);
+
+    // build order text (used for WhatsApp + record)
+    const lines = items.map((it,i)=>`${i+1}. ${it.name} (${it.code}) ×${it.qty} = ${fmt(it.price*it.qty)}`).join('\n');
+    const msg =
+`*XANVOR — New Order ${oid}*
+
+${lines}
+
+Subtotal: ${fmt(t.sub)}
+GST 18%: ${fmt(t.gst)}
+Shipping: Free
+*Total: ${fmt(t.total)}*
+
+Payment: ${({whatsapp:'WhatsApp',upi:'UPI',cod:'Cash on Delivery',bank:'Bank transfer'})[pay]}
+
+Ship to:
+${d.name}
+${d.address}${d.landmark?', '+d.landmark:''}
+${d.city}, ${d.state} - ${d.pincode}
+Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
+
+    const waUrl = 'https://wa.me/' + CFG.WHATSAPP + '?text=' + encodeURIComponent(msg);
+    if(pay === 'whatsapp'){ window.open(waUrl, '_blank'); }
+
+    renderConfirm(oid, t, pay, waUrl);
+    S.clear();
+    window.scrollTo(0,0);
+  }
+
+  function renderConfirm(oid, t, method, waUrl){
+    let instr = '';
+    if(method==='upi'){
+      const upiLink = 'upi://pay?pa='+encodeURIComponent(CFG.UPI)+'&pn=XANVOR&am='+Math.round(t.total)+'&cu=INR&tn='+oid;
+      instr = `<b>Pay ${fmt(t.total)} via UPI</b><br>
+        UPI ID: <span class="mono">${esc(CFG.UPI)}</span><br>
+        <a class="btn btn-ghost" style="margin-top:12px" href="${upiLink}">Open UPI app</a><br><br>
+        After paying, share the screenshot on WhatsApp so we can confirm and dispatch.`;
+    } else if(method==='bank'){
+      instr = `<b>Bank transfer (NEFT / IMPS)</b><br>
+        A/c name: <span class="mono">${esc(CFG.BANK.name)}</span><br>
+        A/c no: <span class="mono">${esc(CFG.BANK.ac)}</span><br>
+        IFSC: <span class="mono">${esc(CFG.BANK.ifsc)}</span><br>
+        Bank: ${esc(CFG.BANK.bank)}<br><br>
+        Transfer ${fmt(t.total)} and send the reference on WhatsApp with your order number.`;
+    } else if(method==='cod'){
+      instr = `<b>Cash on Delivery</b><br>Pay ${fmt(t.total)} to the courier when your order arrives. We'll confirm dispatch on WhatsApp.`;
+    } else {
+      instr = `<b>Order sent on WhatsApp</b><br>We've opened a pre-filled message for you. Hit send and our team will confirm your order and share payment options. If the chat didn't open, use the button below.`;
+    }
+    root.innerHTML = `
+      <div class="confirm">
+        <div class="tick">${tick}</div>
+        <h2>Thank you — order <em>placed</em></h2>
+        <p>We've received your order. Keep your order number handy for any follow-up.</p>
+        <div class="oid">Order · ${oid}</div>
+        <div class="instr">${instr}</div>
+        <div class="cta-row">
+          <a class="btn btn-wa" href="${waUrl}" target="_blank" rel="noopener">${waIcon} ${method==='whatsapp'?'Open WhatsApp':'Send order on WhatsApp'}</a>
+          <a class="btn btn-ghost" href="Hot-Serve Collection.html">Continue shopping</a>
+        </div>
+      </div>`;
+  }
+
+  function renderEmpty(){
+    root.innerHTML = `
+      <div class="empty">
+        <div class="e">✺</div>
+        <h2>Your cart is <em>empty</em></h2>
+        <p>Add a hot-pot, warmer or serving dome and it'll show up here, ready to check out.</p>
+        <a class="btn btn-ghost" href="Hot-Serve Collection.html">Shop the Hot-Serve collection</a>
+      </div>`;
+  }
+
+  renderCheckout();
+  window.addEventListener('xanvor:cart-change', ()=>{ if(!document.querySelector('.confirm')) renderCheckout(); });
+})();
+</script>
+</body>
+</html>

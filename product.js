@@ -8,14 +8,15 @@
   const all = (window.XANVOR_PRODUCTS || []);
   const product = all.find(p => p.id === id);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmt = n => '₹' + Number(n).toLocaleString('en-IN');
 
   /* ---- Bulk-pricing tiers (illustrative; final pricing on enquiry) ---- */
   const TIERS = [
-    { id:'s',   q:5,    label:'Sample · 1–49 pcs',          disc:'Standard',         lead:'2–3 weeks',           ship:'Air cargo · DHL/FedEx' },
-    { id:'a',   q:50,   label:'Trial order · 50–199 pcs',   disc:'~12% off sample',  lead:'4–5 weeks',           ship:'FOB · EXW · DDP' },
-    { id:'b',   q:200,  label:'Volume · 200–499 pcs',       disc:'~22% off sample',  lead:'6–7 weeks',           ship:'FOB · EXW · DDP' },
-    { id:'c',   q:500,  label:'Bulk · 500–999 pcs',         disc:'~32% off sample',  lead:'8–10 weeks',          ship:'FOB Mundra / Nhava Sheva' },
-    { id:'d',   q:1000, label:'Container · 1000+ pcs',      disc:'~40% off sample',  lead:'10–12 weeks · split shipment available', ship:'FOB · CIF · DDP' },
+    { id:'s',   q:5,    pct:0,    label:'Sample · 1–49 pcs',          disc:'Standard',         lead:'2–3 weeks',           ship:'Air cargo · DHL/FedEx' },
+    { id:'a',   q:50,   pct:0.12, label:'Trial order · 50–199 pcs',   disc:'~12% off sample',  lead:'4–5 weeks',           ship:'FOB · EXW · DDP' },
+    { id:'b',   q:200,  pct:0.22, label:'Volume · 200–499 pcs',       disc:'~22% off sample',  lead:'6–7 weeks',           ship:'FOB · EXW · DDP' },
+    { id:'c',   q:500,  pct:0.32, label:'Bulk · 500–999 pcs',         disc:'~32% off sample',  lead:'8–10 weeks',          ship:'FOB Mundra / Nhava Sheva' },
+    { id:'d',   q:1000, pct:0.40, label:'Container · 1000+ pcs',      disc:'~40% off sample',  lead:'10–12 weeks · split shipment available', ship:'FOB · CIF · DDP' },
   ];
   const tierFor = q => {
     if(q < 50)   return TIERS[0];
@@ -78,6 +79,113 @@
   const related = relatedFor(product);
   const seriesShort = (product.series || '').split('·')[0].trim();
 
+  /* ---- pricing (Hot-Serve collection carries an offer price) ---- */
+  const hasPrice = typeof product.offer === 'number';
+  const discPct  = hasPrice ? Math.round((1 - product.offer / product.mrp) * 100) : 0;
+  const priceBlock = hasPrice ? `
+        <div class="price-block">
+          <div class="pb-label">Offer price · trade, ex-works</div>
+          <div class="pb-row">
+            <span class="pb-offer">${fmt(product.offer)}</span>
+            <span class="pb-mrp">${fmt(product.mrp)}</span>
+            <span class="pb-off">${discPct}% off</span>
+          </div>
+          <div class="pb-note">Per piece · ex-GST (${esc(product.gst||'18%')}) · ex-works Moradabad</div>
+        </div>` : '';
+
+  /* ---- highlights → feature list (falls back to generic spec list) ---- */
+  const fIcons = ['shield','clock','box','stamp','gear'];
+  const featsHTML = (product.highlights && product.highlights.length)
+    ? product.highlights.map((h,i)=>`<li><span class="ic">${icon(fIcons[i % fIcons.length])}</span><div><b>${esc(h)}</b></div></li>`).join('')
+    : `
+          <li><span class="ic">${icon('stamp')}</span><div><b>Finish &amp; colourway.</b><span class="d">Antique, polished, matte, oxidised or silver — to your reference.</span></div></li>
+          <li><span class="ic">${icon('ruler')}</span><div><b>Dimensions &amp; weight.</b><span class="d">Up- or down-scaled to your spec; we share a CAD before tooling.</span></div></li>
+          <li><span class="ic">${icon('box')}</span><div><b>Packaging.</b><span class="d">Plain export carton, retail-ready gift box, or your branded packaging.</span></div></li>
+          <li><span class="ic">${icon('shield')}</span><div><b>QC &amp; certification.</b><span class="d">Pre-shipment inspection, REACH/RoHS compliance on request.</span></div></li>`;
+  const featH = (product.highlights && product.highlights.length) ? 'Highlights' : 'What you can specify';
+
+  /* ---- spec rows ---- */
+  const specRows = hasPrice ? `
+        <div class="row"><b>Sizes</b><span>${esc(product.sizes||'—')}</span></div>
+        <div class="row"><b>Construction</b><span>${esc(product.construction||'—')}</span></div>
+        <div class="row"><b>MOQ</b><span>${esc(product.moq||'—')}</span></div>
+        <div class="row"><b>HSN / GST</b><span>${esc(product.hsn||'—')} · ${esc(product.gst||'')}</span></div>` : `
+        <div class="row"><b>Finish</b><span>Hand-applied at the workshop</span></div>
+        <div class="row"><b>HSN code</b><span>On request</span></div>
+        <div class="row"><b>Customisation</b><span>Size · finish · colourway</span></div>
+        <div class="row"><b>Compliance</b><span>REACH / RoHS on request</span></div>`;
+
+  /* ---- retail pricing & dual-mode buybox (Hot-Serve) ---- */
+  const THRESHOLD = (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.THRESHOLD) || 50;
+  const GSTrate   = (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.GST) || 0.18;
+  const retail    = product.retail || product.offer;
+  const rdisc     = product.mrp ? Math.round((1 - retail / product.mrp) * 100) : 0;
+  const gstPct    = Math.round(GSTrate * 100);
+  const retailBadges =
+    `<span class="b fill">${icon('hand')} Hand-cast in Moradabad</span>` +
+    `<span class="b">${icon('ship')} Free shipping in India</span>` +
+    `<span class="b">${icon('shield')} GST invoice · 7-day returns</span>`;
+  const retailBuybox = `
+      <aside class="buybox" id="buybox">
+        <div class="bb-toggle" id="bbToggle">
+          <button type="button" data-mode="retail" class="on">Buy retail</button>
+          <button type="button" data-mode="wholesale">Wholesale ${THRESHOLD}+</button>
+        </div>
+
+        <div class="price-block retail-only">
+          <div class="pb-label">Price · per piece</div>
+          <div class="pb-row">
+            <span class="pb-offer">${fmt(retail)}</span>
+            <span class="pb-mrp">${fmt(product.mrp)}</span>
+            <span class="pb-off">${rdisc}% off</span>
+          </div>
+          <div class="pb-note">+ ${gstPct}% GST at checkout · Free shipping across India</div>
+        </div>
+        <div class="price-block wholesale-only">
+          <div class="pb-label">Wholesale · ex-works</div>
+          <div class="pb-row">
+            <span class="pb-mrp" style="text-decoration:none">from</span>
+            <span class="pb-offer" id="wUnit">${fmt(product.offer)}</span>
+            <span class="pb-off">/ pc</span>
+          </div>
+          <div class="pb-note">Per piece · ex-GST · MOQ ${esc(product.moq||'50 pcs')} · drops with volume</div>
+        </div>
+
+        <div class="qty-input">
+          <div class="lbl">Quantity</div>
+          <div class="field">
+            <button id="qtyMinus" aria-label="Decrease">−</button>
+            <input id="qtyInput" type="number" min="1" value="1" inputmode="numeric">
+            <button id="qtyPlus" aria-label="Increase">+</button>
+            <div class="suffix">pcs</div>
+          </div>
+        </div>
+
+        <div class="retail-only">
+          <div class="quote-card">
+            <div class="row"><span class="k">Subtotal · <span id="rQ">1 pc</span></span><span class="v" id="rSub">${fmt(retail)}</span></div>
+            <div class="row"><span class="k">GST ${gstPct}%</span><span class="v" id="rGst">${fmt(Math.round(retail*GSTrate))}</span></div>
+            <div class="row price"><span class="k">Pay at checkout</span><span class="v" id="rTot">${fmt(Math.round(retail*(1+GSTrate)))}</span></div>
+          </div>
+          <button class="btn btn-primary" id="ctaCart">${icon('tag')} Add to Cart</button>
+          <button class="btn btn-ink" id="ctaBuy">${icon('box')} Buy Now</button>
+          <div class="bb-switch">Ordering ${THRESHOLD} or more? <a href="#" id="goWholesale">See wholesale pricing →</a></div>
+          <div class="secure">Free shipping across India · GST invoice · Easy 7-day returns</div>
+        </div>
+
+        <div class="wholesale-only">
+          <div class="quote-card">
+            <div class="row tier"><span class="k">Volume tier</span><span class="v" id="qTier">—</span></div>
+            <div class="row"><span class="k">Indicative discount</span><span class="v"><em id="qDisc">—</em></span></div>
+            <div class="row"><span class="k">Lead time</span><span class="v" id="qLead">—</span></div>
+            <div class="row price"><span class="k">Est. order value</span><span class="v" id="qTotal">—</span></div>
+          </div>
+          <button class="btn btn-primary" id="ctaAdd">${icon('tag')} Add to Enquiry</button>
+          <button class="btn btn-ghost" id="ctaQuote" type="button">${icon('clock')} Request bulk quote</button>
+          <div class="secure">Confidential trade pricing · Reply within 1 working day</div>
+        </div>
+      </aside>`;
+
   /* ---- render ---- */
   root.innerHTML = `
     <div class="crumbs">
@@ -93,6 +201,7 @@
       <!-- GALLERY -->
       <div class="gallery">
         <div class="main-shot">
+          ${product.tag ? `<span class="badge-pin">${esc(product.tag)}</span>` : ''}
           <img src="${esc(product.image)}" alt="${esc(product.name)}">
         </div>
         <div class="shot-meta">Photographed at the workshop · Moradabad</div>
@@ -120,20 +229,18 @@
         <div class="p-rule"></div>
         <p class="p-desc">${esc(product.desc)}</p>
 
-        <div class="feat-h">What you can specify</div>
+        <div class="feat-h">${featH}</div>
         <ul class="feats">
-          <li><span class="ic">${icon('stamp')}</span><div><b>Finish &amp; colourway.</b><span class="d">Antique, polished, matte, oxidised or silver — to your reference.</span></div></li>
-          <li><span class="ic">${icon('ruler')}</span><div><b>Dimensions &amp; weight.</b><span class="d">Up- or down-scaled to your spec; we share a CAD before tooling.</span></div></li>
-          <li><span class="ic">${icon('box')}</span><div><b>Packaging.</b><span class="d">Plain export carton, retail-ready gift box, or your branded packaging.</span></div></li>
-          <li><span class="ic">${icon('shield')}</span><div><b>QC &amp; certification.</b><span class="d">Pre-shipment inspection, REACH/RoHS compliance on request.</span></div></li>
+          ${featsHTML}
         </ul>
       </div>
 
       <!-- B2B BULK QUOTE BOX -->
       <aside class="buybox" id="buybox">
         <div class="quote-h">Trade Desk · Bulk Quote</div>
-        <div class="quote-title">Indicative pricing &amp; lead time</div>
-        <p class="quote-p">Final pricing is confidential and shared on enquiry. Enter your target quantity to see the indicative tier, discount band and lead time.</p>
+        <div class="quote-title">${hasPrice ? 'Offer price &amp; bulk tiers' : 'Indicative pricing &amp; lead time'}</div>
+        <p class="quote-p">${hasPrice ? 'The offer price below is per piece, ex-works. Enter a target quantity for the indicative bulk-tier discount, unit price and lead time.' : 'Final pricing is confidential and shared on enquiry. Enter your target quantity to see the indicative tier, discount band and lead time.'}</p>
+        ${priceBlock}
 
         <div class="tier-chips" id="tierChips">
           <button data-q="5">Sample</button>
@@ -158,7 +265,8 @@
           <div class="row"><span class="k">Indicative discount</span><span class="v"><em id="qDisc">—</em></span></div>
           <div class="row"><span class="k">Lead time</span><span class="v" id="qLead">—</span></div>
           <div class="row"><span class="k">Shipping terms</span><span class="v" id="qShip">—</span></div>
-          <div class="row price"><span class="k">Unit price</span><span class="v">disclosed on enquiry</span></div>
+          <div class="row price"><span class="k">${hasPrice ? 'Est. unit price' : 'Unit price'}</span><span class="v" id="qUnit">${hasPrice ? fmt(product.offer) : 'disclosed on enquiry'}</span></div>
+          ${hasPrice ? `<div class="row price"><span class="k">Est. order value</span><span class="v" id="qTotal">—</span></div>` : ''}
         </div>
 
         <button class="btn btn-primary" id="ctaAdd">
@@ -225,11 +333,8 @@
         <div class="row"><b>Code</b><span>${esc(product.code)}</span></div>
         <div class="row"><b>Collection</b><span>${esc(product.collection)}</span></div>
         <div class="row"><b>Materials</b><span>${esc(product.materials)}</span></div>
-        <div class="row"><b>Finish</b><span>Hand-applied at the workshop</span></div>
         <div class="row"><b>Origin</b><span>Moradabad, India</span></div>
-        <div class="row"><b>HSN code</b><span>On request</span></div>
-        <div class="row"><b>Customisation</b><span>Size · finish · colourway</span></div>
-        <div class="row"><b>Compliance</b><span>REACH / RoHS on request</span></div>
+        ${specRows}
       </div>
 
       ${related.length ? `
@@ -252,33 +357,88 @@
     </div>
   `;
 
-  /* ---- B2B quote logic ---- */
-  const qtyInput   = document.getElementById('qtyInput');
-  const qtyMinus   = document.getElementById('qtyMinus');
-  const qtyPlus    = document.getElementById('qtyPlus');
-  const tierChips  = document.getElementById('tierChips');
-  const qTier      = document.getElementById('qTier');
-  const qDisc      = document.getElementById('qDisc');
-  const qLead      = document.getElementById('qLead');
-  const qShip      = document.getElementById('qShip');
-  const tableBody  = document.getElementById('tierTableBody');
-
-  function syncQuote(){
-    const q = Math.max(1, Math.min(99999, parseInt(qtyInput.value || '0', 10) || 1));
-    qtyInput.value = q;
-    const t = tierFor(q);
-    qTier.textContent = t.label.replace(/^[^·]+·\s*/, '');
-    qDisc.textContent = t.disc;
-    qLead.textContent = t.lead;
-    qShip.textContent = t.ship;
-    [...tierChips.children].forEach(b => b.classList.toggle('on', parseInt(b.dataset.q,10) === t.q));
-    [...tableBody.children].forEach(tr => tr.classList.toggle('active', tr.dataset.tier === t.id));
+  /* ---- buybox: swap to retail/wholesale dual-mode for priced items ---- */
+  if(hasPrice){
+    const bb = document.getElementById('buybox');
+    if(bb) bb.outerHTML = retailBuybox;
+    const fr = document.querySelector('.finish-row'); if(fr) fr.style.display = 'none';
+    const pbg = document.querySelector('.p-badges'); if(pbg) pbg.innerHTML = retailBadges;
   }
-  qtyInput.addEventListener('input', syncQuote);
-  qtyMinus.addEventListener('click', () => { qtyInput.value = Math.max(1, (parseInt(qtyInput.value,10)||1) - (parseInt(qtyInput.value,10) > 50 ? 50 : 10)); syncQuote(); });
-  qtyPlus .addEventListener('click', () => { qtyInput.value = (parseInt(qtyInput.value,10)||0) + (parseInt(qtyInput.value,10) >= 50 ? 50 : 10); syncQuote(); });
-  [...tierChips.children].forEach(b => b.addEventListener('click', () => { qtyInput.value = b.dataset.q; syncQuote(); }));
-  syncQuote();
+
+  const qtyInput  = document.getElementById('qtyInput');
+  const qtyMinus  = document.getElementById('qtyMinus');
+  const qtyPlus   = document.getElementById('qtyPlus');
+  const tableBody = document.getElementById('tierTableBody');
+  const clampQ = v => Math.max(1, Math.min(99999, parseInt(v||'0',10)||1));
+
+  if(hasPrice){
+    const buybox = document.getElementById('buybox');
+    const toggle = document.getElementById('bbToggle');
+    const rQ=document.getElementById('rQ'), rSub=document.getElementById('rSub'), rGst=document.getElementById('rGst'), rTot=document.getElementById('rTot');
+    const wUnit=document.getElementById('wUnit'), qTier=document.getElementById('qTier'), qDisc=document.getElementById('qDisc'), qLead=document.getElementById('qLead'), qTotal=document.getElementById('qTotal');
+    function update(){
+      const q=clampQ(qtyInput.value); qtyInput.value=q;
+      const wholesale = q>=THRESHOLD;
+      buybox.classList.toggle('is-wholesale', wholesale);
+      [...toggle.children].forEach(b=>b.classList.toggle('on',(b.dataset.mode==='wholesale')===wholesale));
+      if(!wholesale){
+        const sub=retail*q;
+        if(rQ) rQ.textContent = q+' pc'+(q>1?'s':'');
+        rSub.textContent=fmt(sub); rGst.textContent=fmt(Math.round(sub*GSTrate)); rTot.textContent=fmt(Math.round(sub*(1+GSTrate)));
+      } else {
+        const t=tierFor(q), unit=Math.round(product.offer*(1-t.pct));
+        if(wUnit) wUnit.textContent=fmt(unit);
+        qTier.textContent=t.label.replace(/^[^·]+·\s*/,''); qDisc.textContent=t.disc; qLead.textContent=t.lead; qTotal.textContent=fmt(unit*q);
+        if(tableBody)[...tableBody.children].forEach(tr=>tr.classList.toggle('active',tr.dataset.tier===t.id));
+      }
+    }
+    qtyInput.addEventListener('input',update);
+    qtyMinus.addEventListener('click',()=>{const q=clampQ(qtyInput.value);qtyInput.value=Math.max(1,q-(q>50?50:1));update();});
+    qtyPlus .addEventListener('click',()=>{const q=clampQ(qtyInput.value);qtyInput.value=q+(q>=50?50:1);update();});
+    [...toggle.children].forEach(b=>b.addEventListener('click',()=>{
+      const q=clampQ(qtyInput.value);
+      if(b.dataset.mode==='wholesale'){ if(q<THRESHOLD) qtyInput.value=THRESHOLD; }
+      else { if(q>=THRESHOLD) qtyInput.value=1; }
+      update();
+    }));
+    const goW=document.getElementById('goWholesale');
+    if(goW) goW.addEventListener('click',e=>{e.preventDefault(); qtyInput.value=THRESHOLD; update();});
+    const addCart=(go)=>{
+      const q=clampQ(qtyInput.value);
+      if(window.XanvorShop) window.XanvorShop.add({id:product.id,code:product.code,name:product.name,image:product.image,price:retail,mrp:product.mrp,qty:q});
+      if(go){ location.href='checkout.html'; } else if(window.XanvorShop){ setTimeout(()=>window.XanvorShop.open(),260); }
+    };
+    const cC=document.getElementById('ctaCart'); if(cC) cC.addEventListener('click',()=>addCart(false));
+    const cB=document.getElementById('ctaBuy');  if(cB) cB.addEventListener('click',()=>addCart(true));
+    const addEnq=()=>{ const q=clampQ(qtyInput.value); if(window.XanvorBasket){ window.XanvorBasket.add({code:product.code,name:product.name,image:product.image,qty:q,finish:''}); setTimeout(()=>window.XanvorBasket.open(),260);} };
+    const cA=document.getElementById('ctaAdd');   if(cA) cA.addEventListener('click',addEnq);
+    const cQ=document.getElementById('ctaQuote'); if(cQ) cQ.addEventListener('click',addEnq);
+    update();
+  } else {
+    const tierChips=document.getElementById('tierChips');
+    const qTier=document.getElementById('qTier'),qDisc=document.getElementById('qDisc'),qLead=document.getElementById('qLead'),qShip=document.getElementById('qShip'),qUnit=document.getElementById('qUnit'),qTotal=document.getElementById('qTotal');
+    function syncQuote(){
+      const q=clampQ(qtyInput.value); qtyInput.value=q;
+      const t=tierFor(q);
+      qTier.textContent=t.label.replace(/^[^·]+·\s*/,'');
+      qDisc.textContent=t.disc; qLead.textContent=t.lead; qShip.textContent=t.ship;
+      [...tierChips.children].forEach(b=>b.classList.toggle('on',parseInt(b.dataset.q,10)===t.q));
+      if(tableBody)[...tableBody.children].forEach(tr=>tr.classList.toggle('active',tr.dataset.tier===t.id));
+    }
+    qtyInput.addEventListener('input',syncQuote);
+    qtyMinus.addEventListener('click',()=>{qtyInput.value=Math.max(1,(parseInt(qtyInput.value,10)||1)-(parseInt(qtyInput.value,10)>50?50:10));syncQuote();});
+    qtyPlus .addEventListener('click',()=>{qtyInput.value=(parseInt(qtyInput.value,10)||0)+(parseInt(qtyInput.value,10)>=50?50:10);syncQuote();});
+    [...tierChips.children].forEach(b=>b.addEventListener('click',()=>{qtyInput.value=b.dataset.q;syncQuote();}));
+    syncQuote();
+    const currentFinish=()=>(document.querySelector('#finishes .finish.on')||{}).dataset?.id||'antique';
+    const addToBasket=(qty)=>{
+      if(!window.XanvorBasket){ const qp=new URLSearchParams({product:product.code,name:product.name,qty,finish:currentFinish()}); location.href=`index.html?${qp.toString()}#enquiry-form`; return; }
+      window.XanvorBasket.add({code:product.code,name:product.name,image:product.image,qty:qty,finish:currentFinish()});
+      setTimeout(()=>window.XanvorBasket.open(),280);
+    };
+    document.getElementById('ctaAdd').addEventListener('click',()=>addToBasket(qtyInput.value));
+    document.getElementById('ctaSample').addEventListener('click',()=>addToBasket(5));
+  }
 
   /* ---- finish selector (visual only) ---- */
   document.querySelectorAll('#finishes .finish').forEach(btn => {
@@ -287,34 +447,6 @@
       btn.classList.add('on');
     });
   });
-
-  /* ---- CTAs add to basket and open enquiry drawer ---- */
-  const currentFinish = () =>
-    (document.querySelector('#finishes .finish.on') || {}).dataset?.id || 'antique';
-
-  const addToBasket = (qty) => {
-    if(!window.XanvorBasket){
-      // fallback if script missing — go to homepage enquiry form
-      const qp = new URLSearchParams({
-        product: product.code, name: product.name, qty,
-        finish: currentFinish()
-      });
-      location.href = `index.html?${qp.toString()}#enquiry-form`;
-      return;
-    }
-    window.XanvorBasket.add({
-      code: product.code,
-      name: product.name,
-      image: product.image,
-      qty: qty,
-      finish: currentFinish(),
-    });
-    // open drawer after small delay so flash animation is visible
-    setTimeout(() => window.XanvorBasket.open(), 280);
-  };
-
-  document.getElementById('ctaAdd'   ).addEventListener('click', () => addToBasket(qtyInput.value));
-  document.getElementById('ctaSample').addEventListener('click', () => addToBasket(5));
 
   /* ---- nav scroll ---- */
   const nav = document.getElementById('nav');
