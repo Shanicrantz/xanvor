@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XANVOR — The Hot-Serve Collection</title>
+<meta name="description" content="XANVOR Hot-Serve Collection — hand-hammered insulated food warmers, hot-pots and serving domes from Moradabad. Trade catalogue 2026 with offer pricing.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta property="og:title" content="XANVOR — The Hot-Serve Collection">
+<meta property="og:description" content="Hand-hammered food warmers, hot-pots & serving domes — trade catalogue with offer pricing.">
+<meta property="og:image" content="assets/products/xv-fw-101.jpg">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --claret:#3A2718; --claret-deep:#241510; --ink:#1F140C;
+    --brass:#B68B5C; --brass-soft:#C9A57E; --bone:#F4EEE2; --parchment:#D9CBAE;
+    --rust:#A85D2A; --bone-warm:#FBF6E8;
+    --paper:#FCFAF4; --paper-2:#F8F2E6; --band:#5E3F28;
+    --ink-soft:#6E6151; --ink-faint:#9A8E7C;
+    --line:#E6DCC8; --line-strong:#D8CBB0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bone); color:var(--ink);
+    font-family:'Cormorant Garamond',serif; font-size:19px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  body::after{
+    content:""; position:fixed; inset:0; z-index:9999; pointer-events:none;
+    opacity:.045; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  a{color:inherit;text-decoration:none;}
+  img{display:block;max-width:100%;}
+
+  /* nav */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 6vw; transition:background .4s, padding .4s, border-color .4s;
+    border-bottom:1px solid transparent;
+    background:rgba(252,250,244,.82); backdrop-filter:blur(10px);
+  }
+  nav.scrolled{ background:rgba(252,250,244,.96); padding:13px 6vw; border-bottom:1px solid var(--line); }
+  nav .brand{ font-family:'Fraunces',serif; font-weight:400; font-size:21px; letter-spacing:.16em; color:var(--claret-deep); }
+  nav .links{display:flex;gap:34px;}
+  nav .links a{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.2em;
+    text-transform:uppercase; color:#5A4636; padding-bottom:3px;
+    border-bottom:1px solid transparent; transition:all .25s;
+  }
+  nav .links a:hover{color:var(--rust);border-bottom-color:var(--rust);}
+  @media(max-width:680px){ nav .links{gap:18px;} nav .links a:nth-child(1){display:none;} }
+
+  /* ===== Categories dropdown menu ===== */
+  .nav-cat{position:relative;display:inline-flex;}
+  .nav-cat-btn{
+    display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:#5A4636;padding:0 0 3px;border-bottom:1px solid transparent;transition:color .25s,border-color .25s;
+  }
+  .nav-cat-btn .chev{width:9px;height:9px;transition:transform .28s;}
+  .nav-cat:hover .nav-cat-btn,.nav-cat.open .nav-cat-btn{color:var(--rust);border-bottom-color:var(--rust);}
+  .nav-cat:hover .nav-cat-btn .chev,.nav-cat.open .nav-cat-btn .chev{transform:rotate(180deg);}
+  .cat-menu{
+    position:absolute;top:calc(100% + 16px);right:0;width:320px;max-width:84vw;
+    background:var(--paper);border:1px solid var(--line-strong);border-radius:12px;
+    box-shadow:0 26px 64px -26px rgba(58,39,24,.55);padding:9px;
+    opacity:0;visibility:hidden;transform:translateY(8px);
+    transition:opacity .2s ease,transform .2s ease,visibility .2s;z-index:300;
+  }
+  .nav-cat:hover .cat-menu,.nav-cat.open .cat-menu{opacity:1;visibility:visible;transform:translateY(0);}
+  .cat-menu::before{content:"";position:absolute;top:-16px;left:0;right:0;height:16px;}
+  .cat-menu .cm-h{
+    font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;
+    color:#8A7359;padding:8px 12px 10px;border-bottom:1px solid var(--line);margin-bottom:6px;
+  }
+  .cat-menu a{display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:8px;transition:background .16s;}
+  .cat-menu a:hover{background:var(--paper-2);}
+  .cat-menu .cm-num{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:var(--rust);width:24px;text-align:center;flex:none;line-height:1;}
+  .cat-menu .cm-t{display:flex;flex-direction:column;gap:3px;}
+  .cat-menu .cm-t b{font-family:'Fraunces',serif;font-weight:400;font-size:17px;color:var(--claret-deep);line-height:1.1;}
+  .cat-menu .cm-t span{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:#8A7359;}
+  .cat-menu a.cm-new .cm-badge{margin-left:auto;align-self:center;background:var(--rust);color:var(--bone-warm);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:50px;}
+  @media(max-width:680px){ .cat-menu{right:auto;left:50%;transform:translateX(-50%) translateY(8px);} .nav-cat.open .cat-menu{transform:translateX(-50%) translateY(0);} }
+
+  /* hero band */
+  .col-hero{
+    padding:150px 6vw 70px;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 24%, rgba(168,93,42,.14), transparent 72%),
+      linear-gradient(180deg, var(--bone) 0%, #EDE2CD 100%);
+    text-align:center;
+  }
+  .col-hero .crumbs{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.22em;
+    text-transform:uppercase;color:#7A6650;margin-bottom:26px;
+    display:flex;gap:9px;justify-content:center;align-items:center;flex-wrap:wrap;
+  }
+  .col-hero .crumbs a:hover{color:var(--rust);}
+  .col-hero .crumbs .sep{color:var(--ink-faint);}
+  .col-hero .crumbs .here{color:var(--rust);}
+  .col-hero .eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.32em;
+    text-transform:uppercase;color:var(--rust);margin-bottom:18px;
+  }
+  .col-hero h1{
+    font-family:'Fraunces',serif;font-weight:300;line-height:1.04;
+    font-size:clamp(36px,5.4vw,62px);color:var(--claret-deep);margin-bottom:20px;
+  }
+  .col-hero h1 em{font-style:italic;color:var(--rust);}
+  .col-hero .rule{width:54px;height:2px;background:var(--brass);margin:0 auto 22px;}
+  .col-hero p{max-width:620px;margin:0 auto;color:#43352B;font-size:18.5px;line-height:1.7;}
+
+  /* spec strip */
+  .spec-strip{
+    background:var(--band);color:#F1E4CF;
+    display:flex;justify-content:center;flex-wrap:wrap;gap:10px 38px;
+    padding:18px 6vw;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+  .spec-strip span{display:inline-flex;align-items:center;gap:9px;}
+  .spec-strip span b{color:var(--brass-soft);font-weight:500;}
+  .spec-strip .dot{width:5px;height:5px;border-radius:50%;background:var(--brass);}
+
+  /* listing */
+  .listing{padding:clamp(58px,7vw,90px) 6vw clamp(70px,9vw,110px);}
+  .listing-wrap{max-width:1240px;margin:0 auto;}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  @media(max-width:880px){ .grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:540px){ .grid{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--paper);border:1px solid var(--line);border-radius:8px;
+    overflow:hidden;display:flex;flex-direction:column;position:relative;
+    transition:border-color .25s, transform .35s, box-shadow .35s;
+  }
+  .card:hover{border-color:var(--rust);transform:translateY(-3px);box-shadow:0 22px 52px -30px rgba(58,39,24,.45);}
+  .card .pin{
+    position:absolute;top:14px;left:14px;z-index:2;background:var(--band);color:#F6ECDB;
+    font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.18em;
+    text-transform:uppercase;padding:6px 11px;border-radius:50px;
+  }
+  .card .off-tag{
+    position:absolute;top:14px;right:14px;z-index:2;background:var(--rust);color:var(--bone-warm);
+    font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.1em;
+    text-transform:uppercase;padding:6px 9px;border-radius:50px;
+  }
+  .card .ph{
+    aspect-ratio:4/3;background:var(--paper-2);border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;padding:18px;overflow:hidden;
+  }
+  .card .ph img{
+    max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
+    transition:transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  .card:hover .ph img{transform:scale(1.045);}
+  .card .body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:7px;flex:1;}
+  .card .orn{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:var(--rust);line-height:1;}
+  .card h3{font-family:'Fraunces',serif;font-weight:400;font-size:21px;color:var(--claret-deep);line-height:1.2;}
+  .card .desc{font-size:14.5px;line-height:1.5;color:#5A4636;flex:1;}
+  .card .meta{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:#8A7359;
+  }
+  .card .price{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;padding-top:12px;margin-top:4px;border-top:1px solid var(--line);}
+  .card .offer{font-family:'Fraunces',serif;font-weight:400;font-size:26px;color:var(--claret-deep);line-height:1;}
+  .card .mrp{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ink-faint);text-decoration:line-through;}
+  .card .wholesale-note{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#8A7359;margin-top:6px;}
+  .card .foot{
+    display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;
+  }
+  .card .code{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--ink);}
+  .card .arr{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);}
+  .card:hover .arr{color:#C0712F;}
+
+  /* feature (signature) card spans full row */
+  .card.feature{grid-column:span 3;flex-direction:row;background:linear-gradient(135deg,var(--paper) 0%,#F3E9D2 100%);border-color:var(--rust);}
+  .card.feature .ph{aspect-ratio:auto;flex:1.15;border-bottom:none;border-right:1px solid var(--line);padding:30px;}
+  .card.feature .body{flex:1;padding:38px 38px;justify-content:center;gap:10px;}
+  .card.feature h3{font-size:clamp(26px,3vw,34px);}
+  .card.feature .desc{font-size:16px;max-width:46ch;}
+  .card.feature .offer{font-size:34px;}
+  .card.feature .mrp{font-size:19px;}
+  @media(max-width:880px){
+    .card.feature{grid-column:span 2;flex-direction:column;}
+    .card.feature .ph{aspect-ratio:4/2.7;flex:none;border-right:none;border-bottom:1px solid var(--line);}
+    .card.feature .body{padding:28px 26px;}
+  }
+  @media(max-width:540px){ .card.feature{grid-column:span 1;} }
+
+  /* terms note */
+  .terms{
+    max-width:1240px;margin:46px auto 0;padding:22px 26px;
+    background:var(--paper);border:1px solid var(--line);border-radius:8px;
+    font-size:14.5px;line-height:1.7;color:#5A4636;text-align:center;
+  }
+  .terms b{color:var(--claret-deep);font-weight:500;}
+  .terms a{color:var(--rust);border-bottom:1px solid var(--brass);}
+
+  /* footer */
+  footer{background:var(--band);padding:56px 6vw 40px;text-align:center;}
+  footer .f-mark{width:74px;margin:0 auto 22px;opacity:.96;filter:brightness(1.15);}
+  footer .f-rule{width:40px;height:1px;background:var(--brass);margin:0 auto 22px;}
+  footer .f-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--brass);margin-bottom:10px;}
+  footer .f-legal{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#C5B498;line-height:1.7;}
+  footer .f-legal a{color:#E7D7B4;}
+  footer .f-policy{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 22px;margin:18px auto 14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;}
+  footer .f-policy a{color:#D9CBAE;}
+  footer .f-policy a:hover{color:var(--brass-soft);}
+  footer .f-policy .sep{color:#8C7657;}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="index.html" class="brand">XANVOR</a>
+  <div class="links">
+    <div class="nav-cat" id="navCat">
+      <button class="nav-cat-btn" type="button" aria-haspopup="true" aria-expanded="false">Categories
+        <svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"></path></svg>
+      </button>
+      <div class="cat-menu" role="menu">
+        <div class="cm-h">The Collections</div>
+        <a role="menuitem" href="index.html#c-silvergold"><span class="cm-num">I</span><span class="cm-t"><b>Silver &amp; Gold</b><span>Trays · bowls · jar sets</span></span></a>
+        <a role="menuitem" href="index.html#c-copper"><span class="cm-num">II</span><span class="cm-t"><b>Copper</b><span>Drinkware &amp; bar</span></span></a>
+        <a role="menuitem" href="index.html#c-brass"><span class="cm-num">III</span><span class="cm-t"><b>Brass</b><span>Singing bowls &amp; heritage</span></span></a>
+        <a role="menuitem" href="index.html#c-wood"><span class="cm-num">IV</span><span class="cm-t"><b>Sheesham &amp; Wood</b><span>Trays &amp; spice boxes</span></span></a>
+        <a role="menuitem" href="index.html#c-furniture"><span class="cm-num">V</span><span class="cm-t"><b>Wireform Furniture</b><span>Baskets · tables · seating</span></span></a>
+        <a role="menuitem" class="cm-new" href="Hot-Serve Collection.html"><span class="cm-num">VI</span><span class="cm-t"><b>Hot-Serve</b><span>Warmers · hot-pots · domes</span></span><span class="cm-badge">New</span></a>
+      </div>
+    </div>
+    <a href="index.html#catalogue">Catalogue</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="col-hero">
+  <div class="crumbs">
+    <a href="index.html">Home</a>
+    <span class="sep">/</span>
+    <a href="index.html#catalogue">Catalogue</a>
+    <span class="sep">/</span>
+    <span class="here">Hot-Serve Collection</span>
+  </div>
+  <div class="eyebrow">Trade Catalogue · Volume 01 · 2026</div>
+  <h1>The <em>Hot-Serve</em> Collection</h1>
+  <div class="rule"></div>
+  <p>Hand-hammered, insulated food warmers, hot-pots and serving domes — a food-safe SS304 core inside a mirror-gold, hammered-steel, mango-wood or marble shell. Serveware that performs like a hot-pot and presents like a centrepiece.</p>
+</header>
+
+<div class="spec-strip">
+  <span><span class="dot"></span><b>12</b>&nbsp;Pieces</span>
+  <span><span class="dot"></span>Double-wall&nbsp;<b>2–4 hr heat</b></span>
+  <span><span class="dot"></span>Food-safe&nbsp;<b>SS304 core</b></span>
+  <span><span class="dot"></span>Ex-works&nbsp;<b>Moradabad</b></span>
+</div>
+
+<section class="listing">
+  <div class="listing-wrap">
+    <div class="grid" id="grid"><!-- rendered from products.js --></div>
+    <div class="terms">
+      <b>All prices are ex-works Moradabad, per piece, exclusive of GST (18%) and freight.</b>
+      MOQ is per design; mixed-finish orders on the same body share MOQ. Custom sizing, branding / laser engraving and gift packaging available on request.
+      Prices valid 30 days · E&amp;OE. &nbsp;Trade enquiries: <a href="mailto:hello@xanvor.com">hello@xanvor.com</a>.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <img class="f-mark" src="assets/logo_mark.png" alt="XANVOR">
+  <div class="f-rule"></div>
+  <div class="f-tag">Manufacturer · Exporter · Ecommerce</div>
+  <div class="f-policy" role="navigation" aria-label="Policies">
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <span class="sep">·</span>
+    <a href="refund-policy.html">Refund &amp; Return</a>
+    <span class="sep">·</span>
+    <a href="shipping-policy.html">Shipping</a>
+    <span class="sep">·</span>
+    <a href="terms.html">Terms</a>
+  </div>
+  <div class="f-legal">
+    XANVOR is a house brand of Zenko Inc · Moradabad, India<br>
+    © 2026 Zenko Inc. All rights reserved · <a href="mailto:hello@xanvor.com">hello@xanvor.com</a>
+  </div>
+</footer>
+
+<script src="assets/products.js"></script>
+<script src="shop-cart.js"></script>
+<script>
+(function(){
+  const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmt = n => '₹' + Number(n).toLocaleString('en-IN');
+  const items = (window.XANVOR_PRODUCTS || []).filter(p => p.collection === 'Hot-Serve');
+  const grid = document.getElementById('grid');
+
+  grid.innerHTML = items.map(p => {
+    const off = (p.mrp && p.retail) ? Math.round((1 - p.retail / p.mrp) * 100) : 0;
+    const feature = p.signature ? ' feature' : '';
+    const size = (p.sizes || '').split('(')[0].trim();
+    return `
+      <a class="card${feature}" href="product.html?id=${esc(p.id)}">
+        ${p.tag ? `<span class="pin">${esc(p.tag)}</span>` : ''}
+        ${off ? `<span class="off-tag">${off}% off</span>` : ''}
+        <div class="ph"><img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async"></div>
+        <div class="body">
+          <span class="orn">&#x2767;</span>
+          <h3>${esc(p.name)}</h3>
+          <p class="desc">${esc(p.desc)}</p>
+          <div class="meta">${esc(p.materials)}${size ? ' · ' + esc(size) : ''}</div>
+          <div class="price">
+            <span class="offer">${fmt(p.retail||p.offer)}</span>
+            ${p.mrp ? `<span class="mrp">${fmt(p.mrp)}</span>` : ''}
+          </div>
+          ${p.offer ? `<div class="wholesale-note">Wholesale ${fmt(p.offer)}/pc · 50+ pcs</div>` : ''}
+          <div class="foot"><span class="code">${esc(p.code)}</span><span class="arr">View piece &rarr;</span></div>
+        </div>
+      </a>`;
+  }).join('');
+
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+  onScroll(); window.addEventListener('scroll', onScroll, { passive:true });
+
+  const nc=document.getElementById('navCat');
+  if(nc){
+    const btn=nc.querySelector('.nav-cat-btn');
+    btn.addEventListener('click',(e)=>{e.preventDefault();e.stopPropagation();const o=nc.classList.toggle('open');btn.setAttribute('aria-expanded',o);});
+    document.addEventListener('click',(e)=>{ if(!nc.contains(e.target)){nc.classList.remove('open');btn.setAttribute('aria-expanded','false');} });
+    document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){nc.classList.remove('open');btn.setAttribute('aria-expanded','false');} });
+  }
+})();
+</script>
+</body>
+</html>

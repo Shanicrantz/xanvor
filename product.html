@@ -64,6 +64,38 @@
   nav .links a:hover{color:var(--rust);border-bottom-color:var(--rust);}
   @media(max-width:680px){ nav .links{gap:18px;} nav .links a:nth-child(1){display:none;} }
 
+  /* ===== Categories dropdown menu ===== */
+  .nav-cat{position:relative;display:inline-flex;}
+  .nav-cat-btn{
+    display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:#5A4636;padding:0 0 3px;border-bottom:1px solid transparent;transition:color .25s,border-color .25s;
+  }
+  .nav-cat-btn .chev{width:9px;height:9px;transition:transform .28s;}
+  .nav-cat:hover .nav-cat-btn,.nav-cat.open .nav-cat-btn{color:var(--rust);border-bottom-color:var(--rust);}
+  .nav-cat:hover .nav-cat-btn .chev,.nav-cat.open .nav-cat-btn .chev{transform:rotate(180deg);}
+  .cat-menu{
+    position:absolute;top:calc(100% + 16px);right:0;width:320px;max-width:84vw;
+    background:var(--paper);border:1px solid var(--line-strong);border-radius:12px;
+    box-shadow:0 26px 64px -26px rgba(58,39,24,.55);padding:9px;
+    opacity:0;visibility:hidden;transform:translateY(8px);
+    transition:opacity .2s ease,transform .2s ease,visibility .2s;z-index:300;
+  }
+  .nav-cat:hover .cat-menu,.nav-cat.open .cat-menu{opacity:1;visibility:visible;transform:translateY(0);}
+  .cat-menu::before{content:"";position:absolute;top:-16px;left:0;right:0;height:16px;}
+  .cat-menu .cm-h{
+    font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;
+    color:#8A7359;padding:8px 12px 10px;border-bottom:1px solid var(--line);margin-bottom:6px;
+  }
+  .cat-menu a{display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:8px;transition:background .16s;}
+  .cat-menu a:hover{background:var(--paper-2);}
+  .cat-menu .cm-num{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:var(--rust);width:24px;text-align:center;flex:none;line-height:1;}
+  .cat-menu .cm-t{display:flex;flex-direction:column;gap:3px;}
+  .cat-menu .cm-t b{font-family:'Fraunces',serif;font-weight:400;font-size:17px;color:var(--claret-deep);line-height:1.1;}
+  .cat-menu .cm-t span{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:#8A7359;}
+  .cat-menu a.cm-new .cm-badge{margin-left:auto;align-self:center;background:var(--rust);color:var(--bone-warm);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:50px;}
+  @media(max-width:680px){ .cat-menu{right:auto;left:50%;transform:translateX(-50%) translateY(8px);} .nav-cat.open .cat-menu{transform:translateX(-50%) translateY(0);} }
+
   /* ============ PRODUCT PAGE ============ */
   .product-section{
     padding:130px 6vw 80px;
@@ -258,6 +290,41 @@
     color:var(--rust);font-style:italic;font-size:16px;
   }
 
+  /* offer price block (Hot-Serve) */
+  .price-block{
+    background:linear-gradient(150deg,#FBF4E4,#F2E6CA);
+    border:1px solid var(--line-strong); border-radius:8px;
+    padding:14px 16px; margin-bottom:16px;
+  }
+  .pb-label{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:500;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:9px;
+  }
+  .pb-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .pb-offer{font-family:'Fraunces',serif;font-weight:400;font-size:32px;color:var(--claret-deep);line-height:1;}
+  .pb-mrp{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink-faint);text-decoration:line-through;}
+  .pb-off{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:500;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--bone-warm);
+    background:var(--rust);padding:4px 9px;border-radius:50px;align-self:center;
+  }
+  .pb-note{
+    font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;
+    color:#8A7359;margin-top:9px;line-height:1.55;
+  }
+
+  /* dual-mode buybox toggle (retail / wholesale) */
+  .bb-toggle{display:flex;gap:5px;background:var(--paper-2);border:1px solid var(--line);border-radius:50px;padding:4px;margin-bottom:16px;}
+  .bb-toggle button{flex:1;border:none;background:transparent;border-radius:50px;padding:9px 6px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#5A4636;cursor:pointer;transition:all .2s;}
+  .bb-toggle button:hover{color:var(--rust);}
+  .bb-toggle button.on{background:var(--claret-deep);color:var(--bone-warm);}
+  .buybox .wholesale-only{display:none;}
+  .buybox.is-wholesale .retail-only{display:none;}
+  .buybox.is-wholesale .wholesale-only{display:block;}
+  .bb-switch{text-align:center;margin:2px 0;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.04em;color:#8A7359;}
+  .bb-switch a{color:var(--rust);}
+  .bb-switch a:hover{color:#C0712F;}
+
   .btn{
     display:inline-flex;justify-content:center;align-items:center;gap:9px;
     font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;
@@ -410,7 +477,20 @@
 <nav id="nav">
   <a href="index.html" class="brand">XANVOR</a>
   <div class="links">
-    <a href="index.html#collections">Collections</a>
+    <div class="nav-cat" id="navCat">
+      <button class="nav-cat-btn" type="button" aria-haspopup="true" aria-expanded="false">Categories
+        <svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"></path></svg>
+      </button>
+      <div class="cat-menu" role="menu">
+        <div class="cm-h">The Collections</div>
+        <a role="menuitem" href="index.html#c-silvergold"><span class="cm-num">I</span><span class="cm-t"><b>Silver &amp; Gold</b><span>Trays · bowls · jar sets</span></span></a>
+        <a role="menuitem" href="index.html#c-copper"><span class="cm-num">II</span><span class="cm-t"><b>Copper</b><span>Drinkware &amp; bar</span></span></a>
+        <a role="menuitem" href="index.html#c-brass"><span class="cm-num">III</span><span class="cm-t"><b>Brass</b><span>Singing bowls &amp; heritage</span></span></a>
+        <a role="menuitem" href="index.html#c-wood"><span class="cm-num">IV</span><span class="cm-t"><b>Sheesham &amp; Wood</b><span>Trays &amp; spice boxes</span></span></a>
+        <a role="menuitem" href="index.html#c-furniture"><span class="cm-num">V</span><span class="cm-t"><b>Wireform Furniture</b><span>Baskets · tables · seating</span></span></a>
+        <a role="menuitem" class="cm-new" href="Hot-Serve Collection.html"><span class="cm-num">VI</span><span class="cm-t"><b>Hot-Serve</b><span>Warmers · hot-pots · domes</span></span><span class="cm-badge">New</span></a>
+      </div>
+    </div>
     <a href="index.html#catalogue">Catalogue</a>
     <a href="index.html#contact">Contact</a>
   </div>
@@ -426,7 +506,7 @@
   <img class="f-mark" src="assets/logo_mark.png" alt="XANVOR">
   <div class="f-rule"></div>
   <div class="f-tag">Manufacturer · Exporter · Ecommerce</div>
-  <nav class="f-policy" aria-label="Policies">
+  <div class="f-policy" role="navigation" aria-label="Policies">
     <a href="privacy-policy.html">Privacy Policy</a>
     <span class="sep">·</span>
     <a href="refund-policy.html">Refund &amp; Return</a>
@@ -434,7 +514,7 @@
     <a href="shipping-policy.html">Shipping</a>
     <span class="sep">·</span>
     <a href="terms.html">Terms</a>
-  </nav>
+  </div>
   <div class="f-legal">
     XANVOR is a house brand of Zenko Inc · Moradabad, India<br>
     © 2026 Zenko Inc. All rights reserved · <a href="mailto:hello@xanvor.com">hello@xanvor.com</a>
@@ -442,7 +522,17 @@
 </footer>
 
 <script src="assets/products.js"></script>
+<script src="shop-cart.js"></script>
 <script src="enquiry-basket.js"></script>
 <script src="product.js"></script>
+<script>
+(function(){
+  var nc=document.getElementById('navCat'); if(!nc) return;
+  var btn=nc.querySelector('.nav-cat-btn');
+  btn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var o=nc.classList.toggle('open');btn.setAttribute('aria-expanded',o);});
+  document.addEventListener('click',function(e){ if(!nc.contains(e.target)){nc.classList.remove('open');btn.setAttribute('aria-expanded','false');} });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'){nc.classList.remove('open');btn.setAttribute('aria-expanded','false');} });
+})();
+</script>
 </body>
 </html>
