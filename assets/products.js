@@ -172,6 +172,69 @@ window.XANVOR_PRODUCTS = [
     "image": "assets/products/sg-307.jpg"
   },
   {
+    "id": "gn-05",
+    "name": "Arbor 3-Bowl Tree Server",
+    "code": "XV·GN·05",
+    "collection": "Silver & Gold",
+    "series": "Tree-of-Life Servers · Gold branches with crackle-glaze ceramic",
+    "materials": "Gold-finish cast metal · Crackle-glaze ceramic bowls",
+    "construction": "Cast-metal tree · 3 leaf-shaped ceramic bowls",
+    "sizes": "22 × 20 × 26 cm",
+    "moq": "6 pcs", "hsn": "8306", "gst": "12%",
+    "tag": "Tree of Life",
+    "mrp": 4499, "retail": 3249, "offer": 1979,
+    "desc": "A hand-finished gold-metal branch rises from three aqua-blue crackle-glaze ceramic bowls — three leaf-shaped compartments for nuts, dry fruits, condiments or trinkets, presented as one sculptural decorative server.",
+    "highlights": [
+      "Gold-finish cast tree with leaf detail",
+      "Crackle-glaze ceramic bowls · gold rims",
+      "3 compartments · serveware + organizer",
+      "MOQ 6 · HSN 8306"
+    ],
+    "image": "assets/products/gn-05.jpg"
+  },
+  {
+    "id": "gn-06",
+    "name": "Arbor Flore 3-Bowl Tree Server",
+    "code": "XV·GN·06",
+    "collection": "Silver & Gold",
+    "series": "Tree-of-Life Servers · Gold branches with crackle-glaze ceramic",
+    "materials": "Gold-finish metal · White ceramic bowls · Ceramic floral accents",
+    "construction": "Cast-metal branch · 3 ceramic bowls · 2 ceramic flowers",
+    "sizes": "22 × 20 × 28 cm",
+    "moq": "6 pcs", "hsn": "8306", "gst": "12%",
+    "tag": "Floral Centrepiece",
+    "mrp": 4899, "retail": 3499, "offer": 2149,
+    "desc": "The floral interpretation of the tree-of-life server — three white textured ceramic bowls with gold rims around a gold branch, finished with two soft pink-and-white ceramic flowers and gold leaves. A boutique centrepiece straight out of the box.",
+    "highlights": [
+      "White gloss ceramic bowls · gold rims",
+      "Hand-finished ceramic flower accents",
+      "3 compartments · serveware + organizer",
+      "MOQ 6 · HSN 8306"
+    ],
+    "image": "assets/products/gn-06.jpg"
+  },
+  {
+    "id": "gn-07",
+    "name": "Arbor Tier Leaf Stand",
+    "code": "XV·GN·07",
+    "collection": "Silver & Gold",
+    "series": "Tree-of-Life Servers · Gold branches with crackle-glaze ceramic",
+    "materials": "Gold-finish metal branch stand · Crackle-glaze ceramic",
+    "construction": "2-tier · leaf platter + hanging bowl on branch stand",
+    "sizes": "32 × 28 × 30 cm",
+    "moq": "4 pcs", "hsn": "8306", "gst": "12%",
+    "tag": "Two-Tier Sculpture",
+    "mrp": 5499, "retail": 3959, "offer": 2359,
+    "desc": "A two-level serveware sculpture: a large aqua crackle-glaze leaf platter anchors a gold-branch stand, with a smaller hanging bowl above it. Use the platter for fruits or canapés and the upper bowl for dips — one piece, two tiers, full centrepiece presence.",
+    "highlights": [
+      "2-tier · leaf platter + hanging bowl",
+      "Gold branch stand · stabilising feet",
+      "Aqua crackle-glaze ceramic · gold rims",
+      "MOQ 4 · HSN 8306"
+    ],
+    "image": "assets/products/gn-07.jpg"
+  },
+  {
     "id": "sg-311",
     "name": "Lotus Tealight Holder",
     "code": "XV·SG·311",
