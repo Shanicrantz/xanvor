@@ -147,9 +147,12 @@
 
   const PAYMENTS = [
     { id:'whatsapp', t:'Order on WhatsApp', d:'Send your order to us · confirm & pay', badge:'Fastest' },
-    { id:'upi',      t:'UPI / QR',          d:'PhonePe · GPay · Paytm · any UPI app' },
     { id:'cod',      t:'Cash on Delivery',  d:'Pay when it arrives' },
-    { id:'bank',     t:'Bank transfer',     d:'NEFT / IMPS · manual confirm' },
+    // UPI and Bank transfer are hidden until live payment details are set.
+    // Placeholders live in shop-cart.js (UPI 'xanvor@upi', bank XXXX). To
+    // re-enable: put real values in window.XANVOR_SHOPCFG, then restore:
+    // { id:'upi',  t:'UPI / QR',      d:'PhonePe · GPay · Paytm · any UPI app' },
+    // { id:'bank', t:'Bank transfer', d:'NEFT / IMPS · manual confirm' },
   ];
   let pay = 'whatsapp';
 
