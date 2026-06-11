@@ -1,0 +1,8 @@
+{
+  "name": "xanvor-site",
+  "private": true,
+  "description": "XANVOR brand site — static pages + Netlify functions for live catalogue, sitemap and merchant feed",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}
