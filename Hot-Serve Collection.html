@@ -292,8 +292,9 @@
   </div>
 </footer>
 
+<script src="assets/img-opt.js?v=1"></script>
 <script src="/api/products.js"></script>
-<script src="shop-cart.js?v=hs2"></script>
+<script src="shop-cart.js?v=hs3"></script>
 <script>
 (function(){
   const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -309,7 +310,7 @@
       <a class="card${feature}" href="product.html?id=${esc(p.id)}">
         ${p.tag ? `<span class="pin">${esc(p.tag)}</span>` : ''}
         ${off ? `<span class="off-tag">${off}% off</span>` : ''}
-        <div class="ph"><img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async"></div>
+        <div class="ph"><img src="${esc(window.xvImg ? xvImg(p.image, 640) : p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async"></div>
         <div class="body">
           <span class="orn">&#x2767;</span>
           <h3>${esc(p.name)}</h3>

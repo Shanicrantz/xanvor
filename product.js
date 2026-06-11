@@ -245,7 +245,7 @@
       <div class="gallery">
         <div class="main-shot">
           ${product.tag ? `<span class="badge-pin">${esc(product.tag)}</span>` : ''}
-          <img src="${esc(product.image)}" alt="${esc(product.name)}">
+          <img src="${esc(window.xvImg ? xvImg(product.image, 1200) : product.image)}" alt="${esc(product.name)}">
         </div>
         <div class="shot-meta">Photographed at the workshop · Moradabad</div>
         <div class="finish-row">
@@ -389,7 +389,7 @@
         <div class="related-grid">
           ${related.map(r=>`
             <a class="rel-card" href="product.html?id=${esc(r.id)}">
-              <div class="rel-img"><img src="${esc(r.image)}" alt="${esc(r.name)}" loading="lazy"></div>
+              <div class="rel-img"><img src="${esc(window.xvImg ? xvImg(r.image, 480) : r.image)}" alt="${esc(r.name)}" loading="lazy"></div>
               <div class="rel-body">
                 <h4>${esc(r.name)}</h4>
                 <div class="rc">${esc(r.code)}</div>

@@ -136,7 +136,8 @@
   <div class="f-legal">XANVOR is a house brand of Zenko Inc · Moradabad, India · <a href="mailto:hello@xanvor.com">hello@xanvor.com</a></div>
 </footer>
 
-<script src="shop-cart.js?v=hs2"></script>
+<script src="assets/img-opt.js?v=1"></script>
+<script src="shop-cart.js?v=hs3"></script>
 <script>
 (function(){
   const root = document.getElementById('root');
@@ -214,7 +215,7 @@
             <div class="sum-items">
               ${items.map(it=>`
                 <div class="si">
-                  <div class="si-thumb">${it.image?`<img src="${esc(it.image)}" alt="">`:''}</div>
+                  <div class="si-thumb">${it.image?`<img src="${esc(window.xvImg?xvImg(it.image,120):it.image)}" alt="">`:''}</div>
                   <div><div class="si-name">${esc(it.name)}</div><div class="si-q">${esc(it.code)} · Qty ${it.qty}</div></div>
                   <div class="si-line">${fmt(it.price*it.qty)}</div>
                 </div>`).join('')}
