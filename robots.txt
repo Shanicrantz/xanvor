@@ -1,0 +1,8 @@
+# XANVOR — xanvor.com
+# Search engines are welcome. Checkout is excluded (no indexable content).
+
+User-agent: *
+Allow: /
+Disallow: /checkout.html
+
+Sitemap: https://xanvor.com/sitemap.xml

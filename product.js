@@ -63,12 +63,51 @@
     return;
   }
 
-  /* ---- meta ---- */
+  /* ---- meta + SEO (canonical, OG, Product structured data) ---- */
+  const SITE_URL  = 'https://xanvor.com';
+  const pageURL   = `${SITE_URL}/product.html?id=${encodeURIComponent(product.id)}`;
+  const imageURL  = `${SITE_URL}/${String(product.image||'').replace(/^\/+/,'')}`;
+  const metaDesc  = `${product.name} (${product.code}) — ${product.desc}`;
   document.title = `${product.name} — XANVOR`;
-  document.querySelector('meta[name="description"]').setAttribute('content', `${product.name} (${product.code}) — ${product.desc}`);
+  document.querySelector('meta[name="description"]').setAttribute('content', metaDesc);
   document.querySelector('meta[property="og:title"]').setAttribute('content', `${product.name} — XANVOR`);
   document.querySelector('meta[property="og:description"]').setAttribute('content', product.desc);
-  document.querySelector('meta[property="og:image"]').setAttribute('content', product.image);
+  document.querySelector('meta[property="og:image"]').setAttribute('content', imageURL);
+  (function injectSEO(){
+    const head = document.head;
+    const canon = document.createElement('link');
+    canon.rel = 'canonical'; canon.href = pageURL; head.appendChild(canon);
+    const ogu = document.createElement('meta');
+    ogu.setAttribute('property','og:url'); ogu.content = pageURL; head.appendChild(ogu);
+    const ld = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      sku: product.id,
+      image: [imageURL],
+      description: `${product.desc} ${product.materials ? product.materials.replace(/·/g,', ') + '.' : ''} Handcrafted in Moradabad, India.`.trim(),
+      brand: { '@type': 'Brand', name: 'XANVOR' },
+      material: (product.materials||'').split('·').map(s=>s.trim()).filter(Boolean).join(', ') || undefined,
+    };
+    /* offers only on retail-priced pieces; price is the GST-inclusive amount the buyer pays */
+    if(typeof (product.retail || product.offer) === 'number' && product.mrp){
+      const rate  = (parseFloat(product.gst) / 100) || (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.GST) || 0.18;
+      const base  = product.retail || product.offer;
+      ld.offers = {
+        '@type': 'Offer',
+        url: pageURL,
+        price: String(Math.round(base * (1 + rate))),
+        priceCurrency: 'INR',
+        availability: 'https://schema.org/InStock',
+        itemCondition: 'https://schema.org/NewCondition',
+        seller: { '@type': 'Organization', name: 'Zenko Inc.' },
+      };
+    }
+    const s = document.createElement('script');
+    s.type = 'application/ld+json';
+    s.textContent = JSON.stringify(ld);
+    head.appendChild(s);
+  })();
 
   /* ---- related ---- */
   function relatedFor(p){
@@ -117,9 +156,13 @@
 
   /* ---- retail pricing & dual-mode buybox (Hot-Serve) ---- */
   const THRESHOLD = (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.THRESHOLD) || 50;
-  const GSTrate   = (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.GST) || 0.18;
+  /* per-product GST (e.g. "18%" / "12%"), falling back to the shop default */
+  const GSTrate   = (parseFloat(product.gst) / 100) || (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.GST) || 0.18;
   const retail    = product.retail || product.offer;
-  const rdisc     = product.mrp ? Math.round((1 - retail / product.mrp) * 100) : 0;
+  /* B2C sticker price is GST-inclusive — required for Google Merchant Center (India)
+     and consistent with Indian retail norms. Checkout charges exactly this amount. */
+  const incl      = Math.round(retail * (1 + GSTrate));
+  const rdisc     = product.mrp ? Math.round((1 - incl / product.mrp) * 100) : 0;
   const gstPct    = Math.round(GSTrate * 100);
   const retailBadges =
     `<span class="b fill">${icon('hand')} Hand-cast in Moradabad</span>` +
@@ -135,11 +178,11 @@
         <div class="price-block retail-only">
           <div class="pb-label">Price · per piece</div>
           <div class="pb-row">
-            <span class="pb-offer">${fmt(retail)}</span>
+            <span class="pb-offer">${fmt(incl)}</span>
             <span class="pb-mrp">${fmt(product.mrp)}</span>
             <span class="pb-off">${rdisc}% off</span>
           </div>
-          <div class="pb-note">+ ${gstPct}% GST at checkout · Free shipping across India</div>
+          <div class="pb-note">Inclusive of ${gstPct}% GST · Free shipping across India</div>
         </div>
         <div class="price-block wholesale-only">
           <div class="pb-label">Wholesale · ex-works</div>
@@ -163,9 +206,9 @@
 
         <div class="retail-only">
           <div class="quote-card">
-            <div class="row"><span class="k">Subtotal · <span id="rQ">1 pc</span></span><span class="v" id="rSub">${fmt(retail)}</span></div>
-            <div class="row"><span class="k">GST ${gstPct}%</span><span class="v" id="rGst">${fmt(Math.round(retail*GSTrate))}</span></div>
-            <div class="row price"><span class="k">Pay at checkout</span><span class="v" id="rTot">${fmt(Math.round(retail*(1+GSTrate)))}</span></div>
+            <div class="row"><span class="k">Subtotal · <span id="rQ">1 pc</span></span><span class="v" id="rSub">${fmt(incl)}</span></div>
+            <div class="row"><span class="k">Incl. GST ${gstPct}%</span><span class="v" id="rGst">${fmt(incl - Math.round(incl/(1+GSTrate)))}</span></div>
+            <div class="row price"><span class="k">Pay at checkout</span><span class="v" id="rTot">${fmt(incl)}</span></div>
           </div>
           <button class="btn btn-primary" id="ctaCart">${icon('tag')} Add to Cart</button>
           <button class="btn btn-ink" id="ctaBuy">${icon('box')} Buy Now</button>
@@ -382,9 +425,9 @@
       buybox.classList.toggle('is-wholesale', wholesale);
       [...toggle.children].forEach(b=>b.classList.toggle('on',(b.dataset.mode==='wholesale')===wholesale));
       if(!wholesale){
-        const sub=retail*q;
+        const sub=incl*q;
         if(rQ) rQ.textContent = q+' pc'+(q>1?'s':'');
-        rSub.textContent=fmt(sub); rGst.textContent=fmt(Math.round(sub*GSTrate)); rTot.textContent=fmt(Math.round(sub*(1+GSTrate)));
+        rSub.textContent=fmt(sub); rGst.textContent=fmt(sub - Math.round(sub/(1+GSTrate))); rTot.textContent=fmt(sub);
       } else {
         const t=tierFor(q), unit=Math.round(product.offer*(1-t.pct));
         if(wUnit) wUnit.textContent=fmt(unit);
@@ -405,7 +448,7 @@
     if(goW) goW.addEventListener('click',e=>{e.preventDefault(); qtyInput.value=THRESHOLD; update();});
     const addCart=(go)=>{
       const q=clampQ(qtyInput.value);
-      if(window.XanvorShop) window.XanvorShop.add({id:product.id,code:product.code,name:product.name,image:product.image,price:retail,mrp:product.mrp,qty:q});
+      if(window.XanvorShop) window.XanvorShop.add({id:product.id,code:product.code,name:product.name,image:product.image,price:incl,mrp:product.mrp,qty:q});
       if(go){ location.href='checkout.html'; } else if(window.XanvorShop){ setTimeout(()=>window.XanvorShop.open(),260); }
     };
     const cC=document.getElementById('ctaCart'); if(cC) cC.addEventListener('click',()=>addCart(false));

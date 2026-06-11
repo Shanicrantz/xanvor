@@ -143,8 +143,8 @@
     </header>
     <div class="sc-body" id="sc-body"></div>
     <footer class="sc-foot" id="sc-foot" style="display:none;">
-      <div class="sc-sum"><span class="k">Subtotal</span><span class="v" id="sc-subtotal">₹0</span></div>
-      <div class="sc-tax">+ 18% GST &amp; free shipping calculated at checkout</div>
+      <div class="sc-sum"><span class="k">Subtotal (incl. GST)</span><span class="v" id="sc-subtotal">₹0</span></div>
+      <div class="sc-tax">Prices include 18% GST · Free shipping across India</div>
       <a class="sc-checkout" id="sc-checkout" href="checkout.html">Proceed to Checkout</a>
       <button class="sc-cont" id="sc-cont">Continue shopping</button>
     </footer>`;
