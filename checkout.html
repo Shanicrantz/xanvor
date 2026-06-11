@@ -136,7 +136,7 @@
   <div class="f-legal">XANVOR is a house brand of Zenko Inc · Moradabad, India · <a href="mailto:hello@xanvor.com">hello@xanvor.com</a></div>
 </footer>
 
-<script src="shop-cart.js?v=hs1"></script>
+<script src="shop-cart.js?v=hs2"></script>
 <script>
 (function(){
   const root = document.getElementById('root');
@@ -161,9 +161,11 @@
   const bagIcon = `<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h12l-1 12H6L5 7Z"/><path d="M8 7V5a3 3 0 0 1 6 0v2"/></svg>`;
 
   function totals(){
+    /* Cart unit prices are GST-inclusive (set on the product page).
+       GST here is the included portion, shown for the invoice — not added on top. */
     const sub = S.subtotal();
-    const gst = sub * CFG.GST;
-    return { sub, gst, ship:0, total: sub + gst };
+    const gst = sub - sub / (1 + CFG.GST);
+    return { sub, gst, ship:0, total: sub };
   }
 
   function renderCheckout(){
@@ -219,8 +221,8 @@
             </div>
             <button class="edit-cart" id="edit-cart" type="button">Edit cart</button>
             <div class="sum-div"></div>
-            <div class="sum-row"><span class="k">Subtotal</span><span class="v">${fmt(t.sub)}</span></div>
-            <div class="sum-row"><span class="k">GST (18%)</span><span class="v">${fmt(t.gst)}</span></div>
+            <div class="sum-row"><span class="k">Subtotal (incl. GST)</span><span class="v">${fmt(t.sub)}</span></div>
+            <div class="sum-row"><span class="k">Includes GST (18%)</span><span class="v">${fmt(t.gst)}</span></div>
             <div class="sum-row free"><span class="k">Shipping</span><span class="v">Free</span></div>
             <div class="sum-div"></div>
             <div class="sum-total"><span class="k">Total</span><span class="v">${fmt(t.total)}</span></div>
@@ -255,8 +257,8 @@
 
 ${lines}
 
-Subtotal: ${fmt(t.sub)}
-GST 18%: ${fmt(t.gst)}
+Subtotal (incl. GST): ${fmt(t.sub)}
+Includes GST 18%: ${fmt(t.gst)}
 Shipping: Free
 *Total: ${fmt(t.total)}*
 
