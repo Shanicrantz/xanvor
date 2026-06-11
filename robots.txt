@@ -4,5 +4,7 @@
 User-agent: *
 Allow: /
 Disallow: /checkout.html
+Disallow: /admin.html
+Disallow: /api/
 
 Sitemap: https://xanvor.com/sitemap.xml

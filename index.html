@@ -1750,7 +1750,25 @@
     }
   })();
 </script>
-<script src="assets/products.js?v=hs1"></script>
+<script src="/api/products.js"></script>
+<script>
+/* Live-catalogue enhancer — admin se add hue products jinka card is static
+   HTML me nahi hai, unke cards apni collection ke aakhri grid me jod deta hai. */
+(function(){
+  var MAP={'Silver & Gold':'c-silvergold','Copper':'c-copper','Brass':'c-brass','Sheesham & Wood':'c-wood','Wireform Furniture':'c-furniture'};
+  (window.XANVOR_PRODUCTS||[]).forEach(function(p){
+    var gid=MAP[p.collection]; if(!gid) return;
+    if(document.querySelector('.cat-item[href$="id='+p.id+'"]')) return;
+    var grids=document.querySelectorAll('#'+gid+' .cat-grid'); if(!grids.length) return;
+    var a=document.createElement('a'); a.className='cat-item'; a.href='product.html?id='+encodeURIComponent(p.id);
+    a.innerHTML='<div class="cat-photo"><img loading="lazy" decoding="async"></div><div class="cat-item-body"><span class="ornament">&#x2767;</span><h4></h4><p class="desc"></p><div class="foot"><span class="code"></span><span class="mat"></span></div></div>';
+    var img=a.querySelector('img'); img.src=p.image||''; img.alt=p.name;
+    a.querySelector('h4').textContent=p.name; a.querySelector('.desc').textContent=p.desc||'';
+    a.querySelector('.code').textContent=p.code||''; a.querySelector('.mat').textContent=p.materials||'';
+    grids[grids.length-1].appendChild(a);
+  });
+})();
+</script>
 <script src="shop-cart.js?v=hs2"></script>
 <script src="enquiry-basket.js?v=hs1"></script>
 <script>
