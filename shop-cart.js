@@ -167,7 +167,7 @@
     body.innerHTML = items.map((it,i)=>{
       const over = (parseInt(it.qty)||0) >= CFG.THRESHOLD;
       return `<div class="sc-item" data-idx="${i}">
-        <div class="sc-thumb">${it.image?`<img src="${esc(it.image)}" alt="">`:''}</div>
+        <div class="sc-thumb">${it.image?`<img src="${esc(window.xvImg?xvImg(it.image,140):it.image)}" alt="">`:''}</div>
         <div>
           <div class="sc-name">${esc(it.name)}</div>
           <div class="sc-code">${esc(it.code)}</div>

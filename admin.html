@@ -131,6 +131,7 @@
 
 </div>
 <div class="toast" id="toast"></div>
+<script src="assets/img-opt.js?v=1"></script>
 <script>
 (function(){
   const $ = id => document.getElementById(id);
@@ -166,7 +167,7 @@
     $('count').textContent = '· '+CATALOG.length+' total';
     $('list').innerHTML = items.map(p => `
       <div class="row">
-        <img class="thumb" loading="lazy" src="${p.image||''}" alt="">
+        <img class="thumb" loading="lazy" src="${window.xvImg?xvImg(p.image||'',120):(p.image||'')}" alt="">
         <div>
           <div class="r-name">${p.name}</div>
           <div class="r-meta">${p.id} · ${p.collection}${inclOf(p)&&p.retail?` · <b>${fmt(inclOf(p))} incl. GST</b>`:' · B2B only'}${p.availability==='out_of_stock'?' · OUT OF STOCK':''}</div>
