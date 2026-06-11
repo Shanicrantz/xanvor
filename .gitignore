@@ -10,3 +10,5 @@
 
 # Node (if added later)
 node_modules/
+.claude/
+.netlify/
