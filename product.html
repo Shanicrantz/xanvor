@@ -143,6 +143,11 @@
     letter-spacing:.18em; text-transform:uppercase;
     padding:6px 12px; border-radius:50px;
   }
+  .pd-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center;}
+  .pd-th{width:64px;height:64px;border-radius:8px;border:1px solid var(--line-strong);padding:0;overflow:hidden;background:#fff;cursor:pointer;opacity:.7;transition:all .2s;}
+  .pd-th:hover{opacity:1;}
+  .pd-th.on{border-color:var(--rust);opacity:1;box-shadow:0 0 0 2px rgba(168,93,42,.18);}
+  .pd-th img{width:100%;height:100%;object-fit:cover;display:block;}
   .shot-meta{
     margin-top:12px;
     font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;
@@ -525,7 +530,7 @@
 <script src="/api/products.js"></script>
 <script src="shop-cart.js?v=hs3"></script>
 <script src="enquiry-basket.js?v=hs1"></script>
-<script src="product.js?v=hs3"></script>
+<script src="product.js?v=hs4"></script>
 <script>
 (function(){
   var nc=document.getElementById('navCat'); if(!nc) return;
