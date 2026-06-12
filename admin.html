@@ -104,6 +104,7 @@
       <div><label>HSN</label><input id="f_hsn" placeholder="7323"></div>
       <div><label>GST</label><select id="f_gst"><option value="">—</option><option>18%</option><option>12%</option><option>5%</option></select></div>
       <div><label>Stock</label><select id="f_availability"><option value="">In stock</option><option value="out_of_stock">Out of stock</option></select></div>
+      <div><label>Status</label><select id="f_status"><option value="">Live — website pe dikhe</option><option value="draft">Draft — abhi chhupa rahe</option></select></div>
       <div><label>MRP ₹</label><input id="f_mrp" inputmode="numeric" placeholder="4499"></div>
       <div><label>Retail ₹ (ex-GST)</label><input id="f_retail" inputmode="numeric" placeholder="3399"></div>
       <div><label>Offer ₹ (B2B/trade)</label><input id="f_offer" inputmode="numeric" placeholder="2100"></div>
@@ -237,11 +238,11 @@
       <div class="row">
         <img class="thumb" loading="lazy" src="${window.xvImg?xvImg(p.image||'',120):(p.image||'')}" alt="">
         <div>
-          <div class="r-name">${p.name}</div>
+          <div class="r-name">${p.name}${p.status==='draft'?' <span style="background:#EFE3CB;color:#7A5A2E;font-family:\'JetBrains Mono\',monospace;font-size:8.5px;letter-spacing:.12em;padding:3px 8px;border-radius:20px;vertical-align:middle;">DRAFT</span>':''}</div>
           <div class="r-meta">${p.id} · ${p.collection}${inclOf(p)&&p.retail?` · <b>${fmt(inclOf(p))} incl. GST</b>`:' · B2B only'}${p.availability==='out_of_stock'?' · OUT OF STOCK':''}</div>
         </div>
         <div class="r-actions">
-          <a class="btn btn-ghost" href="product.html?id=${encodeURIComponent(p.id)}" target="_blank">View</a>
+          ${p.status==='draft'?'':`<a class="btn btn-ghost" href="product.html?id=${encodeURIComponent(p.id)}" target="_blank">View</a>`}
           <button class="btn btn-ghost" data-edit="${p.id}">Edit</button>
           <button class="btn btn-danger" data-del="${p.id}">Delete</button>
         </div>
@@ -266,6 +267,7 @@
     $('f_sizes').value=p?.sizes||''; $('f_construction').value=p?.construction||'';
     $('f_moq').value=p?.moq||''; $('f_hsn').value=p?.hsn||''; $('f_gst').value=p?.gst||'';
     $('f_availability').value=p?.availability||'';
+    $('f_status').value=p?.status||'';
     $('f_mrp').value=p?.mrp||''; $('f_retail').value=p?.retail||''; $('f_offer').value=p?.offer||'';
     $('f_highlights').value=(p?.highlights||[]).join('\n');
     $('f_signature').checked=!!p?.signature;
@@ -296,9 +298,22 @@
     if(m){ const i=+m.dataset.gmain; galleryArr.unshift(galleryArr.splice(i,1)[0]); renderGallery(); }
     if(d){ galleryArr.splice(+d.dataset.gdel,1); renderGallery(); }
   });
-  $('openStudioBtn').addEventListener('click', ()=>{
-    if(editingId){ const sel=$('ls_product'); sel.value=editingId; sel.dispatchEvent(new Event('change',{bubbles:true})); show('listing'); }
-    else toast('Pehle product Save karo — phir Listing studio se bani images gallery me daal sakte ho', true);
+  $('openStudioBtn').addEventListener('click', async ()=>{
+    /* form se studio — save zaroori NAHI; form ka naam/features/photos saath jaate hain */
+    LS.fromForm = true;
+    LS.formCtx = { name: $('f_name').value.trim(), highlights: $('f_highlights').value };
+    $('ls_product').value = editingId || '';
+    if($('f_highlights').value.trim()) $('ls_features').value = $('f_highlights').value;
+    show('listing');
+    if(galleryArr.length){
+      lsStatus('Form ki photos studio me la rahe…');
+      try{
+        LS.photos = []; LS.processed = []; LS.callouts = []; LS.ready = false;
+        for(const g of galleryArr) LS.photos.push(await urlToCanvas(g));
+        renderLsThumbs();
+        lsStatus(LS.photos.length+' photo'+(LS.photos.length>1?'s':'')+' form se aa gayi — Generate dabao.');
+      }catch(e){ lsStatus('Photos load nahi hui — neeche se file chuno.'); }
+    } else lsStatus('Photos chuno (form me abhi koi photo nahi).');
   });
 
   async function refresh(){
@@ -337,6 +352,13 @@
      (free, koi API nahi); model pehli baar ~40MB download hota hai. */
   let staged = null;
   let rbFn = null;
+
+  const urlToCanvas = async (u) => {
+    const img = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=u; });
+    const cv=document.createElement('canvas'); cv.width=img.width; cv.height=img.height;
+    cv.getContext('2d').drawImage(img,0,0);
+    return cv;
+  };
 
   const fileToCanvas = async (file) => {
     const dataUrl = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
@@ -431,6 +453,7 @@
       desc: $('f_desc').value, sizes: $('f_sizes').value, construction: $('f_construction').value,
       moq: $('f_moq').value, hsn: $('f_hsn').value, gst: $('f_gst').value,
       availability: $('f_availability').value,
+      status: $('f_status').value,
       mrp: $('f_mrp').value, retail: $('f_retail').value, offer: $('f_offer').value,
       highlights: $('f_highlights').value.split('\n').map(s=>s.trim()).filter(Boolean),
       signature: $('f_signature').checked,
@@ -447,15 +470,25 @@
   });
 
   /* ================= Listing studio — Amazon-style images ================= */
-  const LS = { photos: [], processed: [], callouts: [], ready: false };
+  const LS = { photos: [], processed: [], callouts: [], ready: false, fromForm: false, formCtx: null };
   const lsC = $('ls_canvas'), lsX = lsC.getContext('2d');
   const FOOT = 'XANVOR · MORADABAD · IN';
 
   const lsStatus = t => { $('ls_status').textContent = t; };
   const lsProduct = () => CATALOG.find(p=>p.id===$('ls_product').value);
 
-  $('listingBtn').addEventListener('click', ()=>{ show('listing'); });
-  $('ls_back').addEventListener('click', ()=>show('list'));
+  $('listingBtn').addEventListener('click', ()=>{ LS.fromForm=false; LS.formCtx=null; show('listing'); });
+  $('ls_back').addEventListener('click', ()=>{ if(LS.fromForm){ LS.fromForm=false; show('form'); } else show('list'); });
+
+  function renderLsThumbs(){
+    $('ls_thumbs').innerHTML = LS.photos.map((cv)=>{
+      const t=document.createElement('canvas'); t.width=120; t.height=120;
+      const s=Math.min(120/cv.width,120/cv.height);
+      const x=t.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,120,120);
+      x.drawImage(cv,(120-cv.width*s)/2,(120-cv.height*s)/2,cv.width*s,cv.height*s);
+      return `<img src="${t.toDataURL()}" style="width:60px;height:60px;border:1px solid var(--line);border-radius:6px;">`;
+    }).join('');
+  }
 
   $('ls_product').addEventListener('change', ()=>{
     const p = lsProduct();
@@ -475,13 +508,7 @@
     lsStatus('Photos load ho rahi…');
     LS.photos = []; LS.processed = []; LS.callouts = []; LS.ready = false;
     for(const f of files) LS.photos.push(await fileToCanvas(f));
-    $('ls_thumbs').innerHTML = LS.photos.map((cv,i)=>{
-      const t=document.createElement('canvas'); t.width=120; t.height=120;
-      const s=Math.min(120/cv.width,120/cv.height);
-      const x=t.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,120,120);
-      x.drawImage(cv,(120-cv.width*s)/2,(120-cv.height*s)/2,cv.width*s,cv.height*s);
-      return `<img src="${t.toDataURL()}" style="width:60px;height:60px;border:1px solid var(--line);border-radius:6px;">`;
-    }).join('');
+    renderLsThumbs();
     lsStatus(LS.photos.length+' photo'+(LS.photos.length>1?'s':'')+' ready — Generate dabao.');
   });
 
@@ -596,12 +623,13 @@
       const ph = await lsPrepPhotos();
       const t = $('ls_template').value;
       const p = lsProduct();
+      const dispName = p ? p.name : ((LS.formCtx && LS.formCtx.name) || '');
       if(t==='callout') renderCallout(ph);
-      else if(t==='collage') renderCollage(ph, p ? p.name : '');
-      else renderHero(ph, p ? p.name : 'XANVOR', $('ls_features').value.split('\n').map(s=>s.trim()).filter(Boolean));
+      else if(t==='collage') renderCollage(ph, dispName);
+      else renderHero(ph, dispName || 'XANVOR', $('ls_features').value.split('\n').map(s=>s.trim()).filter(Boolean));
       LS.ready = true;
       $('ls_download').disabled = false;
-      $('ls_setImage').disabled = !p;
+      $('ls_setImage').disabled = !(p || LS.fromForm);
       lsStatus(t==='callout' ? 'Ab text likh ke photo pe click karo — callout lagta jayega.' : 'Ready — Download karo ya site photo banao.');
     }catch(err){ toast('Generate fail: '+err.message, true); lsStatus(''); }
     $('ls_generate').disabled = false;
@@ -630,7 +658,23 @@
   });
 
   $('ls_setImage').addEventListener('click', async ()=>{
-    const p = lsProduct(); if(!p || !LS.ready) return;
+    if(!LS.ready) return;
+    const p = lsProduct();
+    /* form se aaye the aur product abhi saved nahi — image wapas form ki gallery me */
+    if(!p && LS.fromForm){
+      $('ls_setImage').disabled = true;
+      try{
+        const jpeg = lsC.toDataURL('image/jpeg',0.9).split(',')[1];
+        const base = ($('f_id').value.trim()||'listing').toLowerCase().replace(/[^a-z0-9-]/g,'-');
+        const out = await api({action:'upload-image', name: base+'-listing.jpg', dataBase64: jpeg});
+        galleryArr.push(out.path); renderGallery();
+        LS.fromForm = false; show('form');
+        toast('Image form ki gallery me jud gayi ✓ — Save karna mat bhoolna');
+      }catch(err){ toast(err.message, true); }
+      $('ls_setImage').disabled = false;
+      return;
+    }
+    if(!p) return;
     if(!confirm(`Yeh image "${p.name}" ki photo gallery me jod dein? (Product page pe thumbnail ban ke dikhegi)`)) return;
     $('ls_setImage').disabled = true;
     try{

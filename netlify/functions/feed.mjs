@@ -1,10 +1,10 @@
 /* /merchant-feed.xml — Google Merchant Center feed from the live catalogue */
 import { getCatalog } from './lib/catalog.mjs';
-import { renderFeed } from './lib/render.mjs';
+import { renderFeed, liveOnly } from './lib/render.mjs';
 
 export default async () => {
   const { products } = await getCatalog();
-  return new Response(renderFeed(products), {
+  return new Response(renderFeed(liveOnly(products)), {
     headers: {
       'content-type': 'application/xml; charset=utf-8',
       'cache-control': 'public, max-age=300, must-revalidate',

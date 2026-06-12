@@ -30,6 +30,9 @@ export const inclPrice = (p) => {
 
 export const isRetail = (p) => typeof (p.retail || p.offer) === 'number' && !!p.mrp;
 
+/* drafts live in the admin catalogue but never reach the public site/Google */
+export const liveOnly = (products) => products.filter(p => p.status !== 'draft');
+
 /* ---- /api/products.js — drop-in replacement for assets/products.js ---- */
 export function renderProductsJs(products) {
   return '// XANVOR product catalogue — served live from the admin catalogue\n'
