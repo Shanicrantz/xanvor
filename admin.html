@@ -115,7 +115,25 @@
           <div style="flex:1;">
             <input type="file" id="f_file" accept="image/jpeg,image/png,image/webp">
             <input type="hidden" id="f_image">
-            <p class="hint" id="imgStatus">JPG/PNG chuno — apne aap chhota (1600px) karke upload hoga.</p>
+            <p class="hint" id="imgStatus">JPG/PNG chuno — Photo Studio options milenge.</p>
+          </div>
+        </div>
+        <div id="studio" class="hidden" style="margin-top:14px;border:1px solid var(--line-strong);border-radius:8px;padding:16px;background:#fff;">
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
+            <canvas id="studioCv" width="10" height="10" style="width:220px;height:220px;border:1px solid var(--line);border-radius:6px;background:#fff;object-fit:contain;"></canvas>
+            <div style="flex:1;min-width:230px;">
+              <label style="margin-bottom:10px;">Photo studio</label>
+              <div style="display:flex;flex-direction:column;gap:9px;font-size:16px;">
+                <label style="display:flex;gap:9px;align-items:center;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ink);cursor:pointer;"><input type="radio" name="studioMode" value="studio" style="width:auto;" checked> ✨ White studio background (AI) + 1:1</label>
+                <label style="display:flex;gap:9px;align-items:center;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ink);cursor:pointer;"><input type="radio" name="studioMode" value="square" style="width:auto;"> ▣ Sirf 1:1 square (white padding)</label>
+                <label style="display:flex;gap:9px;align-items:center;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ink);cursor:pointer;"><input type="radio" name="studioMode" value="original" style="width:auto;"> ▢ Original jaisa hai waisa</label>
+              </div>
+              <p class="hint" id="studioStatus" style="min-height:20px;"></p>
+              <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
+                <button type="button" class="btn btn-primary" id="studioApply">Apply &amp; upload</button>
+                <button type="button" class="btn btn-ghost" id="studioCancel">Cancel</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -202,7 +220,8 @@
     $('f_highlights').value=(p?.highlights||[]).join('\n');
     $('f_signature').checked=!!p?.signature;
     $('f_image').value=p?.image||''; $('imgPreview').src=p?.image||'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
-    $('f_file').value=''; $('imgStatus').textContent='JPG/PNG chuno — apne aap chhota (1600px) karke upload hoga.';
+    $('f_file').value=''; staged=null; $('studio').classList.add('hidden');
+    $('imgStatus').textContent='JPG/PNG chuno — Photo Studio options milenge.';
     priceHint(); show('form');
   }
 
@@ -235,22 +254,93 @@
     }
   });
 
+  /* ---- Photo studio: file → mode chuno → Apply & upload ----
+     White-studio mode @imgly/background-removal se browser me hi chalta hai
+     (free, koi API nahi); model pehli baar ~40MB download hota hai. */
+  let staged = null;
+  let rbFn = null;
+
+  const fileToCanvas = async (file) => {
+    const dataUrl = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
+    const img = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=dataUrl; });
+    const MAX=1600, sc=Math.min(1, MAX/Math.max(img.width,img.height));
+    const cv=document.createElement('canvas'); cv.width=Math.round(img.width*sc); cv.height=Math.round(img.height*sc);
+    cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    return cv;
+  };
+
+  const padSquare = (cv) => {
+    const S=Math.max(cv.width,cv.height), out=document.createElement('canvas');
+    out.width=S; out.height=S;
+    const x=out.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,S,S);
+    x.drawImage(cv,(S-cv.width)/2,(S-cv.height)/2);
+    return out;
+  };
+
+  const getRB = async () => {
+    if(rbFn) return rbFn;
+    $('studioStatus').textContent='AI model download ho raha hai (~40MB, sirf pehli baar)…';
+    const m = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm');
+    rbFn = m.removeBackground || m.default;
+    return rbFn;
+  };
+
+  const studioWhite = async (cv) => {
+    const rb = await getRB();
+    $('studioStatus').textContent='Background hata rahe… (10–30 sec lag sakte hain)';
+    const blob = await new Promise(res=>cv.toBlob(res,'image/png'));
+    const cutBlob = await rb(blob);
+    const cut = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=URL.createObjectURL(cutBlob); });
+    const t=document.createElement('canvas'); t.width=cut.width; t.height=cut.height;
+    const tx=t.getContext('2d'); tx.drawImage(cut,0,0);
+    const d=tx.getImageData(0,0,t.width,t.height).data;
+    let x0=t.width,y0=t.height,x1=0,y1=0,found=false;
+    for(let y=0;y<t.height;y++)for(let x=0;x<t.width;x++){
+      if(d[(y*t.width+x)*4+3]>16){ found=true; if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; }
+    }
+    if(!found) throw new Error('AI ko product nahi mila — "Sirf 1:1 square" try karo');
+    const bw=x1-x0+1, bh=y1-y0+1;
+    const S=1600, mg=Math.round(S*0.07), fit=S-2*mg, sc=Math.min(fit/bw, fit/bh);
+    const out=document.createElement('canvas'); out.width=S; out.height=S;
+    const ox=out.getContext('2d'); ox.fillStyle='#fff'; ox.fillRect(0,0,S,S);
+    ox.drawImage(t, x0,y0,bw,bh, (S-bw*sc)/2, (S-bh*sc)/2, bw*sc, bh*sc);
+    return out;
+  };
+
+  const drawPreview = (cv) => { const p=$('studioCv'); p.width=cv.width; p.height=cv.height; p.getContext('2d').drawImage(cv,0,0); };
+  const previewMode = () => {
+    if(!staged) return;
+    const mode=document.querySelector('input[name="studioMode"]:checked').value;
+    drawPreview(mode==='square' ? padSquare(staged) : staged);
+    $('studioStatus').textContent = mode==='studio' ? 'White-studio result Apply dabane par banega.' : '';
+  };
+  document.querySelectorAll('input[name="studioMode"]').forEach(r=>r.addEventListener('change', previewMode));
+
   $('f_file').addEventListener('change', async ()=>{
-    const file = $('f_file').files[0]; if(!file) return;
-    $('imgStatus').textContent='Photo chhota kar rahe…';
+    const file=$('f_file').files[0]; if(!file) return;
+    try{ staged=await fileToCanvas(file); $('studio').classList.remove('hidden'); previewMode(); $('imgStatus').textContent='Mode chuno, phir "Apply & upload".'; }
+    catch(err){ toast('Photo padh nahi paye: '+err.message, true); }
+  });
+  $('studioCancel').addEventListener('click', ()=>{ staged=null; $('studio').classList.add('hidden'); $('f_file').value=''; $('imgStatus').textContent='JPG/PNG chuno — Photo Studio options milenge.'; });
+
+  $('studioApply').addEventListener('click', async ()=>{
+    if(!staged) return;
+    const mode=document.querySelector('input[name="studioMode"]:checked').value;
+    $('studioApply').disabled=true;
     try{
-      const dataUrl = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
-      const img = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=dataUrl; });
-      const MAX=1600, sc=Math.min(1, MAX/Math.max(img.width,img.height));
-      const cv=document.createElement('canvas'); cv.width=Math.round(img.width*sc); cv.height=Math.round(img.height*sc);
-      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
-      const jpeg = cv.toDataURL('image/jpeg', 0.85).split(',')[1];
-      $('imgStatus').textContent='Upload ho raha…';
-      const base = ($('f_id').value.trim()||'product').toLowerCase().replace(/[^a-z0-9-]/g,'-');
-      const out = await api({action:'upload-image', name: base+'.jpg', dataBase64: jpeg});
-      $('f_image').value = out.path; $('imgPreview').src = out.path;
-      $('imgStatus').textContent = 'Upload ho gaya ✓ '+out.path;
-    }catch(err){ $('imgStatus').textContent=''; toast('Photo upload fail: '+err.message, true); }
+      let cv=staged;
+      if(mode==='studio') cv=await studioWhite(staged);
+      else if(mode==='square') cv=padSquare(staged);
+      drawPreview(cv);
+      $('studioStatus').textContent='Upload ho raha…';
+      const jpeg=cv.toDataURL('image/jpeg',0.9).split(',')[1];
+      const base=($('f_id').value.trim()||'product').toLowerCase().replace(/[^a-z0-9-]/g,'-');
+      const out=await api({action:'upload-image', name: base+'.jpg', dataBase64: jpeg});
+      $('f_image').value=out.path; $('imgPreview').src=out.path;
+      $('studioStatus').textContent='Upload ho gaya ✓ — ab "Save — live karo" dabana zaroori hai.';
+      toast('Photo ready ✓ — Save dabana mat bhoolna, tabhi live hoga');
+    }catch(err){ $('studioStatus').textContent=''; toast('Photo process fail: '+err.message, true); }
+    $('studioApply').disabled=false;
   });
 
   $('saveBtn').addEventListener('click', async ()=>{
