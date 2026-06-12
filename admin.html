@@ -115,8 +115,8 @@
         <div id="galleryRow" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;"></div>
         <div class="imgbox">
           <div style="flex:1;">
-            <input type="file" id="f_file" accept="image/jpeg,image/png,image/webp">
-            <p class="hint" id="imgStatus">JPG/PNG chuno — Photo Studio options milenge. Ek-ek karke jitni chaaho photos jodo.</p>
+            <input type="file" id="f_file" accept="image/jpeg,image/png,image/webp" multiple>
+            <p class="hint" id="imgStatus">Ek saath kayi photos select kar sakte ho — mode sab pe ek saath lagega.</p>
           </div>
           <button type="button" class="btn btn-ghost" id="openStudioBtn">🎨 Listing studio</button>
         </div>
@@ -273,8 +273,8 @@
     $('f_signature').checked=!!p?.signature;
     galleryArr = p ? (Array.isArray(p.images)&&p.images.length ? [...p.images] : (p.image?[p.image]:[])) : [];
     renderGallery();
-    $('f_file').value=''; staged=null; $('studio').classList.add('hidden');
-    $('imgStatus').textContent='JPG/PNG chuno — Photo Studio options milenge. Ek-ek karke jitni chaaho photos jodo.';
+    $('f_file').value=''; stagedList=[]; $('studio').classList.add('hidden');
+    $('imgStatus').textContent='Ek saath kayi photos select kar sakte ho — mode sab pe ek saath lagega.';
     priceHint(); show('form');
   }
 
@@ -350,7 +350,7 @@
   /* ---- Photo studio: file → mode chuno → Apply & upload ----
      White-studio mode @imgly/background-removal se browser me hi chalta hai
      (free, koi API nahi); model pehli baar ~40MB download hota hai. */
-  let staged = null;
+  let stagedList = [];
   let rbFn = null;
 
   const urlToCanvas = async (u) => {
@@ -411,38 +411,57 @@
 
   const drawPreview = (cv) => { const p=$('studioCv'); p.width=cv.width; p.height=cv.height; p.getContext('2d').drawImage(cv,0,0); };
   const previewMode = () => {
-    if(!staged) return;
+    if(!stagedList.length) return;
     const mode=document.querySelector('input[name="studioMode"]:checked').value;
-    drawPreview(mode==='square' ? padSquare(staged) : staged);
-    $('studioStatus').textContent = mode==='studio' ? 'White-studio result Apply dabane par banega.' : '';
+    drawPreview(mode==='square' ? padSquare(stagedList[0]) : stagedList[0]);
+    const extra = stagedList.length>1 ? ` (+${stagedList.length-1} aur — same mode sab pe)` : '';
+    $('studioStatus').textContent = (mode==='studio' ? 'White-studio result Apply dabane par banega.' : '') + extra;
   };
   document.querySelectorAll('input[name="studioMode"]').forEach(r=>r.addEventListener('change', previewMode));
 
   $('f_file').addEventListener('change', async ()=>{
-    const file=$('f_file').files[0]; if(!file) return;
-    try{ staged=await fileToCanvas(file); $('studio').classList.remove('hidden'); previewMode(); $('imgStatus').textContent='Mode chuno, phir "Apply & upload".'; }
+    const files=[...$('f_file').files]; if(!files.length) return;
+    const room = 8 - galleryArr.length;
+    if(room <= 0){ toast('8 photos ki limit ho gayi — pehle koi hatao', true); $('f_file').value=''; return; }
+    if(files.length > room) toast('Sirf '+room+' aur photo aa sakti hain (limit 8) — pehli '+room+' li gayi', true);
+    try{
+      stagedList = [];
+      for(const f of files.slice(0, room)) stagedList.push(await fileToCanvas(f));
+      $('studio').classList.remove('hidden'); previewMode();
+      $('imgStatus').textContent = stagedList.length>1
+        ? stagedList.length+' photos — mode chuno, phir "Apply & upload" (sab pe lagega).'
+        : 'Mode chuno, phir "Apply & upload".';
+    }
     catch(err){ toast('Photo padh nahi paye: '+err.message, true); }
   });
-  $('studioCancel').addEventListener('click', ()=>{ staged=null; $('studio').classList.add('hidden'); $('f_file').value=''; $('imgStatus').textContent='JPG/PNG chuno — Photo Studio options milenge.'; });
+  $('studioCancel').addEventListener('click', ()=>{ stagedList=[]; $('studio').classList.add('hidden'); $('f_file').value=''; $('imgStatus').textContent='Ek saath kayi photos select kar sakte ho — mode sab pe ek saath lagega.'; });
 
   $('studioApply').addEventListener('click', async ()=>{
-    if(!staged) return;
+    if(!stagedList.length) return;
     const mode=document.querySelector('input[name="studioMode"]:checked').value;
+    const n=stagedList.length;
     $('studioApply').disabled=true;
+    let done=0;
     try{
-      let cv=staged;
-      if(mode==='studio') cv=await studioWhite(staged);
-      else if(mode==='square') cv=padSquare(staged);
-      drawPreview(cv);
-      $('studioStatus').textContent='Upload ho raha…';
-      const jpeg=cv.toDataURL('image/jpeg',0.9).split(',')[1];
       const base=($('f_id').value.trim()||'product').toLowerCase().replace(/[^a-z0-9-]/g,'-');
-      const out=await api({action:'upload-image', name: base+'.jpg', dataBase64: jpeg});
-      galleryArr.push(out.path); renderGallery();
-      staged=null; $('studio').classList.add('hidden'); $('f_file').value='';
-      $('imgStatus').textContent='Photo #'+galleryArr.length+' jud gayi ✓ — aur photo chuno ya "Save — live karo" dabao.';
-      toast('Photo #'+galleryArr.length+' gallery me ✓ — Save dabana mat bhoolna');
-    }catch(err){ $('studioStatus').textContent=''; toast('Photo process fail: '+err.message, true); }
+      for(let i=0;i<n;i++){
+        $('studioStatus').textContent='Photo '+(i+1)+'/'+n+' process ho rahi…';
+        let cv=stagedList[i];
+        if(mode==='studio') cv=await studioWhite(stagedList[i]);
+        else if(mode==='square') cv=padSquare(stagedList[i]);
+        drawPreview(cv);
+        $('studioStatus').textContent='Photo '+(i+1)+'/'+n+' upload ho rahi…';
+        const jpeg=cv.toDataURL('image/jpeg',0.9).split(',')[1];
+        const out=await api({action:'upload-image', name: base+'.jpg', dataBase64: jpeg});
+        galleryArr.push(out.path); renderGallery(); done++;
+      }
+      stagedList=[]; $('studio').classList.add('hidden'); $('f_file').value='';
+      $('imgStatus').textContent=done+' photo'+(done>1?'s':'')+' jud gayi ✓ (total '+galleryArr.length+') — aur chuno ya "Save — live karo" dabao.';
+      toast(done+' photo'+(done>1?'s':'')+' gallery me ✓ — Save dabana mat bhoolna');
+    }catch(err){
+      $('studioStatus').textContent='';
+      toast('Photo process fail ('+(done+1)+'/'+n+'): '+err.message + (done?` — pehli ${done} jud chuki hain`:''), true);
+    }
     $('studioApply').disabled=false;
   });
 
