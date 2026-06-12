@@ -34,8 +34,14 @@ function cleanProduct(raw) {
   if (!name) throw new Error('name is required');
   const collection = str(raw.collection, 40);
   if (!COLLECTIONS.includes(collection)) throw new Error('unknown collection');
+  const imgOk = (s) => s.startsWith('assets/') || s.startsWith('/img/');
   const image = str(raw.image, 200);
-  if (image && !(image.startsWith('assets/') || image.startsWith('/img/'))) throw new Error('image must be an assets/ path or an uploaded /img/ path');
+  if (image && !imgOk(image)) throw new Error('image must be an assets/ path or an uploaded /img/ path');
+  /* gallery: images[] (max 8); first one is the primary shown on cards/feed */
+  let images = Array.isArray(raw.images)
+    ? raw.images.map(s => str(s, 200)).filter(Boolean).slice(0, 8) : [];
+  for (const s of images) if (!imgOk(s)) throw new Error('har gallery image assets/ ya /img/ path honi chahiye');
+  if (!images.length && image) images = [image];
 
   const p = {
     id, name, collection,
@@ -43,8 +49,9 @@ function cleanProduct(raw) {
     series: str(raw.series, 160),
     materials: str(raw.materials, 160),
     desc: str(raw.desc, 600),
-    image,
+    image: images[0] || image,
   };
+  if (images.length) p.images = images;
   const opt = {
     construction: str(raw.construction, 120), sizes: str(raw.sizes, 160),
     moq: str(raw.moq, 60), hsn: str(raw.hsn, 20), tag: str(raw.tag, 60),

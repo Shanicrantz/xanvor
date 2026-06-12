@@ -110,14 +110,14 @@
       <div class="span3"><div class="price-hint" id="priceHint"></div></div>
       <div class="span3"><label>Highlights — ek line me ek</label><textarea id="f_highlights" placeholder="Solid brass, double-wall&#10;Food-safe SS304 inner"></textarea></div>
       <div class="span3">
-        <label>Photo</label>
+        <label>Photos — pehli wali main hai (cards, Google feed); baaki PDP gallery me</label>
+        <div id="galleryRow" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;"></div>
         <div class="imgbox">
-          <img id="imgPreview" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
           <div style="flex:1;">
             <input type="file" id="f_file" accept="image/jpeg,image/png,image/webp">
-            <input type="hidden" id="f_image">
-            <p class="hint" id="imgStatus">JPG/PNG chuno — Photo Studio options milenge.</p>
+            <p class="hint" id="imgStatus">JPG/PNG chuno — Photo Studio options milenge. Ek-ek karke jitni chaaho photos jodo.</p>
           </div>
+          <button type="button" class="btn btn-ghost" id="openStudioBtn">🎨 Listing studio</button>
         </div>
         <div id="studio" class="hidden" style="margin-top:14px;border:1px solid var(--line-strong);border-radius:8px;padding:16px;background:#fff;">
           <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
@@ -190,7 +190,7 @@
       <div class="span3" style="display:flex;gap:12px;flex-wrap:wrap;">
         <button type="button" class="btn btn-primary" id="ls_generate">Generate</button>
         <button type="button" class="btn btn-ghost" id="ls_download" disabled>⬇ Download JPG</button>
-        <button type="button" class="btn btn-ghost" id="ls_setImage" disabled>Site photo bana do</button>
+        <button type="button" class="btn btn-ghost" id="ls_setImage" disabled>Product gallery me daal do</button>
         <button type="button" class="btn btn-ghost" id="ls_back">← Products</button>
       </div>
     </div>
@@ -269,11 +269,37 @@
     $('f_mrp').value=p?.mrp||''; $('f_retail').value=p?.retail||''; $('f_offer').value=p?.offer||'';
     $('f_highlights').value=(p?.highlights||[]).join('\n');
     $('f_signature').checked=!!p?.signature;
-    $('f_image').value=p?.image||''; $('imgPreview').src=p?.image||'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
+    galleryArr = p ? (Array.isArray(p.images)&&p.images.length ? [...p.images] : (p.image?[p.image]:[])) : [];
+    renderGallery();
     $('f_file').value=''; staged=null; $('studio').classList.add('hidden');
-    $('imgStatus').textContent='JPG/PNG chuno — Photo Studio options milenge.';
+    $('imgStatus').textContent='JPG/PNG chuno — Photo Studio options milenge. Ek-ek karke jitni chaaho photos jodo.';
     priceHint(); show('form');
   }
+
+  /* ---- form photo gallery (pehli = main) ---- */
+  let galleryArr = [];
+  function renderGallery(){
+    $('galleryRow').innerHTML = galleryArr.length ? galleryArr.map((g,i)=>`
+      <div style="border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;width:88px;background:#fff;">
+        <div style="position:relative;">
+          <img src="${window.xvImg?xvImg(g,160):g}" style="width:88px;height:88px;object-fit:cover;display:block;">
+          ${i===0?'<span style="position:absolute;top:4px;left:4px;background:#A85D2A;color:#FBF6E8;font-family:\'JetBrains Mono\',monospace;font-size:8px;letter-spacing:.1em;padding:2px 7px;border-radius:20px;">MAIN</span>':''}
+        </div>
+        <div style="display:flex;border-top:1px solid var(--line);">
+          ${i>0?`<button type="button" data-gmain="${i}" title="Main banao" style="flex:1;border:none;background:#F8F2E6;font-size:13px;padding:4px;cursor:pointer;">★</button>`:''}
+          <button type="button" data-gdel="${i}" title="Hatao" style="flex:1;border:none;background:#F8F2E6;font-size:13px;padding:4px;cursor:pointer;color:#A32D2D;">✕</button>
+        </div>
+      </div>`).join('') : '<p class="hint" style="margin:0;">Abhi koi photo nahi — neeche se add karo.</p>';
+  }
+  $('galleryRow').addEventListener('click', e=>{
+    const m=e.target.closest('[data-gmain]'), d=e.target.closest('[data-gdel]');
+    if(m){ const i=+m.dataset.gmain; galleryArr.unshift(galleryArr.splice(i,1)[0]); renderGallery(); }
+    if(d){ galleryArr.splice(+d.dataset.gdel,1); renderGallery(); }
+  });
+  $('openStudioBtn').addEventListener('click', ()=>{
+    if(editingId){ const sel=$('ls_product'); sel.value=editingId; sel.dispatchEvent(new Event('change',{bubbles:true})); show('listing'); }
+    else toast('Pehle product Save karo — phir Listing studio se bani images gallery me daal sakte ho', true);
+  });
 
   async function refresh(){
     const data = await api({action:'list'});
@@ -390,9 +416,10 @@
       const jpeg=cv.toDataURL('image/jpeg',0.9).split(',')[1];
       const base=($('f_id').value.trim()||'product').toLowerCase().replace(/[^a-z0-9-]/g,'-');
       const out=await api({action:'upload-image', name: base+'.jpg', dataBase64: jpeg});
-      $('f_image').value=out.path; $('imgPreview').src=out.path;
-      $('studioStatus').textContent='Upload ho gaya ✓ — ab "Save — live karo" dabana zaroori hai.';
-      toast('Photo ready ✓ — Save dabana mat bhoolna, tabhi live hoga');
+      galleryArr.push(out.path); renderGallery();
+      staged=null; $('studio').classList.add('hidden'); $('f_file').value='';
+      $('imgStatus').textContent='Photo #'+galleryArr.length+' jud gayi ✓ — aur photo chuno ya "Save — live karo" dabao.';
+      toast('Photo #'+galleryArr.length+' gallery me ✓ — Save dabana mat bhoolna');
     }catch(err){ $('studioStatus').textContent=''; toast('Photo process fail: '+err.message, true); }
     $('studioApply').disabled=false;
   });
@@ -406,9 +433,10 @@
       availability: $('f_availability').value,
       mrp: $('f_mrp').value, retail: $('f_retail').value, offer: $('f_offer').value,
       highlights: $('f_highlights').value.split('\n').map(s=>s.trim()).filter(Boolean),
-      signature: $('f_signature').checked, image: $('f_image').value,
+      signature: $('f_signature').checked,
+      images: galleryArr, image: galleryArr[0] || '',
     };
-    if(!product.image) { if(!confirm('Photo nahi lagi — bina photo ke save karein? (Card pe khali thumbnail dikhega)')) return; }
+    if(!galleryArr.length) { if(!confirm('Koi photo nahi lagi — bina photo ke save karein? (Card pe khali thumbnail dikhega)')) return; }
     $('saveBtn').disabled = true;
     try{
       await api({action:'save', product});
@@ -603,13 +631,15 @@
 
   $('ls_setImage').addEventListener('click', async ()=>{
     const p = lsProduct(); if(!p || !LS.ready) return;
-    if(!confirm(`"${p.name}" ki website photo is image se badal dein?`)) return;
+    if(!confirm(`Yeh image "${p.name}" ki photo gallery me jod dein? (Product page pe thumbnail ban ke dikhegi)`)) return;
     $('ls_setImage').disabled = true;
     try{
       const jpeg = lsC.toDataURL('image/jpeg',0.9).split(',')[1];
       const out = await api({action:'upload-image', name: p.id+'-listing.jpg', dataBase64: jpeg});
-      await api({action:'save', product: {...p, image: out.path}});
-      toast('Ho gaya — website pe ~1 min me nayi photo');
+      const imgs = (Array.isArray(p.images)&&p.images.length) ? [...p.images] : (p.image?[p.image]:[]);
+      imgs.push(out.path);
+      await api({action:'save', product: {...p, images: imgs, image: imgs[0]}});
+      toast('Gallery me jud gayi ('+imgs.length+' photos) — website pe ~1 min me');
       await refresh();
     }catch(err){ toast(err.message, true); }
     $('ls_setImage').disabled = false;

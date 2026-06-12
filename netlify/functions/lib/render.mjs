@@ -12,10 +12,14 @@ export const esc = (s) => String(s ?? '')
 
 export const productURL = (p) => `${SITE}/product.html?id=${encodeURIComponent(p.id)}`;
 
-export const imageURL = (p) => {
-  const img = String(p.image || '');
+const absImage = (s) => {
+  const img = String(s || '');
   return img.startsWith('/') ? `${SITE}${img}` : `${SITE}/${img}`;
 };
+export const imageURL = (p) => absImage(p.image);
+/* full gallery — images[] if present, else the single image */
+export const galleryOf = (p) =>
+  (Array.isArray(p.images) && p.images.length ? p.images : [p.image]).filter(Boolean);
 
 /* GST-inclusive customer price — must match product.js buybox math */
 export const inclPrice = (p) => {
@@ -62,6 +66,9 @@ export function renderFeed(products) {
   const retail = products.filter(isRetail);
   const items = retail.map(p => {
     const incl = inclPrice(p);
+    const gal = galleryOf(p);
+    const extraImgs = gal.slice(1, 11).map(g =>
+      `\n    <g:additional_image_link>${esc(absImage(g))}</g:additional_image_link>`).join('');
     const firstMaterial = String(p.materials || '').split('·')[0].trim();
     const title = `${p.name} — ${firstMaterial} · XANVOR`;
     const description = [
@@ -75,7 +82,7 @@ export function renderFeed(products) {
     <g:title>${esc(title)}</g:title>
     <g:description>${esc(description)}</g:description>
     <g:link>${esc(productURL(p))}</g:link>
-    <g:image_link>${esc(imageURL(p))}</g:image_link>
+    <g:image_link>${esc(absImage(gal[0]))}</g:image_link>${extraImgs}
     <g:availability>${p.availability === 'out_of_stock' ? 'out_of_stock' : 'in_stock'}</g:availability>
     <g:condition>new</g:condition>
     <g:brand>XANVOR</g:brand>

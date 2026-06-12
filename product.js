@@ -63,10 +63,21 @@
     return;
   }
 
+  /* ---- photo gallery (images[] if present, else single image) ---- */
+  const GALLERY = (Array.isArray(product.images) && product.images.length ? product.images : [product.image]).filter(Boolean);
+  root.addEventListener('click', (e) => {
+    const b = e.target.closest('.pd-th'); if(!b) return;
+    const i = +b.dataset.i, src = GALLERY[i];
+    const main = root.querySelector('.main-shot img');
+    if(main) main.src = window.xvImg ? xvImg(src, 1200) : src;
+    root.querySelectorAll('.pd-th').forEach(t => t.classList.toggle('on', t === b));
+  });
+
   /* ---- meta + SEO (canonical, OG, Product structured data) ---- */
   const SITE_URL  = 'https://xanvor.com';
   const pageURL   = `${SITE_URL}/product.html?id=${encodeURIComponent(product.id)}`;
-  const imageURL  = `${SITE_URL}/${String(product.image||'').replace(/^\/+/,'')}`;
+  const absImg    = (s) => `${SITE_URL}/${String(s||'').replace(/^\/+/,'')}`;
+  const imageURL  = absImg(product.image);
   const metaDesc  = `${product.name} (${product.code}) — ${product.desc}`;
   document.title = `${product.name} — XANVOR`;
   document.querySelector('meta[name="description"]').setAttribute('content', metaDesc);
@@ -84,7 +95,7 @@
       '@type': 'Product',
       name: product.name,
       sku: product.id,
-      image: [imageURL],
+      image: GALLERY.map(absImg),
       description: `${product.desc} ${product.materials ? product.materials.replace(/·/g,', ') + '.' : ''} Handcrafted in Moradabad, India.`.trim(),
       brand: { '@type': 'Brand', name: 'XANVOR' },
       material: (product.materials||'').split('·').map(s=>s.trim()).filter(Boolean).join(', ') || undefined,
@@ -245,8 +256,12 @@
       <div class="gallery">
         <div class="main-shot">
           ${product.tag ? `<span class="badge-pin">${esc(product.tag)}</span>` : ''}
-          <img src="${esc(window.xvImg ? xvImg(product.image, 1200) : product.image)}" alt="${esc(product.name)}">
+          <img src="${esc(window.xvImg ? xvImg(GALLERY[0], 1200) : GALLERY[0])}" alt="${esc(product.name)}">
         </div>
+        ${GALLERY.length > 1 ? `
+        <div class="pd-thumbs">
+          ${GALLERY.map((g,i)=>`<button type="button" class="pd-th${i===0?' on':''}" data-i="${i}" aria-label="Photo ${i+1}"><img src="${esc(window.xvImg ? xvImg(g, 200) : g)}" alt=""></button>`).join('')}
+        </div>` : ''}
         <div class="shot-meta">Photographed at the workshop · Moradabad</div>
         <div class="finish-row">
           <div class="lbl">Available finishes</div>
