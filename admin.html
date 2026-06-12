@@ -82,6 +82,7 @@
     <div class="toolbar">
       <h2 style="margin:0;flex:1;">Products <span class="count" id="count"></span></h2>
       <input type="search" id="search" placeholder="Search — naam ya id">
+      <button class="btn btn-ghost" id="listingBtn">🎨 Listing studio</button>
       <button class="btn btn-primary" id="addBtn">+ Naya product</button>
     </div>
     <div id="list"></div>
@@ -147,6 +148,54 @@
     </div>
   </div>
 
+  <div class="panel hidden" id="listingPanel">
+    <h2>Listing studio <span class="count">· Amazon-style images, 1600×1600</span></h2>
+    <div class="grid">
+      <div class="span2">
+        <label>Product (naam / features auto-bharne ke liye)</label>
+        <select id="ls_product"><option value="">— koi product chuno —</option></select>
+      </div>
+      <div>
+        <label>Template</label>
+        <select id="ls_template">
+          <option value="callout">Callouts — photo pe feature labels</option>
+          <option value="collage">Collage — 2–4 photos grid</option>
+          <option value="hero">Hero + feature list</option>
+        </select>
+      </div>
+      <div class="span3">
+        <label>Photos (1–4 chuno; collage ke liye 2+)</label>
+        <input type="file" id="ls_files" accept="image/jpeg,image/png,image/webp" multiple>
+        <div id="ls_thumbs" style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;"></div>
+        <label style="display:flex;gap:8px;align-items:center;margin-top:10px;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--ink);">
+          <input type="checkbox" id="ls_whitebg" checked style="width:auto;"> ✨ AI white studio background sab photos pe
+        </label>
+      </div>
+      <div class="span3" id="ls_calloutBox">
+        <label>Callout add karo — text likho, phir preview me product ke us hisse pe click karo</label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <input id="ls_calloutText" placeholder="jaise: Hand-hammered brass" style="flex:1;min-width:200px;">
+          <button type="button" class="btn btn-ghost" id="ls_undoCallout">Undo last</button>
+        </div>
+        <p class="hint" id="ls_calloutHint">Pehle text likho, phir photo pe click — label wahan lag jayega.</p>
+      </div>
+      <div class="span3 hidden" id="ls_featBox">
+        <label>Feature list — ek line me ek (product chunne par highlights se khud bharta hai)</label>
+        <textarea id="ls_features" placeholder="Solid brass, double-wall&#10;Food-safe SS304 inner"></textarea>
+      </div>
+      <div class="span3">
+        <canvas id="ls_canvas" width="1600" height="1600" style="width:100%;max-width:480px;border:1px solid var(--line-strong);border-radius:8px;background:#fff;cursor:crosshair;"></canvas>
+        <p class="hint" id="ls_status"></p>
+      </div>
+      <div class="span3" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button type="button" class="btn btn-primary" id="ls_generate">Generate</button>
+        <button type="button" class="btn btn-ghost" id="ls_download" disabled>⬇ Download JPG</button>
+        <button type="button" class="btn btn-ghost" id="ls_setImage" disabled>Site photo bana do</button>
+        <button type="button" class="btn btn-ghost" id="ls_back">← Products</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 <div class="toast" id="toast"></div>
 <script src="assets/img-opt.js?v=1"></script>
@@ -172,6 +221,7 @@
     $('gate').classList.toggle('hidden', view!=='gate');
     $('listPanel').classList.toggle('hidden', view!=='list');
     $('formPanel').classList.toggle('hidden', view!=='form');
+    $('listingPanel').classList.toggle('hidden', view!=='listing');
     $('lockBtn').classList.toggle('hidden', view==='gate');
     window.scrollTo({top:0});
   }
@@ -228,6 +278,8 @@
   async function refresh(){
     const data = await api({action:'list'});
     CATALOG = data.products; renderList();
+    $('ls_product').innerHTML = '<option value="">— koi product chuno —</option>' +
+      CATALOG.map(p=>`<option value="${p.id}">${p.id} · ${p.name}</option>`).join('');
   }
 
   async function unlock(){
@@ -277,9 +329,11 @@
     return out;
   };
 
+  const stStatus = t => { $('studioStatus').textContent=t; const l=$('ls_status'); if(l && !$('listingPanel').classList.contains('hidden')) l.textContent=t; };
+
   const getRB = async () => {
     if(rbFn) return rbFn;
-    $('studioStatus').textContent='AI model download ho raha hai (~40MB, sirf pehli baar)…';
+    stStatus('AI model download ho raha hai (~40MB, sirf pehli baar)…');
     const m = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm');
     rbFn = m.removeBackground || m.default;
     return rbFn;
@@ -287,7 +341,7 @@
 
   const studioWhite = async (cv) => {
     const rb = await getRB();
-    $('studioStatus').textContent='Background hata rahe… (10–30 sec lag sakte hain)';
+    stStatus('Background hata rahe… (10–30 sec lag sakte hain)');
     const blob = await new Promise(res=>cv.toBlob(res,'image/png'));
     const cutBlob = await rb(blob);
     const cut = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=URL.createObjectURL(cutBlob); });
@@ -362,6 +416,203 @@
       await refresh(); show('list');
     }catch(err){ toast(err.message, true); }
     $('saveBtn').disabled = false;
+  });
+
+  /* ================= Listing studio — Amazon-style images ================= */
+  const LS = { photos: [], processed: [], callouts: [], ready: false };
+  const lsC = $('ls_canvas'), lsX = lsC.getContext('2d');
+  const FOOT = 'XANVOR · MORADABAD · IN';
+
+  const lsStatus = t => { $('ls_status').textContent = t; };
+  const lsProduct = () => CATALOG.find(p=>p.id===$('ls_product').value);
+
+  $('listingBtn').addEventListener('click', ()=>{ show('listing'); });
+  $('ls_back').addEventListener('click', ()=>show('list'));
+
+  $('ls_product').addEventListener('change', ()=>{
+    const p = lsProduct();
+    if(p && p.highlights && p.highlights.length) $('ls_features').value = p.highlights.join('\n');
+  });
+
+  $('ls_template').addEventListener('change', ()=>{
+    const t = $('ls_template').value;
+    $('ls_calloutBox').classList.toggle('hidden', t!=='callout');
+    $('ls_featBox').classList.toggle('hidden', t!=='hero');
+    if(LS.ready) lsGenerate();
+  });
+
+  $('ls_files').addEventListener('change', async ()=>{
+    const files = [...$('ls_files').files].slice(0,4);
+    if(!files.length) return;
+    lsStatus('Photos load ho rahi…');
+    LS.photos = []; LS.processed = []; LS.callouts = []; LS.ready = false;
+    for(const f of files) LS.photos.push(await fileToCanvas(f));
+    $('ls_thumbs').innerHTML = LS.photos.map((cv,i)=>{
+      const t=document.createElement('canvas'); t.width=120; t.height=120;
+      const s=Math.min(120/cv.width,120/cv.height);
+      const x=t.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,120,120);
+      x.drawImage(cv,(120-cv.width*s)/2,(120-cv.height*s)/2,cv.width*s,cv.height*s);
+      return `<img src="${t.toDataURL()}" style="width:60px;height:60px;border:1px solid var(--line);border-radius:6px;">`;
+    }).join('');
+    lsStatus(LS.photos.length+' photo'+(LS.photos.length>1?'s':'')+' ready — Generate dabao.');
+  });
+
+  async function lsPrepPhotos(){
+    if(LS.processed.length === LS.photos.length) return LS.processed;
+    LS.processed = [];
+    for(let i=0;i<LS.photos.length;i++){
+      lsStatus('Photo '+(i+1)+'/'+LS.photos.length+' process ho rahi…');
+      LS.processed.push($('ls_whitebg').checked ? await studioWhite(LS.photos[i]) : padSquare(LS.photos[i]));
+    }
+    return LS.processed;
+  }
+  $('ls_whitebg').addEventListener('change', ()=>{ LS.processed=[]; });
+
+  const wrapText = (ctx, text, x, y, maxW, lineH, maxLines, draw=true) => {
+    const words = String(text).split(/\s+/); let line='', lines=0;
+    for(const w of words){
+      const test = line ? line+' '+w : w;
+      if(ctx.measureText(test).width > maxW && line){
+        if(draw) ctx.fillText(line, x, y); y+=lineH; lines++; line=w;
+        if(lines>=maxLines-1) break;
+      } else line=test;
+    }
+    if(line && lines<maxLines){ if(draw) ctx.fillText(line, x, y); y+=lineH; lines++; }
+    return y;
+  };
+
+  const lsBase = () => { lsX.fillStyle='#fff'; lsX.fillRect(0,0,1600,1600); };
+  const lsFoot = () => {
+    lsX.fillStyle='#A85D2A'; lsX.font='500 26px "JetBrains Mono", monospace';
+    lsX.textAlign='center'; lsX.fillText(FOOT, 800, 1568); lsX.textAlign='left';
+  };
+  const drawContain = (cv, x, y, w, h, pad=0.04) => {
+    const iw=w*(1-2*pad), ih=h*(1-2*pad);
+    const s=Math.min(iw/cv.width, ih/cv.height);
+    lsX.drawImage(cv, x+(w-cv.width*s)/2, y+(h-cv.height*s)/2, cv.width*s, cv.height*s);
+  };
+
+  function renderCallout(ph){
+    lsBase();
+    drawContain(ph[0], 200, 120, 1200, 1300);
+    const sides = {left:[], right:[]};
+    LS.callouts.forEach(c => sides[c.x<800?'left':'right'].push(c));
+    lsX.font='500 30px "JetBrains Mono", monospace'; lsX.textBaseline='middle';
+    for(const side of ['left','right']){
+      let lastY = 0;
+      sides[side].sort((a,b)=>a.y-b.y).forEach(c=>{
+        let ly = Math.max(110, Math.min(1450, c.y));
+        if(ly < lastY + 100) ly = lastY + 100;
+        lastY = ly;
+        const label = c.text.toUpperCase();
+        const tw = Math.min(lsX.measureText(label).width, 560);
+        const chipW = tw + 44, chipH = 64;
+        const chipX = side==='left' ? 28 : 1572-chipW;
+        lsX.strokeStyle='#241510'; lsX.lineWidth=3;
+        lsX.beginPath();
+        lsX.moveTo(side==='left'?chipX+chipW:chipX, ly);
+        lsX.lineTo(c.x, c.y); lsX.stroke();
+        lsX.beginPath(); lsX.arc(c.x, c.y, 13, 0, 7);
+        lsX.fillStyle='#A85D2A'; lsX.fill();
+        lsX.strokeStyle='#fff'; lsX.lineWidth=4; lsX.stroke();
+        lsX.fillStyle='#241510';
+        lsX.beginPath(); lsX.roundRect(chipX, ly-chipH/2, chipW, chipH, 10); lsX.fill();
+        lsX.fillStyle='#FBF6E8';
+        lsX.save(); lsX.beginPath(); lsX.rect(chipX+22, ly-chipH/2, tw, chipH); lsX.clip();
+        lsX.fillText(label, chipX+22, ly+2); lsX.restore();
+      });
+    }
+    lsX.textBaseline='alphabetic';
+    lsFoot();
+  }
+
+  function renderCollage(ph, name){
+    lsBase();
+    const G=18, top=24, bottom=1600-110;
+    const area={x:24,y:top,w:1552,h:bottom-top};
+    const cell=(x,y,w,h,cv)=>{ lsX.strokeStyle='#E6DCC8'; lsX.lineWidth=2; lsX.strokeRect(x,y,w,h); drawContain(cv,x,y,w,h); };
+    const n=ph.length;
+    if(n===1) cell(area.x,area.y,area.w,area.h,ph[0]);
+    else if(n===2){ const w=(area.w-G)/2; cell(area.x,area.y,w,area.h,ph[0]); cell(area.x+w+G,area.y,w,area.h,ph[1]); }
+    else if(n===3){ const w=(area.w-G)*0.58, w2=area.w-G-w, h2=(area.h-G)/2;
+      cell(area.x,area.y,w,area.h,ph[0]); cell(area.x+w+G,area.y,w2,h2,ph[1]); cell(area.x+w+G,area.y+h2+G,w2,h2,ph[2]); }
+    else { const w=(area.w-G)/2, h=(area.h-G)/2;
+      cell(area.x,area.y,w,h,ph[0]); cell(area.x+w+G,area.y,w,h,ph[1]);
+      cell(area.x,area.y+h+G,w,h,ph[2]); cell(area.x+w+G,area.y+h+G,w,h,ph[3]); }
+    if(name){ lsX.fillStyle='#241510'; lsX.font='400 44px "Fraunces", serif'; lsX.textAlign='center';
+      lsX.fillText(name, 800, 1532); lsX.textAlign='left'; }
+    lsFoot();
+  }
+
+  function renderHero(ph, name, features){
+    lsBase();
+    drawContain(ph[0], 0, 200, 920, 1200, 0.03);
+    let y = 300;
+    lsX.fillStyle='#241510'; lsX.font='400 76px "Fraunces", serif';
+    y = wrapText(lsX, name || 'XANVOR', 950, y, 600, 88, 3) + 16;
+    lsX.fillStyle='#A85D2A'; lsX.fillRect(950, y, 120, 4); y += 70;
+    lsX.font='400 42px "Cormorant Garamond", serif';
+    features.slice(0,5).forEach(f=>{
+      lsX.fillStyle='#A85D2A'; lsX.beginPath(); lsX.arc(962, y-12, 9, 0, 7); lsX.fill();
+      lsX.fillStyle='#1F140C';
+      y = wrapText(lsX, f, 990, y, 560, 52, 2) + 26;
+    });
+    lsFoot();
+  }
+
+  async function lsGenerate(){
+    if(!LS.photos.length){ toast('Pehle photos chuno', true); return; }
+    $('ls_generate').disabled = true;
+    try{
+      await document.fonts.ready;
+      const ph = await lsPrepPhotos();
+      const t = $('ls_template').value;
+      const p = lsProduct();
+      if(t==='callout') renderCallout(ph);
+      else if(t==='collage') renderCollage(ph, p ? p.name : '');
+      else renderHero(ph, p ? p.name : 'XANVOR', $('ls_features').value.split('\n').map(s=>s.trim()).filter(Boolean));
+      LS.ready = true;
+      $('ls_download').disabled = false;
+      $('ls_setImage').disabled = !p;
+      lsStatus(t==='callout' ? 'Ab text likh ke photo pe click karo — callout lagta jayega.' : 'Ready — Download karo ya site photo banao.');
+    }catch(err){ toast('Generate fail: '+err.message, true); lsStatus(''); }
+    $('ls_generate').disabled = false;
+  }
+  $('ls_generate').addEventListener('click', lsGenerate);
+
+  lsC.addEventListener('click', e=>{
+    if($('ls_template').value!=='callout' || !LS.ready) return;
+    const txt = $('ls_calloutText').value.trim();
+    if(!txt){ toast('Pehle callout text likho', true); $('ls_calloutText').focus(); return; }
+    const r = lsC.getBoundingClientRect();
+    const x = (e.clientX-r.left)/r.width*1600, y=(e.clientY-r.top)/r.height*1600;
+    if(x<200||x>1400||y<120||y>1420){ toast('Product ke upar click karo', true); return; }
+    LS.callouts.push({x,y,text:txt.slice(0,40)});
+    $('ls_calloutText').value='';
+    renderCallout(LS.processed);
+  });
+  $('ls_undoCallout').addEventListener('click', ()=>{ LS.callouts.pop(); if(LS.ready) renderCallout(LS.processed); });
+
+  $('ls_download').addEventListener('click', ()=>{
+    const p = lsProduct();
+    const a=document.createElement('a');
+    a.download = (p?p.id:'xanvor')+'-'+$('ls_template').value+'.jpg';
+    a.href = lsC.toDataURL('image/jpeg', 0.92);
+    a.click();
+  });
+
+  $('ls_setImage').addEventListener('click', async ()=>{
+    const p = lsProduct(); if(!p || !LS.ready) return;
+    if(!confirm(`"${p.name}" ki website photo is image se badal dein?`)) return;
+    $('ls_setImage').disabled = true;
+    try{
+      const jpeg = lsC.toDataURL('image/jpeg',0.9).split(',')[1];
+      const out = await api({action:'upload-image', name: p.id+'-listing.jpg', dataBase64: jpeg});
+      await api({action:'save', product: {...p, image: out.path}});
+      toast('Ho gaya — website pe ~1 min me nayi photo');
+      await refresh();
+    }catch(err){ toast(err.message, true); }
+    $('ls_setImage').disabled = false;
   });
 
   if(KEY){ refresh().then(()=>show('list')).catch(()=>{ KEY=''; sessionStorage.removeItem('xv_admin_key'); show('gate'); }); }
