@@ -73,6 +73,7 @@ function cleanProduct(raw) {
     if (incl > mrp) throw new Error(`GST-inclusive price ₹${incl} MRP ₹${mrp} se zyada ho jayega — MRP badhao ya retail ghatao`);
   }
   if (raw.availability === 'out_of_stock') p.availability = 'out_of_stock';
+  if (raw.status === 'draft') p.status = 'draft';
 
   const highlights = Array.isArray(raw.highlights)
     ? raw.highlights.map(h => str(h, 100)).filter(Boolean).slice(0, 8) : [];
@@ -102,7 +103,13 @@ export default async (req) => {
       const cat = await getCatalog();
       const products = [...cat.products];
       const i = products.findIndex(p => p.id === product.id);
-      if (i >= 0) products[i] = { ...products[i], ...product };
+      if (i >= 0) {
+        products[i] = { ...products[i], ...product };
+        /* toggle fields: absent in the clean product means switched OFF — drop stale values */
+        if (!product.status) delete products[i].status;
+        if (!product.availability) delete products[i].availability;
+        if (!product.signature) delete products[i].signature;
+      }
       else products.push(product);
       const saved = await saveCatalog(products);
       return json({ ok: true, count: saved.products.length, product });
