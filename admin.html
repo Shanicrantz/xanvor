@@ -178,7 +178,8 @@
           <input id="ls_calloutText" placeholder="jaise: Hand-hammered brass" style="flex:1;min-width:200px;">
           <button type="button" class="btn btn-ghost" id="ls_undoCallout">Undo last</button>
         </div>
-        <p class="hint" id="ls_calloutHint">Pehle text likho, phir photo pe click — label wahan lag jayega.</p>
+        <p class="hint" id="ls_calloutHint">Pehle text likho (ya neeche chip dabao), phir photo pe click — label wahan lag jayega.</p>
+        <div id="ls_chipRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;"></div>
       </div>
       <div class="span3 hidden" id="ls_featBox">
         <label>Feature list — ek line me ek (product chunne par highlights se khud bharta hai)</label>
@@ -304,6 +305,7 @@
     LS.formCtx = { name: $('f_name').value.trim(), highlights: $('f_highlights').value };
     $('ls_product').value = editingId || '';
     if($('f_highlights').value.trim()) $('ls_features').value = $('f_highlights').value;
+    renderCalloutChips();
     show('listing');
     if(galleryArr.length){
       lsStatus('Form ki photos studio me la rahe…');
@@ -496,7 +498,7 @@
   const lsStatus = t => { $('ls_status').textContent = t; };
   const lsProduct = () => CATALOG.find(p=>p.id===$('ls_product').value);
 
-  $('listingBtn').addEventListener('click', ()=>{ LS.fromForm=false; LS.formCtx=null; show('listing'); });
+  $('listingBtn').addEventListener('click', ()=>{ LS.fromForm=false; LS.formCtx=null; renderCalloutChips(); show('listing'); });
   $('ls_back').addEventListener('click', ()=>{ if(LS.fromForm){ LS.fromForm=false; show('form'); } else show('list'); });
 
   function renderLsThumbs(){
@@ -509,15 +511,48 @@
     }).join('');
   }
 
-  $('ls_product').addEventListener('change', ()=>{
+  /* product chuna = uska sab kuch fetch: highlights (features + callout chips) aur gallery photos */
+  function currentHighlights(){
+    const p = lsProduct();
+    if(p && p.highlights && p.highlights.length) return p.highlights;
+    if(LS.formCtx && LS.formCtx.highlights) return LS.formCtx.highlights.split('\n').map(s=>s.trim()).filter(Boolean);
+    return [];
+  }
+  function renderCalloutChips(){
+    const hs = currentHighlights().slice(0,8);
+    $('ls_chipRow').innerHTML = hs.length
+      ? hs.map(h=>`<button type="button" class="btn btn-ghost" data-chip="${h.replace(/"/g,'&quot;')}" style="padding:6px 12px;font-size:9px;letter-spacing:.1em;">${h}</button>`).join('')
+      : '<span class="hint" style="margin:0;">Product chuno — uske highlights yahan chips ban ke aayenge.</span>';
+  }
+  $('ls_chipRow').addEventListener('click', e=>{
+    const b = e.target.closest('[data-chip]'); if(!b) return;
+    $('ls_calloutText').value = b.dataset.chip;
+    $('ls_calloutHint').textContent = 'Ab photo pe us jagah click karo jahan "'+b.dataset.chip+'" lagana hai.';
+  });
+
+  $('ls_product').addEventListener('change', async ()=>{
     const p = lsProduct();
     if(p && p.highlights && p.highlights.length) $('ls_features').value = p.highlights.join('\n');
+    renderCalloutChips();
+    if(!p) return;
+    const gal = (Array.isArray(p.images)&&p.images.length) ? p.images : (p.image?[p.image]:[]);
+    if(!gal.length){ lsStatus('Is product me photo nahi — Choose files se chuno.'); return; }
+    lsStatus('Product ki photos la rahe…');
+    try{
+      LS.photos=[]; LS.processed=[]; LS.callouts=[]; LS.ready=false;
+      for(const g of gal) LS.photos.push(await urlToCanvas(g));
+      renderLsThumbs();
+      /* gallery photos pipeline se pehle hi optimize hain — AI dobara chalane ki zaroorat nahi */
+      $('ls_whitebg').checked = false;
+      lsStatus(LS.photos.length+' photo'+(LS.photos.length>1?'s':'')+' product se aa gayi (white-bg pehle se) — Generate dabao. Alag photos chahiye to Choose files.');
+    }catch(e){ lsStatus('Photos load nahi hui — Choose files se chuno.'); }
   });
 
   $('ls_template').addEventListener('change', ()=>{
     const t = $('ls_template').value;
     $('ls_calloutBox').classList.toggle('hidden', t!=='callout');
     $('ls_featBox').classList.toggle('hidden', t!=='hero');
+    if(t==='callout') renderCalloutChips();
     if(LS.ready) lsGenerate();
   });
 
