@@ -11,7 +11,7 @@ import { getStore } from '@netlify/blobs';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { getCatalog, saveCatalog } from './lib/catalog.mjs';
 
-const COLLECTIONS = ['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve'];
+const COLLECTIONS = ['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
