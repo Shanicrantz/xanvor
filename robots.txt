@@ -6,5 +6,6 @@ Allow: /
 Disallow: /checkout.html
 Disallow: /admin.html
 Disallow: /api/
+Disallow: /mcp/
 
 Sitemap: https://xanvor.com/sitemap.xml
