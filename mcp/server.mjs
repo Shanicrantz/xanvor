@@ -4,6 +4,8 @@
 
    Tools: list_products, get_product, upsert_product,
           add_product_photos (resize + optional AI white-bg + 1:1),
+          make_listing_images (white main + callouts + collage + hero,
+            attach + optional go-live),
           set_product_status, delete_product
 
    Backend = https://xanvor.com/api/admin (Netlify functions + Blobs).
@@ -15,6 +17,7 @@ import { z } from 'zod';
 import sharp from 'sharp';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { whiteMain, renderCallouts, renderCollage, renderHero } from './listing.mjs';
 
 const SITE = process.env.XANVOR_SITE || 'https://xanvor.com';
 const KEY = process.env.XANVOR_ADMIN_KEY;
@@ -210,6 +213,55 @@ server.tool(
       added: results, gallery_now: images.length,
       skipped: file_paths.length > room ? file_paths.length - room : 0,
       note: (p.status === 'draft' ? 'Product DRAFT me hai — live karne pe dikhega.' : 'Website pe ~1 min me, Google feed agle fetch pe.'),
+    });
+  }
+);
+
+server.tool(
+  'make_listing_images',
+  'EK CALL ME poori listing: raw photo(s) se 1:1 white-studio main + Amazon-style callouts (product ke highlights se auto, ya diye gaye anchors par) + collage + hero banao, product ki gallery me lagao, aur chaaho to live kar do. callout_labels na do to product ke highlights use hote hain. Anchors (x,y 0-1600) do to callout wahan point karega, warna auto place. go_live=true par live (price na ho to warning ke saath).',
+  {
+    id: z.string(),
+    source_files: z.array(z.string()).min(1).max(4).describe('raw product photo local paths; pehli = hero/main source'),
+    templates: z.array(z.enum(['main', 'callouts', 'collage', 'hero'])).default(['main', 'callouts']).describe('kaunsi images banani hain'),
+    callout_labels: z.array(z.object({ text: z.string(), x: z.number().optional(), y: z.number().optional() })).optional().describe('callout text + optional anchor (x,y in 0-1600); skip = product highlights auto'),
+    white_bg: z.boolean().default(true),
+    replace: z.boolean().default(false).describe('purani gallery hata ke nayi lagao'),
+    go_live: z.boolean().default(false).describe('banane ke baad product live kar do'),
+  },
+  async ({ id, source_files, templates, callout_labels, white_bg, replace, go_live }) => {
+    const p = await getProductOrThrow(id);
+    const whites = [];
+    for (const f of source_files.slice(0, 4)) whites.push(await whiteMain(path.resolve(f), { whiteBg: white_bg }));
+    const main = whites[0];
+    const labels = (callout_labels && callout_labels.length ? callout_labels : (p.highlights || []).map(t => ({ text: t }))).slice(0, 6);
+    if (templates.includes('callouts') && !labels.length) throw new Error('callouts ke liye highlights/labels chahiye — product me highlights daalo ya callout_labels do');
+
+    const built = [];
+    for (const tpl of templates) {
+      if (tpl === 'main') built.push(['main', main.buf]);
+      else if (tpl === 'callouts') built.push(['callouts', await renderCallouts(main.buf, main.prod, labels)]);
+      else if (tpl === 'collage') built.push(['collage', await renderCollage(whites.map(w => w.buf), p.name)]);
+      else if (tpl === 'hero') built.push(['hero', await renderHero(main.buf, p.name, p.highlights || [])]);
+    }
+    const existing = replace ? [] : (Array.isArray(p.images) && p.images.length ? [...p.images] : (p.image ? [p.image] : []));
+    const room = 8 - existing.length;
+    const uploaded = [];
+    for (const [tpl, buf] of built.slice(0, room)) {
+      const up = await api({ action: 'upload-image', name: `${id}-${tpl}.jpg`, dataBase64: buf.toString('base64') });
+      uploaded.push({ template: tpl, path: up.path, kb: Math.round(buf.length / 1024) });
+    }
+    const images = [...existing, ...uploaded.map(u => u.path)].slice(0, 8);
+    const merged = { ...p, images, image: images[0] };
+    const priced = !!(p.retail || p.offer);
+    if (go_live) delete merged.status;
+    await api({ action: 'save', product: merged });
+    return text({
+      id, made: uploaded, gallery_now: images.length, used_ai_whitebg: main.usedAI,
+      callouts_from: (callout_labels && callout_labels.length) ? 'given' : 'product highlights',
+      status: go_live ? 'live' : (p.status || 'live'),
+      warning: go_live && !priced ? '⚠ Product me price nahi hai — live to ho gaya par retail buybox nahi dikhega. set_product_status se draft kar sakte ho, ya pehle pricing daalo.' : undefined,
+      note: go_live ? 'Live — website/sitemap/Google feed pe ~1-5 min me.' : 'Gallery me lag gayi; abhi ' + (p.status || 'live') + '. Live karne ko go_live ya set_product_status.',
     });
   }
 );
