@@ -203,7 +203,7 @@
 <script>
 (function(){
   const $ = id => document.getElementById(id);
-  const COLLECTIONS = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Hot-Serve'];
+  const COLLECTIONS = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Hot-Serve','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection'];
   $('f_collection').innerHTML = COLLECTIONS.map(c=>`<option>${c}</option>`).join('');
   let KEY = sessionStorage.getItem('xv_admin_key') || '';
   let CATALOG = [];
