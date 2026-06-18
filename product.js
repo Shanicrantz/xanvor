@@ -101,7 +101,8 @@
       material: (product.materials||'').split('·').map(s=>s.trim()).filter(Boolean).join(', ') || undefined,
     };
     /* offers only on retail-priced pieces; price is the GST-inclusive amount the buyer pays */
-    if(typeof (product.retail || product.offer) === 'number' && product.mrp){
+    const isPriced = typeof (product.retail || product.offer) === 'number' && product.mrp;
+    if(isPriced){
       const rate  = (parseFloat(product.gst) / 100) || (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.GST) || 0.18;
       const base  = product.retail || product.offer;
       ld.offers = {
@@ -114,10 +115,15 @@
         seller: { '@type': 'Organization', name: 'Zenko Inc.' },
       };
     }
-    const s = document.createElement('script');
-    s.type = 'application/ld+json';
-    s.textContent = JSON.stringify(ld);
-    head.appendChild(s);
+    /* Google Product-snippet needs offers/review/aggregateRating. Enquiry-only
+       (unpriced) pieces have none, so emit Product markup ONLY when priced —
+       otherwise the page is fine but claims no product rich-result. */
+    if(isPriced){
+      const s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.textContent = JSON.stringify(ld);
+      head.appendChild(s);
+    }
   })();
 
   /* ---- related ---- */
