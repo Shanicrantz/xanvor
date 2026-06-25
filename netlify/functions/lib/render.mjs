@@ -44,6 +44,8 @@ export function renderSitemap(products, lastmod) {
   const staticPages = [
     { loc: `${SITE}/`, priority: '1.0' },
     { loc: `${SITE}/Hot-Serve%20Collection.html`, priority: '0.8' },
+    { loc: `${SITE}/about.html`, priority: '0.6' },
+    { loc: `${SITE}/contact.html`, priority: '0.6' },
     { loc: `${SITE}/privacy-policy.html`, priority: '0.3' },
     { loc: `${SITE}/refund-policy.html`, priority: '0.3' },
     { loc: `${SITE}/shipping-policy.html`, priority: '0.3' },
