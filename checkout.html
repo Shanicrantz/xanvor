@@ -138,6 +138,7 @@
 
 <script src="assets/img-opt.js?v=1"></script>
 <script src="shop-cart.js?v=hs3"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 (function(){
   const root = document.getElementById('root');
@@ -147,6 +148,7 @@
   const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   const PAYMENTS = [
+    { id:'razorpay', t:'Pay online · UPI / Cards', d:'Secure payment · UPI, cards, netbanking', badge:'Secure' },
     { id:'whatsapp', t:'Order on WhatsApp', d:'Send your order to us · confirm & pay', badge:'Fastest' },
     { id:'cod',      t:'Cash on Delivery',  d:'Pay when it arrives' },
     // UPI and Bank transfer are hidden until live payment details are set.
@@ -155,7 +157,7 @@
     // { id:'upi',  t:'UPI / QR',      d:'PhonePe · GPay · Paytm · any UPI app' },
     // { id:'bank', t:'Bank transfer', d:'NEFT / IMPS · manual confirm' },
   ];
-  let pay = 'whatsapp';
+  let pay = 'razorpay';
 
   const tick = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>`;
   const waIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.2 1.2-1.7 1.2-.4 0-1 .1-3.2-.9-2.7-1.2-4.4-4-4.5-4.2-.1-.2-1-1.4-1-2.6 0-1.3.7-1.9.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.6-.1l1.9.9c.3.1.4.2.5.3.1.3.1.6-.1 1.1Z"/></svg>`;
@@ -251,6 +253,8 @@
     const t = totals();
     const oid = 'XV' + Date.now().toString().slice(-8);
 
+    if(pay === 'razorpay'){ payWithRazorpay(d, items, t, oid); return; }
+
     // build order text (used for WhatsApp + record)
     const lines = items.map((it,i)=>`${i+1}. ${it.name} (${it.code}) ×${it.qty} = ${fmt(it.price*it.qty)}`).join('\n');
     const msg =
@@ -308,6 +312,60 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
         <div class="instr">${instr}</div>
         <div class="cta-row">
           <a class="btn btn-wa" href="${waUrl}" target="_blank" rel="noopener">${waIcon} ${method==='whatsapp'?'Open WhatsApp':'Send order on WhatsApp'}</a>
+          <a class="btn btn-ghost" href="Hot-Serve Collection.html">Continue shopping</a>
+        </div>
+      </div>`;
+  }
+
+  async function payWithRazorpay(d, items, t, oid){
+    const placeBtn = document.getElementById('place');
+    if(typeof Razorpay === 'undefined'){ alert('Payment is loading. Please retry in a moment, or use WhatsApp / Cash on Delivery.'); return; }
+    placeBtn.disabled = true; placeBtn.textContent = 'Starting secure payment…';
+    let order;
+    try{
+      const res = await fetch('/api/pay/create-order', {
+        method:'POST', headers:{'content-type':'application/json'},
+        body: JSON.stringify({ amount: Math.round(t.total), receipt: oid })
+      });
+      order = await res.json();
+      if(!res.ok || !order.orderId) throw new Error(order.error||'order_failed');
+    }catch(err){
+      placeBtn.disabled=false; placeBtn.innerHTML = bagIcon + ' Place order · ' + fmt(t.total);
+      alert("Online payment isn't available right now. Please choose WhatsApp or Cash on Delivery.");
+      return;
+    }
+    const rzp = new Razorpay({
+      key: order.keyId, order_id: order.orderId, amount: order.amount, currency: order.currency,
+      name: 'XANVOR', description: 'Order ' + oid, image: 'assets/logo_mark.png',
+      prefill: { name: d.name, email: d.email||'', contact: d.phone },
+      notes: { order_ref: oid, ship_to: `${d.name}, ${d.address}, ${d.city}, ${d.state} ${d.pincode}` },
+      theme: { color: '#A85D2A' },
+      handler: async function(resp){
+        try{
+          const v = await fetch('/api/pay/verify', {
+            method:'POST', headers:{'content-type':'application/json'},
+            body: JSON.stringify(resp)
+          });
+          const vr = await v.json();
+          if(vr.ok){ renderPaidConfirm(oid, t, resp.razorpay_payment_id); S.clear(); window.scrollTo(0,0); }
+          else { placeBtn.disabled=false; placeBtn.innerHTML = bagIcon + ' Place order · ' + fmt(t.total); alert('Payment could not be verified. If money was deducted, message us on WhatsApp with order ' + oid + '.'); }
+        }catch(e){ placeBtn.disabled=false; placeBtn.innerHTML = bagIcon + ' Place order · ' + fmt(t.total); alert('Verification failed. Message us on WhatsApp with order ' + oid + '.'); }
+      },
+      modal: { ondismiss: function(){ placeBtn.disabled=false; placeBtn.innerHTML = bagIcon + ' Place order · ' + fmt(t.total); } }
+    });
+    rzp.on('payment.failed', function(){ placeBtn.disabled=false; placeBtn.innerHTML = bagIcon + ' Place order · ' + fmt(t.total); });
+    rzp.open();
+  }
+
+  function renderPaidConfirm(oid, t, paymentId){
+    root.innerHTML = `
+      <div class="confirm">
+        <div class="tick">${tick}</div>
+        <h2>Payment received — order <em>confirmed</em></h2>
+        <p>Thank you! We've received your payment and your order is confirmed. A GST invoice will follow by email.</p>
+        <div class="oid">Order · ${oid}</div>
+        <div class="instr"><b>Paid:</b> ${fmt(t.total)}<br><b>Payment ID:</b> <span class="mono">${esc(paymentId||'')}</span><br><br>We'll dispatch shortly and share tracking on WhatsApp/email. Free shipping across India.</div>
+        <div class="cta-row">
           <a class="btn btn-ghost" href="Hot-Serve Collection.html">Continue shopping</a>
         </div>
       </div>`;
