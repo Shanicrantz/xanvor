@@ -98,11 +98,19 @@
         <option value="collection">Collection</option>
       </select>
       <input type="search" id="search" placeholder="Search — naam ya id">
+      <button class="btn btn-ghost" id="categoriesBtn">📐 Categories order</button>
       <button class="btn btn-ghost" id="listingBtn">🎨 Listing studio</button>
       <button class="btn btn-primary" id="addBtn">+ Naya product</button>
     </div>
     <p class="reorder-hint" id="reorderHint"></p>
     <div id="list"></div>
+  </div>
+
+  <div class="panel hidden" id="categoriesPanel">
+    <h2>Homepage categories ka order</h2>
+    <p class="hint" style="margin:-8px 0 16px;">Yeh homepage pe collection-sections (Silver &amp; Gold, Copper, …) ka sequence set karta hai. Hot-Serve isme nahi hai — wo alag page hai.</p>
+    <div id="catOrderList"></div>
+    <div style="margin-top:14px;"><button type="button" class="btn btn-ghost" id="catOrderBack">← Products</button></div>
   </div>
 
   <div class="panel hidden" id="formPanel">
@@ -228,6 +236,9 @@
   let KEY = sessionStorage.getItem('xv_admin_key') || '';
   let CATALOG = [];
   let editingId = null;
+  /* homepage section order — mirrors index.html's MAP (Hot-Serve excluded, alag page hai) */
+  const DEFAULT_CAT_ORDER = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection'];
+  let COLLECTION_ORDER = [...DEFAULT_CAT_ORDER];
 
   const toast = (msg, bad) => { const t=$('toast'); t.textContent=msg; t.className='toast show'+(bad?' bad':''); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), 3600); };
 
@@ -243,6 +254,7 @@
     $('listPanel').classList.toggle('hidden', view!=='list');
     $('formPanel').classList.toggle('hidden', view!=='form');
     $('listingPanel').classList.toggle('hidden', view!=='listing');
+    $('categoriesPanel').classList.toggle('hidden', view!=='categories');
     $('lockBtn').classList.toggle('hidden', view==='gate');
     window.scrollTo({top:0});
   }
@@ -286,7 +298,9 @@
     $('search').disabled = reorderMode;
     $('sortBy').disabled = reorderMode;
     $('count').textContent = '· '+CATALOG.length+' total'+(items.length!==CATALOG.length?` (${items.length} dikh rahe)`:'');
-    $('reorderHint').textContent = reorderMode ? 'Homepage order mode — ↑ ↓ se sequence badlo (search yahan kaam nahi karta).' : '';
+    $('reorderHint').textContent = reorderMode
+      ? 'Homepage order mode — ↑ ↓ se is collection ke products ka sequence badlo (search yahan kaam nahi karta).'
+      : 'Tip: kisi collection ka product-order badalna ho to upar "Collection" filter chuno — ↑ ↓ arrows aa jayenge. Categories (sections) ka order "📐 Categories order" se.';
     $('list').innerHTML = items.map((p,idx) => `
       <div class="row">
         <img class="thumb" loading="lazy" src="${window.xvImg?xvImg(p.image||'',120):(p.image||'')}" alt="">
@@ -381,7 +395,39 @@
     CATALOG = data.products; renderList();
     $('ls_product').innerHTML = '<option value="">— koi product chuno —</option>' +
       CATALOG.map(p=>`<option value="${p.id}">${p.id} · ${p.name}</option>`).join('');
+    const saved = Array.isArray(data.collection_order) ? data.collection_order : [];
+    COLLECTION_ORDER = [
+      ...saved.filter(c=>DEFAULT_CAT_ORDER.includes(c)),
+      ...DEFAULT_CAT_ORDER.filter(c=>!saved.includes(c)),
+    ];
   }
+
+  /* ---- Homepage categories order ---- */
+  function renderCatOrder(){
+    $('catOrderList').innerHTML = COLLECTION_ORDER.map((name,idx)=>`
+      <div class="row" style="grid-template-columns:36px 1fr auto;">
+        <div class="mono" style="color:var(--ink-faint);">${idx+1}</div>
+        <div class="r-name">${name}</div>
+        <div class="r-actions">
+          <button class="btn btn-ghost" data-catup="${name}" ${idx===0?'disabled':''} title="Upar">↑</button>
+          <button class="btn btn-ghost" data-catdn="${name}" ${idx===COLLECTION_ORDER.length-1?'disabled':''} title="Neeche">↓</button>
+        </div>
+      </div>`).join('');
+  }
+  $('categoriesBtn').addEventListener('click', ()=>{ renderCatOrder(); show('categories'); });
+  $('catOrderBack').addEventListener('click', ()=>show('list'));
+  $('catOrderList').addEventListener('click', async e=>{
+    const up = e.target.closest('[data-catup]'); const dn = e.target.closest('[data-catdn]');
+    if(!up && !dn) return;
+    const name = up ? up.dataset.catup : dn.dataset.catdn;
+    const idx = COLLECTION_ORDER.indexOf(name);
+    const swapWith = up ? idx-1 : idx+1;
+    if(swapWith<0 || swapWith>=COLLECTION_ORDER.length) return;
+    [COLLECTION_ORDER[idx], COLLECTION_ORDER[swapWith]] = [COLLECTION_ORDER[swapWith], COLLECTION_ORDER[idx]];
+    renderCatOrder();
+    try{ await api({action:'reorder-collections', order:COLLECTION_ORDER}); toast('Category order save ho gaya — homepage pe ~1 min me'); }
+    catch(err){ toast(err.message, true); }
+  });
 
   async function unlock(){
     KEY = $('keyInput').value.trim();

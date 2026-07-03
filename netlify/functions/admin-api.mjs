@@ -116,7 +116,7 @@ export default async (req) => {
         if (!product.homepage) delete products[i].homepage;
       }
       else products.push({ ...product, modified_at: now });
-      const saved = await saveCatalog(products);
+      const saved = await saveCatalog(products, cat.collection_order);
       return json({ ok: true, count: saved.products.length, product });
     }
 
@@ -132,8 +132,21 @@ export default async (req) => {
         const i = products.findIndex(p => p.id === id && p.collection === collection);
         if (i >= 0) products[i] = { ...products[i], home_order: idx };
       });
-      const saved = await saveCatalog(products);
+      const saved = await saveCatalog(products, cat.collection_order);
       return json({ ok: true, count: saved.products.length });
+    }
+
+    if (body.action === 'reorder-collections') {
+      /* order = array of collection names in desired homepage-section sequence.
+         Any valid collection not included is appended at the end (default
+         COLLECTIONS order among themselves) so nothing silently disappears. */
+      const incoming = Array.isArray(body.order) ? body.order.map(x => str(x, 40)) : [];
+      const valid = incoming.filter(c => COLLECTIONS.includes(c));
+      const missing = COLLECTIONS.filter(c => !valid.includes(c));
+      const full = [...valid, ...missing];
+      const cat = await getCatalog();
+      const saved = await saveCatalog(cat.products, full);
+      return json({ ok: true, collection_order: saved.collection_order });
     }
 
     if (body.action === 'delete') {
@@ -141,7 +154,7 @@ export default async (req) => {
       const cat = await getCatalog();
       const products = cat.products.filter(p => p.id !== id);
       if (products.length === cat.products.length) return json({ error: 'id not found' }, 404);
-      await saveCatalog(products);
+      await saveCatalog(products, cat.collection_order);
       return json({ ok: true, count: products.length });
     }
 

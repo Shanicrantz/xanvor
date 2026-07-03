@@ -34,9 +34,13 @@ export const isRetail = (p) => typeof (p.retail || p.offer) === 'number' && !!p.
 export const liveOnly = (products) => products.filter(p => p.status !== 'draft');
 
 /* ---- /api/products.js — drop-in replacement for assets/products.js ---- */
-export function renderProductsJs(products) {
-  return '// XANVOR product catalogue — served live from the admin catalogue\n'
+export function renderProductsJs(products, collectionOrder) {
+  let out = '// XANVOR product catalogue — served live from the admin catalogue\n'
     + 'window.XANVOR_PRODUCTS = ' + JSON.stringify(products, null, 1) + ';\n';
+  if (Array.isArray(collectionOrder) && collectionOrder.length) {
+    out += 'window.XANVOR_COLLECTION_ORDER = ' + JSON.stringify(collectionOrder) + ';\n';
+  }
+  return out;
 }
 
 /* ---- /sitemap.xml ---- */

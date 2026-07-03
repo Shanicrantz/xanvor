@@ -17,13 +17,19 @@ const store = () => getStore({ name: STORE, consistency: 'strong' });
 export async function getCatalog() {
   try {
     const data = await store().get(KEY, { type: 'json' });
-    if (data && Array.isArray(data.products) && data.products.length) return data;
+    if (data && Array.isArray(data.products) && data.products.length) {
+      return {
+        updated_at: data.updated_at,
+        products: data.products,
+        collection_order: Array.isArray(data.collection_order) ? data.collection_order : [],
+      };
+    }
   } catch (e) { /* fall through to seed */ }
-  return { updated_at: null, products: seed };
+  return { updated_at: null, products: seed, collection_order: [] };
 }
 
-export async function saveCatalog(products) {
-  const data = { updated_at: new Date().toISOString(), products };
+export async function saveCatalog(products, collectionOrder = []) {
+  const data = { updated_at: new Date().toISOString(), products, collection_order: collectionOrder };
   await store().setJSON(KEY, data);
   return data;
 }
