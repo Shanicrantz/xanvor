@@ -425,7 +425,7 @@
     if(swapWith<0 || swapWith>=COLLECTION_ORDER.length) return;
     [COLLECTION_ORDER[idx], COLLECTION_ORDER[swapWith]] = [COLLECTION_ORDER[swapWith], COLLECTION_ORDER[idx]];
     renderCatOrder();
-    try{ await api({action:'reorder-collections', order:COLLECTION_ORDER}); toast('Category order save ho gaya — homepage pe ~1 min me'); }
+    try{ await api({action:'reorder-collections', order:COLLECTION_ORDER}); toast('Order save ✓ — turant save ho gaya, homepage 60 sec cache ke baad dikhega (koi deploy nahi hota)'); }
     catch(err){ toast(err.message, true); }
   });
 
@@ -624,7 +624,7 @@
     $('saveBtn').disabled = true;
     try{
       await api({action:'save', product});
-      toast('Save ho gaya — website pe ~1 minute me live, Google feed agle fetch pe');
+      toast('Save ✓ — turant save ho gaya (koi deploy nahi), website 60 sec cache ke baad dikhega. Google feed agle fetch pe.');
       await refresh(); show('list');
     }catch(err){ toast(err.message, true); }
     $('saveBtn').disabled = false;
@@ -877,7 +877,7 @@
       const imgs = (Array.isArray(p.images)&&p.images.length) ? [...p.images] : (p.image?[p.image]:[]);
       imgs.push(out.path);
       await api({action:'save', product: {...p, images: imgs, image: imgs[0]}});
-      toast('Gallery me jud gayi ('+imgs.length+' photos) — website pe ~1 min me');
+      toast('Gallery me jud gayi ('+imgs.length+' photos) ✓ — 60 sec cache ke baad website pe (koi deploy nahi)');
       await refresh();
     }catch(err){ toast(err.message, true); }
     $('ls_setImage').disabled = false;
