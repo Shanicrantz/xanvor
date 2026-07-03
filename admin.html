@@ -57,6 +57,12 @@
   .price-hint{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--ok);margin-top:6px;}
   .hidden{display:none !important;}
   .count{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);}
+  .toolbar select{width:auto;max-width:180px;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;padding:3px 8px;border-radius:20px;vertical-align:middle;display:inline-block;}
+  .chip-draft{background:#EFE3CB;color:#7A5A2E;}
+  .chip-hide{background:#F3D9D9;color:#8A3A3A;margin-left:4px;}
+  .r-actions .btn[disabled]{opacity:.3;}
+  .reorder-hint{font-size:14px;color:var(--ink-soft);font-style:italic;margin:0 0 10px;min-height:18px;}
 </style>
 </head>
 <body>
@@ -81,10 +87,21 @@
   <div class="panel hidden" id="listPanel">
     <div class="toolbar">
       <h2 style="margin:0;flex:1;">Products <span class="count" id="count"></span></h2>
+      <select id="filterCollection"><option value="">Sab collections</option></select>
+      <select id="sortBy">
+        <option value="">Default order</option>
+        <option value="name_asc">Naam A→Z</option>
+        <option value="name_desc">Naam Z→A</option>
+        <option value="price_asc">Price: kam→zyada</option>
+        <option value="price_desc">Price: zyada→kam</option>
+        <option value="updated_desc">Abhi update hua</option>
+        <option value="collection">Collection</option>
+      </select>
       <input type="search" id="search" placeholder="Search — naam ya id">
       <button class="btn btn-ghost" id="listingBtn">🎨 Listing studio</button>
       <button class="btn btn-primary" id="addBtn">+ Naya product</button>
     </div>
+    <p class="reorder-hint" id="reorderHint"></p>
     <div id="list"></div>
   </div>
 
@@ -105,6 +122,7 @@
       <div><label>GST</label><select id="f_gst"><option value="">—</option><option>18%</option><option>12%</option><option>5%</option></select></div>
       <div><label>Stock</label><select id="f_availability"><option value="">In stock</option><option value="out_of_stock">Out of stock</option></select></div>
       <div><label>Status</label><select id="f_status"><option value="">Live — website pe dikhe</option><option value="draft">Draft — abhi chhupa rahe</option></select></div>
+      <div><label>Homepage</label><select id="f_homepage"><option value="">Dikhe (default)</option><option value="hide">Chhupao — sirf link/SEO se milega</option></select></div>
       <div><label>MRP ₹</label><input id="f_mrp" inputmode="numeric" placeholder="4499"></div>
       <div><label>Retail ₹ (ex-GST)</label><input id="f_retail" inputmode="numeric" placeholder="3399"></div>
       <div><label>Offer ₹ (B2B/trade)</label><input id="f_offer" inputmode="numeric" placeholder="2100"></div>
@@ -206,6 +224,7 @@
   const $ = id => document.getElementById(id);
   const COLLECTIONS = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Hot-Serve','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection'];
   $('f_collection').innerHTML = COLLECTIONS.map(c=>`<option>${c}</option>`).join('');
+  $('filterCollection').innerHTML = '<option value="">Sab collections</option>' + COLLECTIONS.map(c=>`<option>${c}</option>`).join('');
   let KEY = sessionStorage.getItem('xv_admin_key') || '';
   let CATALOG = [];
   let editingId = null;
@@ -231,18 +250,56 @@
   const inclOf = p => { const r=(parseFloat(p.gst)||18)/100; return (p.retail||p.offer) ? Math.round((p.retail||p.offer)*(1+r)) : null; };
   const fmt = n => '₹'+Number(n).toLocaleString('en-IN');
 
-  function renderList(){
+  /* Collection filter chuni ho to list us collection ke home_order me fix
+     hoti hai (search ignore, taaki ↑/↓ hamesha poore-collection ka sahi,
+     unambiguous sequence dekhe) — warna Sort-by dropdown lagu hota hai. */
+  function currentView(){
     const q = ($('search').value||'').toLowerCase();
-    const items = CATALOG.filter(p => !q || p.name.toLowerCase().includes(q) || p.id.includes(q));
-    $('count').textContent = '· '+CATALOG.length+' total';
-    $('list').innerHTML = items.map(p => `
+    const col = $('filterCollection').value;
+    const reorderMode = !!col;
+    let items = CATALOG.filter(p => (!col || p.collection===col) && (col || !q || p.name.toLowerCase().includes(q) || p.id.includes(q)));
+    items = items.map((p,i)=>({p,i}));
+    if(reorderMode){
+      items.sort((a,b)=>{
+        const oa = typeof a.p.home_order==='number' ? a.p.home_order : 1e9+a.i;
+        const ob = typeof b.p.home_order==='number' ? b.p.home_order : 1e9+b.i;
+        return oa-ob;
+      });
+    } else {
+      const priceOf = x => (x.p.retail && inclOf(x.p)) ? inclOf(x.p) : null;
+      const sorters = {
+        name_asc:  (a,b)=>a.p.name.localeCompare(b.p.name),
+        name_desc: (a,b)=>b.p.name.localeCompare(a.p.name),
+        price_asc: (a,b)=>{ const pa=priceOf(a),pb=priceOf(b); if(pa==null&&pb==null)return a.i-b.i; if(pa==null)return 1; if(pb==null)return -1; return pa-pb; },
+        price_desc:(a,b)=>{ const pa=priceOf(a),pb=priceOf(b); if(pa==null&&pb==null)return a.i-b.i; if(pa==null)return 1; if(pb==null)return -1; return pb-pa; },
+        updated_desc:(a,b)=> (new Date(b.p.modified_at||0)) - (new Date(a.p.modified_at||0)) || (a.i-b.i),
+        collection:(a,b)=> a.p.collection.localeCompare(b.p.collection) || (a.i-b.i),
+      };
+      const sortFn = sorters[$('sortBy').value];
+      if(sortFn) items.sort(sortFn);
+    }
+    return { items: items.map(x=>x.p), reorderMode, collection: col };
+  }
+
+  function renderList(){
+    const { items, reorderMode } = currentView();
+    $('search').disabled = reorderMode;
+    $('sortBy').disabled = reorderMode;
+    $('count').textContent = '· '+CATALOG.length+' total'+(items.length!==CATALOG.length?` (${items.length} dikh rahe)`:'');
+    $('reorderHint').textContent = reorderMode ? 'Homepage order mode — ↑ ↓ se sequence badlo (search yahan kaam nahi karta).' : '';
+    $('list').innerHTML = items.map((p,idx) => `
       <div class="row">
         <img class="thumb" loading="lazy" src="${window.xvImg?xvImg(p.image||'',120):(p.image||'')}" alt="">
         <div>
-          <div class="r-name">${p.name}${p.status==='draft'?' <span style="background:#EFE3CB;color:#7A5A2E;font-family:\'JetBrains Mono\',monospace;font-size:8.5px;letter-spacing:.12em;padding:3px 8px;border-radius:20px;vertical-align:middle;">DRAFT</span>':''}</div>
+          <div class="r-name">${p.name}${p.status==='draft'?' <span class="chip chip-draft">DRAFT</span>':''}${p.homepage==='hide'?' <span class="chip chip-hide">HOME PE NAHI</span>':''}</div>
           <div class="r-meta">${p.id} · ${p.collection}${inclOf(p)&&p.retail?` · <b>${fmt(inclOf(p))} incl. GST</b>`:' · B2B only'}${p.availability==='out_of_stock'?' · OUT OF STOCK':''}</div>
         </div>
         <div class="r-actions">
+          ${reorderMode?`
+          <button class="btn btn-ghost" data-up="${p.id}" title="Upar" ${idx===0?'disabled':''}>↑</button>
+          <button class="btn btn-ghost" data-dn="${p.id}" title="Neeche" ${idx===items.length-1?'disabled':''}>↓</button>`:''}
+          <button class="btn btn-ghost" data-stat="${p.id}" title="Live/Draft badlo">${p.status==='draft'?'Live karo':'Draft karo'}</button>
+          <button class="btn btn-ghost" data-home="${p.id}" title="Homepage pe dikhe/chhupao">${p.homepage==='hide'?'Home pe laao':'Home se hatao'}</button>
           ${p.status==='draft'?'':`<a class="btn btn-ghost" href="product.html?id=${encodeURIComponent(p.id)}" target="_blank">View</a>`}
           <button class="btn btn-ghost" data-edit="${p.id}">Edit</button>
           <button class="btn btn-danger" data-del="${p.id}">Delete</button>
@@ -269,6 +326,7 @@
     $('f_moq').value=p?.moq||''; $('f_hsn').value=p?.hsn||''; $('f_gst').value=p?.gst||'';
     $('f_availability').value=p?.availability||'';
     $('f_status').value=p?.status||'';
+    $('f_homepage').value=p?.homepage||'';
     $('f_mrp').value=p?.mrp||''; $('f_retail').value=p?.retail||''; $('f_offer').value=p?.offer||'';
     $('f_highlights').value=(p?.highlights||[]).join('\n');
     $('f_signature').checked=!!p?.signature;
@@ -335,16 +393,51 @@
   $('keyInput').addEventListener('keydown', e=>{ if(e.key==='Enter') unlock(); });
   $('lockBtn').addEventListener('click', ()=>{ sessionStorage.removeItem('xv_admin_key'); KEY=''; show('gate'); });
   $('search').addEventListener('input', renderList);
+  $('filterCollection').addEventListener('change', renderList);
+  $('sortBy').addEventListener('change', renderList);
   $('addBtn').addEventListener('click', ()=>openForm(null));
   $('cancelBtn').addEventListener('click', ()=>show('list'));
 
   $('list').addEventListener('click', async e=>{
     const ed = e.target.closest('[data-edit]'); const del = e.target.closest('[data-del]');
-    if(ed) openForm(CATALOG.find(p=>p.id===ed.dataset.edit));
+    const stat = e.target.closest('[data-stat]'); const home = e.target.closest('[data-home]');
+    const up = e.target.closest('[data-up]'); const dn = e.target.closest('[data-dn]');
+
+    if(ed) return openForm(CATALOG.find(p=>p.id===ed.dataset.edit));
+
     if(del){
       const p = CATALOG.find(x=>x.id===del.dataset.del);
       if(!confirm(`"${p.name}" (${p.id}) delete karein? Website, sitemap aur Google feed sab se hat jayega.`)) return;
       try{ await api({action:'delete', id:p.id}); toast('Delete ho gaya'); await refresh(); }
+      catch(err){ toast(err.message, true); }
+      return;
+    }
+
+    if(stat){
+      const p = CATALOG.find(x=>x.id===stat.dataset.stat);
+      const next = p.status==='draft' ? '' : 'draft';
+      try{ await api({action:'save', product:{...p, status:next}}); toast(next==='draft'?'Draft me daal diya':'Live kar diya ✓'); await refresh(); }
+      catch(err){ toast(err.message, true); }
+      return;
+    }
+
+    if(home){
+      const p = CATALOG.find(x=>x.id===home.dataset.home);
+      const next = p.homepage==='hide' ? '' : 'hide';
+      try{ await api({action:'save', product:{...p, homepage:next}}); toast(next==='hide'?'Homepage se hata diya (link/SEO se milega)':'Homepage pe wapas dikhega'); await refresh(); }
+      catch(err){ toast(err.message, true); }
+      return;
+    }
+
+    if(up || dn){
+      const { items, collection } = currentView();
+      const ids = items.map(p=>p.id);
+      const id = (up||dn).dataset.up || (up||dn).dataset.dn;
+      const idx = ids.indexOf(id);
+      const swapWith = up ? idx-1 : idx+1;
+      if(swapWith<0 || swapWith>=ids.length) return;
+      [ids[idx], ids[swapWith]] = [ids[swapWith], ids[idx]];
+      try{ await api({action:'reorder', collection, ids}); await refresh(); }
       catch(err){ toast(err.message, true); }
     }
   });
@@ -475,6 +568,7 @@
       moq: $('f_moq').value, hsn: $('f_hsn').value, gst: $('f_gst').value,
       availability: $('f_availability').value,
       status: $('f_status').value,
+      homepage: $('f_homepage').value,
       mrp: $('f_mrp').value, retail: $('f_retail').value, offer: $('f_offer').value,
       highlights: $('f_highlights').value.split('\n').map(s=>s.trim()).filter(Boolean),
       signature: $('f_signature').checked,

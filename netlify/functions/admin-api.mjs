@@ -74,6 +74,9 @@ function cleanProduct(raw) {
   }
   if (raw.availability === 'out_of_stock') p.availability = 'out_of_stock';
   if (raw.status === 'draft') p.status = 'draft';
+  if (raw.homepage === 'hide') p.homepage = 'hide';
+  const homeOrder = Number(raw.home_order);
+  if (Number.isFinite(homeOrder)) p.home_order = homeOrder;
 
   const highlights = Array.isArray(raw.highlights)
     ? raw.highlights.map(h => str(h, 100)).filter(Boolean).slice(0, 8) : [];
@@ -103,16 +106,34 @@ export default async (req) => {
       const cat = await getCatalog();
       const products = [...cat.products];
       const i = products.findIndex(p => p.id === product.id);
+      const now = new Date().toISOString();
       if (i >= 0) {
-        products[i] = { ...products[i], ...product };
+        products[i] = { ...products[i], ...product, modified_at: now };
         /* toggle fields: absent in the clean product means switched OFF — drop stale values */
         if (!product.status) delete products[i].status;
         if (!product.availability) delete products[i].availability;
         if (!product.signature) delete products[i].signature;
+        if (!product.homepage) delete products[i].homepage;
       }
-      else products.push(product);
+      else products.push({ ...product, modified_at: now });
       const saved = await saveCatalog(products);
       return json({ ok: true, count: saved.products.length, product });
+    }
+
+    if (body.action === 'reorder') {
+      /* sets home_order = array index for each id, scoped to one collection —
+         used by the admin list's ↑/↓ buttons to drive homepage card order */
+      const collection = str(body.collection, 40);
+      const ids = Array.isArray(body.ids) ? body.ids.map(x => str(x, 40)) : [];
+      if (!collection || !ids.length) return json({ error: 'collection aur ids chahiye' }, 400);
+      const cat = await getCatalog();
+      const products = [...cat.products];
+      ids.forEach((id, idx) => {
+        const i = products.findIndex(p => p.id === id && p.collection === collection);
+        if (i >= 0) products[i] = { ...products[i], home_order: idx };
+      });
+      const saved = await saveCatalog(products);
+      return json({ ok: true, count: saved.products.length });
     }
 
     if (body.action === 'delete') {
