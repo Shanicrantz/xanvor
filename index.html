@@ -1908,6 +1908,28 @@
     });
     items.forEach(function(el){ grid.appendChild(el); });
   });
+
+  /* Category (homepage section) order — admin ke "Categories order" panel se.
+     Sections (.cat-group), dropdown menu aur jump-nav teeno ek hi sequence
+     me la diye jaate hain; jo collection yahan list nahi (jaise Hot-Serve,
+     jiska is page pe koi section nahi), wo apni jagah untouched rehta hai. */
+  var order=window.XANVOR_COLLECTION_ORDER;
+  if(Array.isArray(order)&&order.length){
+    var moveByOrder=function(container,getId){
+      if(!container) return;
+      order.forEach(function(name){
+        var id=MAP[name]; if(!id) return;
+        var kids=[].slice.call(container.children);
+        for(var i=0;i<kids.length;i++){
+          if(getId(kids[i])===id){ container.appendChild(kids[i]); break; }
+        }
+      });
+    };
+    var hrefId=function(el){ var m=(el.getAttribute&&el.getAttribute('href')||'').match(/(c-[a-z]+)/); return m?m[1]:null; };
+    moveByOrder(document.querySelector('.cat-pages'), function(el){ return el.id||null; });
+    moveByOrder(document.querySelector('.nav-cat .cat-menu'), hrefId);
+    moveByOrder(document.querySelector('.cat-jump'), hrefId);
+  }
 })();
 </script>
 <script src="shop-cart.js?v=hs3"></script>
