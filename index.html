@@ -1858,11 +1858,26 @@
 <script src="assets/img-opt.js?v=1"></script>
 <script src="/api/products.js"></script>
 <script>
-/* Live-catalogue enhancer — admin se add hue products jinka card is static
-   HTML me nahi hai, unke cards apni collection ke aakhri grid me jod deta hai. */
+/* Live-catalogue enhancer:
+   1. admin se add hue products jinka card is static HTML me nahi hai, unke
+      cards apni collection ke aakhri grid me jod deta hai.
+   2. admin me "Homepage se hatao" wale products ka card (static ya dynamic
+      dono) hata deta hai — page/SEO/sitemap unaffected, sirf homepage grid se.
+   3. admin ke ↑/↓ se set kiya gaya home_order har grid ke andar cards ko
+      sort karta hai (jinka order set nahi, wo apni maujooda jagah rakhte hain). */
 (function(){
   var MAP={'Silver & Gold':'c-silvergold','Copper':'c-copper','Brass':'c-brass','Sheesham & Wood':'c-wood','Wireform Furniture':'c-furniture','Artisanal Serving Trays':'c-trays','Copper Home Collection':'c-copperhome','The Jewel Collection':'c-jewel','Canister & Vanity Series':'c-canister','Ribbed Storage Collection':'c-ribbed'};
-  (window.XANVOR_PRODUCTS||[]).forEach(function(p){
+  var products=window.XANVOR_PRODUCTS||[];
+  var byId={}; products.forEach(function(p){ byId[p.id]=p; });
+
+  products.forEach(function(p){
+    if(p.homepage!=='hide') return;
+    var el=document.querySelector('.cat-item[href$="id='+p.id+'"]');
+    if(el) el.remove();
+  });
+
+  products.forEach(function(p){
+    if(p.homepage==='hide') return;
     var gid=MAP[p.collection]; if(!gid) return;
     if(document.querySelector('.cat-item[href$="id='+p.id+'"]')) return;
     var grids=document.querySelectorAll('#'+gid+' .cat-grid'); if(!grids.length) return;
@@ -1872,6 +1887,26 @@
     a.querySelector('h4').textContent=p.name; a.querySelector('.desc').textContent=p.desc||'';
     a.querySelector('.code').textContent=p.code||''; a.querySelector('.mat').textContent=p.materials||'';
     grids[grids.length-1].appendChild(a);
+  });
+
+  document.querySelectorAll('.cat-grid').forEach(function(grid){
+    var items=[].slice.call(grid.children).filter(function(el){ return el.classList.contains('cat-item'); });
+    if(!items.length) return;
+    var hasOrder=items.some(function(el){
+      var m=(el.getAttribute('href')||'').match(/id=([^&]+)/);
+      var p=m&&byId[decodeURIComponent(m[1])];
+      return p&&typeof p.home_order==='number';
+    });
+    if(!hasOrder) return;
+    items.forEach(function(el,idx){ el.__origIdx=idx; });
+    items.sort(function(a,b){
+      var ma=(a.getAttribute('href')||'').match(/id=([^&]+)/), mb=(b.getAttribute('href')||'').match(/id=([^&]+)/);
+      var pa=ma&&byId[decodeURIComponent(ma[1])], pb=mb&&byId[decodeURIComponent(mb[1])];
+      var oa=(pa&&typeof pa.home_order==='number')?pa.home_order:(1e9+a.__origIdx);
+      var ob=(pb&&typeof pb.home_order==='number')?pb.home_order:(1e9+b.__origIdx);
+      return oa-ob;
+    });
+    items.forEach(function(el){ grid.appendChild(el); });
   });
 })();
 </script>
