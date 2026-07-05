@@ -1929,6 +1929,16 @@
     items.forEach(function(el){ grid.appendChild(el); });
   });
 
+  /* Empty sections chhupao — jis collection me abhi koi live product-card
+     nahi (sirf lead card), us .cat-group + uske dropdown/jump-nav entries
+     ko hide kar do. Live product aate hi apne aap wapas dikh jayega. */
+  document.querySelectorAll('.cat-pages > .cat-group').forEach(function(sec){
+    if(sec.querySelector('.cat-item')) return;
+    sec.style.display='none';
+    var sel='a[href="#'+sec.id+'"]';
+    document.querySelectorAll('.cat-menu '+sel+', .cat-jump '+sel).forEach(function(a){ a.style.display='none'; });
+  });
+
   /* Category (homepage section) order — admin ke "Categories order" panel se.
      Sections (.cat-group), dropdown menu aur jump-nav teeno ek hi sequence
      me la diye jaate hain; jo collection yahan list nahi (jaise Hot-Serve,
