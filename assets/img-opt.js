@@ -21,9 +21,9 @@
   }
   window.xvImg = xvImg;
 
-  /* Static + enhancer-added catalogue cards (lazy imgs — not fetched yet) */
+  /* Static + enhancer-added catalogue cards + featured tiles (lazy imgs) */
   function rewriteCards(){
-    document.querySelectorAll('.cat-photo img').forEach(function(im){
+    document.querySelectorAll('.cat-photo img, .feat-img img').forEach(function(im){
       var s = im.getAttribute('src');
       if(!s || s.indexOf('/.netlify/images') === 0) return;
       im.setAttribute('srcset', xvImg(s, 640) + ' 1x, ' + xvImg(s, 1280) + ' 2x');

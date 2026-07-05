@@ -877,34 +877,34 @@
       <h2 class="display">Three to look at <em>first</em></h2>
     </div>
     <div class="featured-grid">
-      <a class="feat-card reveal" href="product.html?id=sg-401">
+      <a class="feat-card reveal" href="product.html?id=wa-110">
         <span class="feat-pin">Signature</span>
-        <div class="feat-img"><img src="assets/products/sg-401.jpg" alt="Sunburst Canister Set" loading="lazy"></div>
+        <div class="feat-img"><img src="/img/wa-110-mr81u8jy.jpg" alt="Midas Leaf Cascade" loading="lazy"></div>
         <div class="feat-body">
           <span class="num">&#x2767;</span>
-          <h3>Sunburst <em>Canister Set</em></h3>
-          <p>A fluted gold canister, paired with a slice of natural agate, raised upon a radial inlay tray.</p>
-          <div class="ft"><span class="code">XV·SG·401</span><span class="arr">View piece &rarr;</span></div>
+          <h3>Midas Leaf <em>Cascade</em></h3>
+          <p>Our statement piece — a sweeping cascade of black-and-gold leaves nearly a metre wide, commanding sofas and beds.</p>
+          <div class="ft"><span class="code">XV·WA·110</span><span class="arr">View piece &rarr;</span></div>
         </div>
       </a>
-      <a class="feat-card reveal d1" href="product.html?id=wd-101">
+      <a class="feat-card reveal d1" href="product.html?id=jw-101">
         <span class="feat-pin">Heirloom</span>
-        <div class="feat-img"><img src="assets/products/wd-101.jpg" alt="Masala Spice Box" loading="lazy"></div>
+        <div class="feat-img"><img src="/img/jw-101-mqbnvpn1.jpg" alt="Zamarrud Gemstone Brass Tray" loading="lazy"></div>
         <div class="feat-body">
           <span class="num">&#x2767;</span>
-          <h3>Masala <em>Spice Box</em></h3>
-          <p>Solid rosewood, turned by hand, fitted with seven brass-cased cups and a revealing spoon — the kitchen heirloom.</p>
-          <div class="ft"><span class="code">XV·WD·101</span><span class="arr">View piece &rarr;</span></div>
+          <h3>Zamarrud Gemstone <em>Tray</em></h3>
+          <p>Polished brass gallery tray studded with green-stone cabochons — each stone hand-set, so no two are ever alike.</p>
+          <div class="ft"><span class="code">XV·JW·101</span><span class="arr">View piece &rarr;</span></div>
         </div>
       </a>
-      <a class="feat-card reveal d2" href="product.html?id=mf-101">
-        <span class="feat-pin">Modern</span>
-        <div class="feat-img"><img src="assets/products/mf-101.jpg" alt="Geometric Wire Basket" loading="lazy"></div>
+      <a class="feat-card reveal d2" href="product.html?id=cv-108">
+        <span class="feat-pin">Sculptural</span>
+        <div class="feat-img"><img src="/img/cv-108-mqbnwb9h.jpg" alt="Hive Hexagonal Fluted Brass Box" loading="lazy"></div>
         <div class="feat-body">
           <span class="num">&#x2767;</span>
-          <h3>Geometric Wire <em>Basket</em></h3>
-          <p>A faceted fruit basket in powder-coated steel, offered in five standing colourways — and any shade to order.</p>
-          <div class="ft"><span class="code">XV·MF·101</span><span class="arr">View piece &rarr;</span></div>
+          <h3>Hive Hexagonal Fluted <em>Box</em></h3>
+          <p>Hexagonal cast-brass box with fine vertical fluting and a ribbed finial — sculptural storage for the vanity.</p>
+          <div class="ft"><span class="code">XV·CV·108</span><span class="arr">View piece &rarr;</span></div>
         </div>
       </a>
     </div>
@@ -1845,6 +1845,30 @@
   },{threshold:.16,rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
+  /* Anchor-jump fix — the live-catalogue enhancer adds ~90 cards into the
+     collection sections AFTER the browser has already jumped to a #c-…
+     hash, so the target slides thousands of px down (page is very tall) and
+     the viewport lands on stale/blank .reveal content. Re-scroll to the hash
+     once layout settles, and force-reveal the target so it never shows blank.
+     Retries cover slow mobile where products.js + images arrive late. */
+  (function(){
+    if(!location.hash || location.hash.length<2) return;
+    var cancelled=false;
+    var stop=function(){ cancelled=true; };
+    ['wheel','touchmove','keydown'].forEach(function(ev){ window.addEventListener(ev, stop, {passive:true, once:true}); });
+    var jump=function(){
+      if(cancelled) return;
+      var t; try{ t=document.querySelector(location.hash); }catch(e){ return; }
+      if(!t) return;
+      if(t.classList.contains('reveal')) t.classList.add('in');
+      t.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+      t.scrollIntoView();
+    };
+    requestAnimationFrame(function(){ requestAnimationFrame(jump); });
+    [250,700,1500,3000].forEach(function(ms){ setTimeout(jump, ms); });
+    window.addEventListener('load', jump);
+  })();
+
   // enquiry-form success state + product pre-fill from product.html
   (function(){
     const qp = new URLSearchParams(location.search);
@@ -1875,7 +1899,7 @@
     }
   })();
 </script>
-<script src="assets/img-opt.js?v=1"></script>
+<script src="assets/img-opt.js?v=2"></script>
 <script src="/api/products.js"></script>
 <script>
 /* Live-catalogue enhancer:
