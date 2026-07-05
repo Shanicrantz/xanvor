@@ -1845,6 +1845,30 @@
   },{threshold:.16,rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
+  /* Anchor-jump fix — the live-catalogue enhancer adds ~90 cards into the
+     collection sections AFTER the browser has already jumped to a #c-…
+     hash, so the target slides thousands of px down (page is very tall) and
+     the viewport lands on stale/blank .reveal content. Re-scroll to the hash
+     once layout settles, and force-reveal the target so it never shows blank.
+     Retries cover slow mobile where products.js + images arrive late. */
+  (function(){
+    if(!location.hash || location.hash.length<2) return;
+    var cancelled=false;
+    var stop=function(){ cancelled=true; };
+    ['wheel','touchmove','keydown'].forEach(function(ev){ window.addEventListener(ev, stop, {passive:true, once:true}); });
+    var jump=function(){
+      if(cancelled) return;
+      var t; try{ t=document.querySelector(location.hash); }catch(e){ return; }
+      if(!t) return;
+      if(t.classList.contains('reveal')) t.classList.add('in');
+      t.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+      t.scrollIntoView();
+    };
+    requestAnimationFrame(function(){ requestAnimationFrame(jump); });
+    [250,700,1500,3000].forEach(function(ms){ setTimeout(jump, ms); });
+    window.addEventListener('load', jump);
+  })();
+
   // enquiry-form success state + product pre-fill from product.html
   (function(){
     const qp = new URLSearchParams(location.search);
