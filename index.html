@@ -1839,10 +1839,13 @@
   const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>40);
   onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
 
-  // scroll reveal
+  // scroll reveal — threshold 0 (not .16): a full-collection .cat-grid on
+  // mobile is single-column and can be >10000px tall, so 16% of it is never
+  // simultaneously in view → it never revealed → the section showed only its
+  // (short) header, grid blank. Firing on ANY intersection fixes tall grids.
   const io=new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
-  },{threshold:.16,rootMargin:'0px 0px -8% 0px'});
+  },{threshold:0,rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
   /* Anchor-jump fix — the live-catalogue enhancer adds ~90 cards into the
