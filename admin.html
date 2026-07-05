@@ -230,14 +230,14 @@
 <script>
 (function(){
   const $ = id => document.getElementById(id);
-  const COLLECTIONS = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Hot-Serve','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection'];
+  const COLLECTIONS = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Hot-Serve','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection','Metal Wall Art & Décor'];
   $('f_collection').innerHTML = COLLECTIONS.map(c=>`<option>${c}</option>`).join('');
   $('filterCollection').innerHTML = '<option value="">Sab collections</option>' + COLLECTIONS.map(c=>`<option>${c}</option>`).join('');
   let KEY = sessionStorage.getItem('xv_admin_key') || '';
   let CATALOG = [];
   let editingId = null;
   /* homepage section order — mirrors index.html's MAP (Hot-Serve excluded, alag page hai) */
-  const DEFAULT_CAT_ORDER = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection'];
+  const DEFAULT_CAT_ORDER = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection','Metal Wall Art & Décor'];
   let COLLECTION_ORDER = [...DEFAULT_CAT_ORDER];
 
   const toast = (msg, bad) => { const t=$('toast'); t.textContent=msg; t.className='toast show'+(bad?' bad':''); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), 3600); };

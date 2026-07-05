@@ -17,7 +17,7 @@
 
 const SITE = 'https://xanvor.com';
 const PROTOCOL = '2025-06-18';
-const COLLECTIONS = ['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection'];
+const COLLECTIONS = ['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection', 'Metal Wall Art & Décor'];
 
 async function admin(payload) {
   const key = process.env.XANVOR_ADMIN_KEY;

@@ -132,7 +132,7 @@ server.tool(
   'list_products',
   'XANVOR catalogue ke products list karo (live + draft dono). Filters optional.',
   {
-    collection: z.enum(['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection']).optional(),
+    collection: z.enum(['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection', 'Metal Wall Art & Décor']).optional(),
     status: z.enum(['live', 'draft']).optional(),
     q: z.string().optional().describe('naam/id me search'),
   },
@@ -159,7 +159,7 @@ server.tool(
   {
     id: z.string().describe('jaise fw-113 (lowercase, dash)'),
     name: z.string().optional(),
-    collection: z.enum(['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection']).optional(),
+    collection: z.enum(['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection', 'Metal Wall Art & Décor']).optional(),
     series: z.string().optional(),
     materials: z.string().optional().describe('· se alag, jaise "Solid Brass · Hand-Hammered"'),
     desc: z.string().optional(),
