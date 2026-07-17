@@ -92,6 +92,8 @@
   .place:hover{background:#C0712F;transform:translateY(-1px);}
   .place svg{width:15px;height:15px;}
   .secure{margin-top:12px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);line-height:1.7;}
+  .acc-line{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#8A7359;margin-top:12px;}
+  .acc-line a{color:var(--rust);text-decoration:underline;}
   .right-rail{position:sticky;top:92px;}
   @media(max-width:880px){ .right-rail{position:static;} }
 
@@ -137,7 +139,36 @@
 </footer>
 
 <script src="assets/img-opt.js?v=2"></script>
+<script src="/api/products.js"></script>
 <script src="shop-cart.js?v=hs3"></script>
+<script>
+/* Google Shopping checkout link — /checkout?item_id={id}
+   Reads the product id from the URL and drops that piece into the cart
+   so the buyer lands on a ready-to-pay checkout (not an empty one). */
+(function(){
+  try{
+    const p = new URLSearchParams(location.search);
+    const pid = p.get('item_id') || p.get('id');
+    if(!pid || !window.XanvorShop) return;
+    const all = window.XANVOR_PRODUCTS || [];
+    const norm = s => String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const prod = all.find(x => x.id === pid) || all.find(x => norm(x.id) === norm(pid) || norm(x.code) === norm(pid));
+    if(!prod) return;
+    const GSTrate = (parseFloat(prod.gst)/100) || (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.GST) || 0.18;
+    const retail  = prod.retail || prod.offer;
+    if(!retail) return; // enquiry-only piece — leave cart untouched
+    const incl = Math.round(retail * (1 + GSTrate));
+    const inCart = window.XanvorShop.items().some(i => i.id === prod.id);
+    if(!inCart){
+      window.XanvorShop.add({ id:prod.id, code:prod.code, name:prod.name, image:prod.image,
+                              price:incl, mrp:prod.mrp, qty:1 });
+    }
+    // tidy the URL so refreshes don't look like a new arrival
+    history.replaceState(null,'', location.pathname);
+  }catch(e){}
+})();
+</script>
+<script src="assets/account.js?v=1"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 (function(){
@@ -158,6 +189,48 @@
     // { id:'bank', t:'Bank transfer', d:'NEFT / IMPS · manual confirm' },
   ];
   let pay = 'razorpay';
+  let profile = null;
+
+  function accLineHtml(){
+    return profile
+      ? `Logged in as <b>${esc(profile.email)}</b> · <a href="account.html">View past orders</a>`
+      : `Have an account? <a href="account.html">Log in</a> to track your orders — or check out as a guest below.`;
+  }
+
+  function applyProfileToForm(){
+    if(!profile) return;
+    const form = document.getElementById('co-form');
+    if(!form) return;
+    const setIfEmpty = (name, val) => { const el = form.elements[name]; if(el && !el.value && val) el.value = val; };
+    ['name','phone','email','address','city','state','pincode','landmark'].forEach(k => setIfEmpty(k, profile[k]));
+  }
+
+  async function loadProfile(){
+    try{
+      const r = await fetch('/api/auth/me', { credentials:'same-origin' });
+      const d = await r.json();
+      if(d && d.loggedIn){
+        profile = d.customer;
+        applyProfileToForm();
+        const line = document.getElementById('accLine');
+        if(line) line.innerHTML = accLineHtml();
+      }
+    }catch(e){}
+  }
+
+  async function persistOrder(d, items, t, oid, paymentMethod, extra){
+    try{
+      await fetch('/api/orders/create', {
+        method:'POST', credentials:'same-origin', headers:{'content-type':'application/json'},
+        body: JSON.stringify({
+          oid, email:d.email, name:d.name, phone:d.phone, address:d.address, city:d.city, state:d.state,
+          pincode:d.pincode, landmark:d.landmark,
+          items: items.map(it=>({ id:it.id, code:it.code, name:it.name, image:it.image, qty:it.qty, price:it.price })),
+          totals: t, paymentMethod, ...(extra||{}),
+        }),
+      });
+    }catch(e){ /* non-fatal — the WhatsApp/COD/paid flow must complete even if this hiccups */ }
+  }
 
   const tick = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>`;
   const waIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.2 1.2-1.7 1.2-.4 0-1 .1-3.2-.9-2.7-1.2-4.4-4-4.5-4.2-.1-.2-1-1.4-1-2.6 0-1.3.7-1.9.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.6-.1l1.9.9c.3.1.4.2.5.3.1.3.1.6-.1 1.1Z"/></svg>`;
@@ -179,6 +252,7 @@
       <div class="co-head">
         <div class="eyebrow">Secure Checkout · Retail</div>
         <h1>Almost <em>yours</em></h1>
+        <div class="acc-line" id="accLine">${accLineHtml()}</div>
       </div>
       <div class="co-grid">
         <div>
@@ -188,7 +262,7 @@
             <form id="co-form" class="form-grid">
               <div class="field full"><label>Full name *</label><input name="name" required autocomplete="name" placeholder="Your name"></div>
               <div class="field"><label>Phone / WhatsApp *</label><input name="phone" required inputmode="tel" autocomplete="tel" placeholder="+91 …"></div>
-              <div class="field"><label>Email</label><input name="email" type="email" autocomplete="email" placeholder="optional"></div>
+              <div class="field"><label>Email *</label><input name="email" type="email" required autocomplete="email" placeholder="you@example.com"></div>
               <div class="field full"><label>Address *</label><input name="address" required autocomplete="street-address" placeholder="House no, street, area"></div>
               <div class="field"><label>City *</label><input name="city" required placeholder="City"></div>
               <div class="field"><label>State *</label><input name="state" required placeholder="State"></div>
@@ -242,6 +316,7 @@
     });
     document.getElementById('edit-cart').addEventListener('click', ()=>S.open());
     document.getElementById('place').addEventListener('click', placeOrder);
+    applyProfileToForm();
   }
 
   function placeOrder(){
@@ -277,6 +352,10 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
 
     const waUrl = 'https://wa.me/' + CFG.WHATSAPP + '?text=' + encodeURIComponent(msg);
     if(pay === 'whatsapp'){ window.open(waUrl, '_blank'); }
+
+    // fire-and-forget — must not delay/await here or the WhatsApp popup above
+    // can get blocked (browsers require window.open in the same tick as the click)
+    persistOrder(d, items, t, oid, pay);
 
     renderConfirm(oid, t, pay, waUrl);
     S.clear();
@@ -347,7 +426,10 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
             body: JSON.stringify(resp)
           });
           const vr = await v.json();
-          if(vr.ok){ renderPaidConfirm(oid, t, resp.razorpay_payment_id); S.clear(); window.scrollTo(0,0); }
+          if(vr.ok){
+            await persistOrder(d, items, t, oid, 'razorpay', { paymentId: resp.razorpay_payment_id });
+            renderPaidConfirm(oid, t, resp.razorpay_payment_id); S.clear(); window.scrollTo(0,0);
+          }
           else { placeBtn.disabled=false; placeBtn.innerHTML = bagIcon + ' Place order · ' + fmt(t.total); alert('Payment could not be verified. If money was deducted, message us on WhatsApp with order ' + oid + '.'); }
         }catch(e){ placeBtn.disabled=false; placeBtn.innerHTML = bagIcon + ' Place order · ' + fmt(t.total); alert('Verification failed. Message us on WhatsApp with order ' + oid + '.'); }
       },
@@ -382,6 +464,7 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
   }
 
   renderCheckout();
+  loadProfile();
   window.addEventListener('xanvor:cart-change', ()=>{ if(!document.querySelector('.confirm')) renderCheckout(); });
 })();
 </script>

@@ -18,6 +18,23 @@
     { id:'c',   q:500,  pct:0.32, label:'Bulk · 500–999 pcs',         disc:'~32% off sample',  lead:'8–10 weeks',          ship:'FOB Mundra / Nhava Sheva' },
     { id:'d',   q:1000, pct:0.40, label:'Container · 1000+ pcs',      disc:'~40% off sample',  lead:'10–12 weeks · split shipment available', ship:'FOB · CIF · DDP' },
   ];
+  /* Tier discounts are applied to the trade (offer) price — but "~12% off
+     sample" reads weak to a bulk buyer. Where we know MRP, show the discount
+     ANCHORED TO MRP instead: unit prices stay identical (no margin given up),
+     the headline just tells the truth vs the sticker price — typically 55–75%
+     off, which is what actually convinces a 50+ pcs buyer. Fallback for
+     pieces without any price: the generic off-sample label. */
+  const discLabelFor = (t, product) => {
+    if(!t.pct) return t.disc;
+    const base = typeof product.offer === 'number' ? product.offer
+               : typeof product.retail === 'number' ? product.retail : null;
+    if(base && product.mrp){
+      const unit = base * (1 - t.pct);
+      return '~' + Math.round((1 - unit / product.mrp) * 100) + '% off MRP';
+    }
+    return t.disc;
+  };
+
   const tierFor = q => {
     if(q < 50)   return TIERS[0];
     if(q < 200)  return TIERS[1];
@@ -137,6 +154,10 @@
 
   /* ---- pricing (Hot-Serve collection carries an offer price) ---- */
   const hasPrice = typeof product.offer === 'number';
+  /* retail buy-box shows for anything customer-priced: retail (B2C) OR offer
+     (legacy B2B-priced pieces) — offer-only was the old gate, which wrongly
+     sent retail-only products (kn-101, ut-*) to the enquiry-only view */
+  const hasRetail = typeof (product.retail || product.offer) === 'number' && !!product.mrp;
   const discPct  = hasPrice ? Math.round((1 - product.offer / product.mrp) * 100) : 0;
   const priceBlock = hasPrice ? `
         <div class="price-block">
@@ -205,7 +226,7 @@
           <div class="pb-label">Wholesale · ex-works</div>
           <div class="pb-row">
             <span class="pb-mrp" style="text-decoration:none">from</span>
-            <span class="pb-offer" id="wUnit">${fmt(product.offer)}</span>
+            <span class="pb-offer" id="wUnit">${typeof product.offer === 'number' ? fmt(product.offer) : 'on enquiry'}</span>
             <span class="pb-off">/ pc</span>
           </div>
           <div class="pb-note">Per piece · ex-GST · MOQ ${esc(product.moq||'50 pcs')} · drops with volume</div>
@@ -383,7 +404,7 @@
             ${TIERS.map(t=>`
               <tr data-tier="${t.id}">
                 <td class="q">${esc(t.label.split('·')[1] ? t.label.split('·')[1].trim() : t.label)}</td>
-                <td class="d">${esc(t.disc)}</td>
+                <td class="d">${esc(discLabelFor(t, product))}</td>
                 <td>${esc(t.lead)}</td>
                 <td>${esc(t.ship)}</td>
               </tr>`).join('')}
@@ -422,7 +443,7 @@
   `;
 
   /* ---- buybox: swap to retail/wholesale dual-mode for priced items ---- */
-  if(hasPrice){
+  if(hasRetail){
     const bb = document.getElementById('buybox');
     if(bb) bb.outerHTML = retailBuybox;
     const fr = document.querySelector('.finish-row'); if(fr) fr.style.display = 'none';
@@ -435,7 +456,7 @@
   const tableBody = document.getElementById('tierTableBody');
   const clampQ = v => Math.max(1, Math.min(99999, parseInt(v||'0',10)||1));
 
-  if(hasPrice){
+  if(hasRetail){
     const buybox = document.getElementById('buybox');
     const toggle = document.getElementById('bbToggle');
     const rQ=document.getElementById('rQ'), rSub=document.getElementById('rSub'), rGst=document.getElementById('rGst'), rTot=document.getElementById('rTot');
@@ -450,9 +471,13 @@
         if(rQ) rQ.textContent = q+' pc'+(q>1?'s':'');
         rSub.textContent=fmt(sub); rGst.textContent=fmt(sub - Math.round(sub/(1+GSTrate))); rTot.textContent=fmt(sub);
       } else {
-        const t=tierFor(q), unit=Math.round(product.offer*(1-t.pct));
-        if(wUnit) wUnit.textContent=fmt(unit);
-        qTier.textContent=t.label.replace(/^[^·]+·\s*/,''); qDisc.textContent=t.disc; qLead.textContent=t.lead; qTotal.textContent=fmt(unit*q);
+        /* wholesale unit derives from the B2B offer price; retail-only pieces
+           have no offer — their trade pricing stays "on enquiry" (no NaN) */
+        const t=tierFor(q);
+        const unit = typeof product.offer === 'number' ? Math.round(product.offer*(1-t.pct)) : null;
+        if(wUnit) wUnit.textContent = unit ? fmt(unit) : 'on enquiry';
+        qTier.textContent=t.label.replace(/^[^·]+·\s*/,''); qDisc.textContent=discLabelFor(t, product); qLead.textContent=t.lead;
+        qTotal.textContent = unit ? fmt(unit*q) : 'on enquiry';
         if(tableBody)[...tableBody.children].forEach(tr=>tr.classList.toggle('active',tr.dataset.tier===t.id));
       }
     }
@@ -485,7 +510,7 @@
       const q=clampQ(qtyInput.value); qtyInput.value=q;
       const t=tierFor(q);
       qTier.textContent=t.label.replace(/^[^·]+·\s*/,'');
-      qDisc.textContent=t.disc; qLead.textContent=t.lead; qShip.textContent=t.ship;
+      qDisc.textContent=discLabelFor(t, product); qLead.textContent=t.lead; qShip.textContent=t.ship;
       [...tierChips.children].forEach(b=>b.classList.toggle('on',parseInt(b.dataset.q,10)===t.q));
       if(tableBody)[...tableBody.children].forEach(tr=>tr.classList.toggle('active',tr.dataset.tier===t.id));
     }
