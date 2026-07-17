@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XANVOR — My Account</title>
+<meta name="description" content="Log in to track your XANVOR orders and manage your details.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --claret:#3A2718; --claret-deep:#241510; --ink:#1F140C;
+    --brass:#B68B5C; --brass-soft:#C9A57E; --bone:#F4EEE2; --parchment:#D9CBAE;
+    --rust:#A85D2A; --bone-warm:#FBF6E8;
+    --paper:#FCFAF4; --paper-2:#F8F2E6; --band:#5E3F28;
+    --ink-soft:#6E6151; --ink-faint:#9A8E7C;
+    --line:#E6DCC8; --line-strong:#D8CBB0; --ok:#1F8A5B; --bad:#A32D2D;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bone);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  a{color:inherit;text-decoration:none;}
+  img{display:block;max-width:100%;}
+  button{font-family:inherit;cursor:pointer;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;background:rgba(252,250,244,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  nav .brand{font-family:'Fraunces',serif;font-weight:400;font-size:21px;letter-spacing:.16em;color:var(--claret-deep);}
+  nav .links{display:flex;gap:28px;align-items:center;}
+  nav .links a{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#5A4636;padding-bottom:3px;border-bottom:1px solid transparent;transition:all .25s;}
+  nav .links a:hover{color:var(--rust);border-bottom-color:var(--rust);}
+  @media(max-width:640px){ nav .links a.hide-sm{display:none;} }
+
+  .wrap{max-width:900px;margin:0 auto;padding:120px 6vw 80px;}
+  .ac-head{margin-bottom:34px;}
+  .ac-head .eyebrow{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--rust);margin-bottom:12px;}
+  .ac-head h1{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(30px,4vw,46px);color:var(--claret-deep);}
+  .ac-head h1 em{font-style:italic;color:var(--rust);}
+
+  .panel{background:var(--paper);border:1px solid var(--line-strong);border-radius:10px;padding:26px 26px 28px;max-width:520px;}
+  .panel.wide{max-width:none;}
+  .panel + .panel{margin-top:22px;}
+  .panel h2{font-family:'Fraunces',serif;font-weight:400;font-size:22px;color:var(--claret-deep);margin-bottom:4px;}
+  .panel .ph{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:18px;}
+
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .form-grid .full{grid-column:1 / -1;}
+  @media(max-width:520px){ .form-grid{grid-template-columns:1fr;} }
+  .field label{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#5A4636;margin-bottom:6px;}
+  .field input{width:100%;background:#fff;color:var(--claret-deep);border:1px solid var(--line-strong);padding:12px 13px;font-family:'Cormorant Garamond',serif;font-size:16px;border-radius:6px;transition:border-color .2s;}
+  .field input:focus{outline:none;border-color:var(--rust);}
+  .field input::placeholder{color:#B6A98F;}
+  .otp-input{letter-spacing:.5em;text-align:center;font-family:'JetBrains Mono',monospace;font-size:22px !important;}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;padding:14px 22px;border-radius:50px;transition:all .25s;border:1px solid transparent;cursor:pointer;width:100%;}
+  .btn-primary{background:var(--rust);color:var(--bone-warm);box-shadow:0 8px 24px -8px rgba(168,93,42,.5);}
+  .btn-primary:hover{background:#C0712F;transform:translateY(-1px);}
+  .btn-primary[disabled]{opacity:.55;pointer-events:none;transform:none;}
+  .btn-ghost{background:transparent;border-color:var(--line-strong);color:#5A4636;}
+  .btn-ghost:hover{border-color:var(--rust);color:var(--rust);}
+  .btn-link{width:auto;background:none;border:none;padding:0;font-size:10px;letter-spacing:.16em;color:var(--rust);text-decoration:underline;}
+
+  .msg{margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;padding:11px 14px;border-radius:7px;line-height:1.6;}
+  .msg.err{background:#FBEAEA;color:var(--bad);border:1px solid #E4B9B9;}
+  .msg.ok{background:#E9F5EE;color:var(--ok);border:1px solid #BFE3CF;}
+  .row-between{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap;}
+
+  .ac-hero{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px;}
+  .ac-hero .who{font-family:'Fraunces',serif;font-size:22px;color:var(--claret-deep);}
+  .ac-hero .who em{font-style:italic;color:var(--rust);}
+  .ac-hero .sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A7359;margin-top:4px;}
+
+  .order-card{border:1px solid var(--line-strong);border-radius:9px;padding:18px 20px;background:#fff;}
+  .order-card + .order-card{margin-top:14px;}
+  .oc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  .oc-oid{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:var(--rust);}
+  .oc-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-faint);margin-top:3px;}
+  .status{display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:50px;white-space:nowrap;}
+  .status-placed{background:#EFE3CB;color:#7A5A2E;}
+  .status-paid{background:#DCEAF7;color:#1F5C8A;}
+  .status-confirmed{background:#DCEAF7;color:#1F5C8A;}
+  .status-shipped{background:#E4DCF7;color:#5A3A9A;}
+  .status-delivered{background:#E9F5EE;color:var(--ok);}
+  .status-cancelled{background:#F3D9D9;color:#8A3A3A;}
+  .oc-items{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:15px;color:#43352B;}
+  .oc-items div{padding:3px 0;}
+  .oc-foot{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .oc-total{font-family:'Fraunces',serif;font-size:18px;color:var(--claret-deep);}
+  .oc-tracking{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5A4636;background:var(--paper-2);border:1px dashed var(--line-strong);border-radius:6px;padding:6px 10px;}
+
+  .empty{text-align:center;padding:40px 20px;}
+  .empty .e{font-family:'Fraunces',serif;font-style:italic;font-size:38px;color:var(--rust);margin-bottom:10px;}
+  .empty p{color:#5A4636;margin-bottom:18px;}
+
+  footer{background:var(--band);padding:40px 6vw;text-align:center;margin-top:70px;}
+  footer .f-legal{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#C5B498;line-height:1.7;}
+  footer .f-legal a{color:#E7D7B4;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">XANVOR</a>
+  <div class="links">
+    <a href="Hot-Serve Collection.html" class="hide-sm">Continue shopping</a>
+    <a href="index.html#contact" class="hide-sm">Help</a>
+  </div>
+</nav>
+
+<div class="wrap" id="root"></div>
+
+<footer>
+  <div class="f-legal">XANVOR is a house brand of Zenko Inc · Moradabad, India · <a href="mailto:hello@xanvor.com">hello@xanvor.com</a></div>
+</footer>
+
+<script src="assets/img-opt.js?v=2"></script>
+<script src="shop-cart.js?v=hs3"></script>
+<script>
+(function(){
+  const root = document.getElementById('root');
+  const fmt = n => '₹' + Number(Math.round(n||0)).toLocaleString('en-IN');
+  const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const STATUS_LABEL = { placed:'Placed', paid:'Paid', confirmed:'Confirmed', shipped:'Shipped', delivered:'Delivered', cancelled:'Cancelled' };
+
+  let state = { checking:true, loggedIn:false, customer:null, stage:'email', email:'', cooldown:0, error:'', orders:null };
+
+  async function api(path, opts){
+    const r = await fetch(path, { credentials:'same-origin', headers:{'content-type':'application/json'}, ...opts });
+    const data = await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(data.error || 'Request failed');
+    return data;
+  }
+
+  function render(){
+    if(state.checking){ root.innerHTML = ''; return; }
+    root.innerHTML = state.loggedIn ? renderAccount() : renderLogin();
+    wire();
+  }
+
+  function renderLogin(){
+    if(state.stage === 'email'){
+      return `
+        <div class="ac-head"><div class="eyebrow">My Account</div><h1>Log in with <em>email</em></h1></div>
+        <div class="panel">
+          <h2>Enter your email</h2>
+          <div class="ph">We'll send a 6-digit code — no password to remember</div>
+          <div class="field full"><label>Email</label><input id="ac_email" type="email" autocomplete="email" placeholder="you@example.com" value="${esc(state.email)}"></div>
+          <div class="row-between"><button class="btn btn-primary" id="ac_send">Send code</button></div>
+          ${state.error ? `<div class="msg err">${esc(state.error)}</div>` : ''}
+        </div>`;
+    }
+    return `
+      <div class="ac-head"><div class="eyebrow">My Account</div><h1>Enter your <em>code</em></h1></div>
+      <div class="panel">
+        <h2>Check your email</h2>
+        <div class="ph">Code sent to ${esc(state.email)}</div>
+        <div class="field full"><label>6-digit code</label><input id="ac_code" class="otp-input" inputmode="numeric" maxlength="6" placeholder="······"></div>
+        <div class="row-between"><button class="btn btn-primary" id="ac_verify">Verify &amp; log in</button></div>
+        <div class="row-between">
+          <button class="btn-link" id="ac_change" type="button">Change email</button>
+          <button class="btn-link" id="ac_resend" type="button" ${state.cooldown>0?'disabled':''}>${state.cooldown>0?`Resend in ${state.cooldown}s`:'Resend code'}</button>
+        </div>
+        ${state.error ? `<div class="msg err">${esc(state.error)}</div>` : ''}
+      </div>`;
+  }
+
+  function renderAccount(){
+    const c = state.customer || {};
+    return `
+      <div class="ac-hero">
+        <div><div class="who">Welcome back, <em>${esc(c.name || c.email)}</em></div><div class="sub">${esc(c.email)}</div></div>
+        <button class="btn btn-ghost" style="width:auto;" id="ac_logout">Log out</button>
+      </div>
+
+      <div class="panel">
+        <h2>My details</h2>
+        <div class="ph">Saved here pre-fills your next checkout</div>
+        <form id="ac_profile" class="form-grid">
+          <div class="field"><label>Full name</label><input name="name" value="${esc(c.name)}" placeholder="Your name"></div>
+          <div class="field"><label>Phone / WhatsApp</label><input name="phone" value="${esc(c.phone)}" placeholder="+91 …"></div>
+          <div class="field full"><label>Address</label><input name="address" value="${esc(c.address)}" placeholder="House no, street, area"></div>
+          <div class="field"><label>City</label><input name="city" value="${esc(c.city)}" placeholder="City"></div>
+          <div class="field"><label>State</label><input name="state" value="${esc(c.state)}" placeholder="State"></div>
+          <div class="field"><label>PIN code</label><input name="pincode" value="${esc(c.pincode)}" placeholder="6-digit PIN"></div>
+          <div class="field"><label>Landmark</label><input name="landmark" value="${esc(c.landmark)}" placeholder="optional"></div>
+          <div class="full"><button class="btn btn-primary" type="submit">Save details</button></div>
+        </form>
+        ${state.profileMsg ? `<div class="msg ${state.profileErr?'err':'ok'}">${esc(state.profileMsg)}</div>` : ''}
+      </div>
+
+      <div class="panel wide">
+        <h2>My orders</h2>
+        <div class="ph">${state.orders===null ? 'Loading…' : (state.orders.length + ' order' + (state.orders.length===1?'':'s'))}</div>
+        <div id="ac_orders">${renderOrders()}</div>
+      </div>`;
+  }
+
+  function renderOrders(){
+    if(state.orders === null) return '';
+    if(!state.orders.length){
+      return `<div class="empty"><div class="e">✺</div><p>No orders yet — your XANVOR pieces will show up here.</p>
+        <a class="btn btn-ghost" style="width:auto;display:inline-flex;" href="Hot-Serve Collection.html">Start shopping</a></div>`;
+    }
+    return state.orders.map(o => {
+      const date = o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '';
+      const st = o.status || 'placed';
+      return `
+      <div class="order-card">
+        <div class="oc-top">
+          <div><div class="oc-oid">Order · ${esc(o.oid)}</div><div class="oc-date">${esc(date)}</div></div>
+          <span class="status status-${esc(st)}">${esc(STATUS_LABEL[st] || st)}</span>
+        </div>
+        <div class="oc-items">
+          ${(o.items||[]).map(it => `<div>${esc(it.qty)} × ${esc(it.name)}</div>`).join('')}
+        </div>
+        <div class="oc-foot">
+          <div class="oc-total">${fmt(o.totals && o.totals.total)}</div>
+          ${o.tracking ? `<div class="oc-tracking">${esc(o.carrier||'Tracking')}: ${esc(o.tracking)}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function wire(){
+    if(!state.loggedIn){
+      if(state.stage === 'email'){
+        document.getElementById('ac_send').addEventListener('click', sendCode);
+        document.getElementById('ac_email').addEventListener('keydown', e=>{ if(e.key==='Enter') sendCode(); });
+      } else {
+        document.getElementById('ac_verify').addEventListener('click', verifyCode);
+        document.getElementById('ac_code').addEventListener('keydown', e=>{ if(e.key==='Enter') verifyCode(); });
+        document.getElementById('ac_change').addEventListener('click', ()=>{ state.stage='email'; state.error=''; render(); });
+        document.getElementById('ac_resend').addEventListener('click', sendCode);
+      }
+      return;
+    }
+    document.getElementById('ac_logout').addEventListener('click', logout);
+    document.getElementById('ac_profile').addEventListener('submit', saveProfile);
+  }
+
+  async function sendCode(){
+    const emailInput = document.getElementById('ac_email');
+    const email = (emailInput ? emailInput.value : state.email).trim();
+    if(!email){ state.error = 'Email daalo'; render(); return; }
+    state.email = email; state.error = '';
+    try{
+      await api('/api/auth/request-otp', { method:'POST', body: JSON.stringify({ email }) });
+      state.stage = 'code';
+      startCooldown(45);
+      render();
+    }catch(e){ state.error = e.message; render(); }
+  }
+
+  function startCooldown(sec){
+    state.cooldown = sec;
+    const tick = () => {
+      state.cooldown--;
+      const btn = document.getElementById('ac_resend');
+      if(btn){ btn.disabled = state.cooldown>0; btn.textContent = state.cooldown>0 ? `Resend in ${state.cooldown}s` : 'Resend code'; }
+      if(state.cooldown>0) setTimeout(tick,1000);
+    };
+    setTimeout(tick,1000);
+  }
+
+  async function verifyCode(){
+    const code = document.getElementById('ac_code').value.trim();
+    if(!code){ state.error='Code daalo'; render(); return; }
+    state.error='';
+    try{
+      const data = await api('/api/auth/verify-otp', { method:'POST', body: JSON.stringify({ email: state.email, code }) });
+      state.loggedIn = true; state.customer = data.customer;
+      render();
+      loadOrders();
+    }catch(e){ state.error = e.message; render(); }
+  }
+
+  async function logout(){
+    try{ await api('/api/auth/logout', { method:'POST' }); }catch(e){}
+    state = { checking:false, loggedIn:false, customer:null, stage:'email', email:'', cooldown:0, error:'', orders:null };
+    render();
+  }
+
+  async function saveProfile(e){
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(e.target).entries());
+    try{
+      const data = await api('/api/auth/me', { method:'POST', body: JSON.stringify(d) });
+      state.customer = data.customer; state.profileMsg = 'Saved'; state.profileErr = false;
+    }catch(err){ state.profileMsg = err.message; state.profileErr = true; }
+    render();
+  }
+
+  async function loadOrders(){
+    try{
+      const data = await api('/api/orders/mine');
+      state.orders = data.orders || [];
+    }catch(e){ state.orders = []; }
+    const el = document.getElementById('ac_orders');
+    if(el) el.innerHTML = renderOrders();
+    const ph = document.querySelector('.panel.wide .ph');
+    if(ph) ph.textContent = state.orders.length + ' order' + (state.orders.length===1?'':'s');
+  }
+
+  (async function init(){
+    try{
+      const data = await api('/api/auth/me');
+      state.checking = false;
+      if(data.loggedIn){ state.loggedIn = true; state.customer = data.customer; render(); loadOrders(); }
+      else { render(); }
+    }catch(e){ state.checking = false; render(); }
+  })();
+})();
+</script>
+</body>
+</html>

@@ -63,6 +63,19 @@
   .chip-hide{background:#F3D9D9;color:#8A3A3A;margin-left:4px;}
   .r-actions .btn[disabled]{opacity:.3;}
   .reorder-hint{font-size:14px;color:var(--ink-soft);font-style:italic;margin:0 0 10px;min-height:18px;}
+  .ord-card{border:1px solid var(--line-strong);border-radius:8px;padding:14px 16px;margin-bottom:12px;background:#fff;}
+  .ord-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;}
+  .ord-oid{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.06em;color:var(--rust);}
+  .ord-meta{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--ink-faint);margin-top:3px;}
+  .ord-items{font-size:15px;color:var(--ink-soft);margin-top:8px;line-height:1.5;}
+  .ord-ship{font-size:14.5px;color:var(--ink-soft);margin-top:6px;line-height:1.5;}
+  .ord-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);}
+  .ord-controls select,.ord-controls input{width:auto;min-width:110px;padding:7px 10px;font-size:14px;}
+  .chip-placed{background:#EFE3CB;color:#7A5A2E;}
+  .chip-paid,.chip-confirmed{background:#DCEAF7;color:#1F5C8A;}
+  .chip-shipped{background:#E4DCF7;color:#5A3A9A;}
+  .chip-delivered{background:#E9F5EE;color:var(--ok);}
+  .chip-cancelled{background:#F3D9D9;color:#8A3A3A;}
 </style>
 </head>
 <body>
@@ -100,6 +113,7 @@
       <input type="search" id="search" placeholder="Search — naam ya id">
       <button class="btn btn-ghost" id="categoriesBtn">📐 Categories order</button>
       <button class="btn btn-ghost" id="listingBtn">🎨 Listing studio</button>
+      <button class="btn btn-ghost" id="ordersBtn">📦 Orders</button>
       <button class="btn btn-primary" id="addBtn">+ Naya product</button>
     </div>
     <p class="reorder-hint" id="reorderHint"></p>
@@ -111,6 +125,15 @@
     <p class="hint" style="margin:-8px 0 16px;">Yeh homepage pe collection-sections (Silver &amp; Gold, Copper, …) ka sequence set karta hai. Hot-Serve isme nahi hai — wo alag page hai.</p>
     <div id="catOrderList"></div>
     <div style="margin-top:14px;"><button type="button" class="btn btn-ghost" id="catOrderBack">← Products</button></div>
+  </div>
+
+  <div class="panel hidden" id="ordersPanel">
+    <div class="toolbar">
+      <h2 style="margin:0;flex:1;">Orders <span class="count" id="ordersCount"></span></h2>
+      <button class="btn btn-ghost" id="ordersRefresh">↻ Refresh</button>
+    </div>
+    <div id="ordersList"></div>
+    <div style="margin-top:14px;"><button type="button" class="btn btn-ghost" id="ordersBack">← Products</button></div>
   </div>
 
   <div class="panel hidden" id="formPanel">
@@ -230,14 +253,14 @@
 <script>
 (function(){
   const $ = id => document.getElementById(id);
-  const COLLECTIONS = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Hot-Serve','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection','Metal Wall Art & Décor'];
+  const COLLECTIONS = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Hot-Serve','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection','Metal Wall Art & Décor','Kansa Dinnerware'];
   $('f_collection').innerHTML = COLLECTIONS.map(c=>`<option>${c}</option>`).join('');
   $('filterCollection').innerHTML = '<option value="">Sab collections</option>' + COLLECTIONS.map(c=>`<option>${c}</option>`).join('');
   let KEY = sessionStorage.getItem('xv_admin_key') || '';
   let CATALOG = [];
   let editingId = null;
   /* homepage section order — mirrors index.html's MAP (Hot-Serve excluded, alag page hai) */
-  const DEFAULT_CAT_ORDER = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection','Metal Wall Art & Décor'];
+  const DEFAULT_CAT_ORDER = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection','Metal Wall Art & Décor','Kansa Dinnerware'];
   let COLLECTION_ORDER = [...DEFAULT_CAT_ORDER];
 
   const toast = (msg, bad) => { const t=$('toast'); t.textContent=msg; t.className='toast show'+(bad?' bad':''); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), 3600); };
@@ -255,6 +278,7 @@
     $('formPanel').classList.toggle('hidden', view!=='form');
     $('listingPanel').classList.toggle('hidden', view!=='listing');
     $('categoriesPanel').classList.toggle('hidden', view!=='categories');
+    $('ordersPanel').classList.toggle('hidden', view!=='orders');
     $('lockBtn').classList.toggle('hidden', view==='gate');
     window.scrollTo({top:0});
   }
@@ -427,6 +451,72 @@
     renderCatOrder();
     try{ await api({action:'reorder-collections', order:COLLECTION_ORDER}); toast('Order save ✓ — turant save ho gaya, homepage 60 sec cache ke baad dikhega (koi deploy nahi hota)'); }
     catch(err){ toast(err.message, true); }
+  });
+
+  /* ---- Orders ---- */
+  let ORDERS = [];
+  const ORDER_STATUSES = ['placed','paid','confirmed','shipped','delivered','cancelled'];
+  function renderOrders(){
+    $('ordersCount').textContent = '· '+ORDERS.length+' total';
+    $('ordersList').innerHTML = ORDERS.length ? ORDERS.map(o=>{
+      const date = o.createdAt ? new Date(o.createdAt).toLocaleString('en-IN', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+      const itemsTxt = (o.items||[]).map(it=>`${it.qty}× ${it.name}`).join(', ');
+      const status = o.status || 'placed';
+      return `
+      <div class="ord-card" data-oid="${o.oid}">
+        <div class="ord-top">
+          <div>
+            <div class="ord-oid">${o.oid} <span class="chip chip-${status}">${status.toUpperCase()}</span></div>
+            <div class="ord-meta">${date} · ${o.paymentMethod||''}${o.paymentId?' · '+o.paymentId:''}</div>
+          </div>
+          <div class="ord-oid">${fmt(o.totals&&o.totals.total||0)}</div>
+        </div>
+        <div class="ord-items">${itemsTxt}</div>
+        <div class="ord-ship"><b>${o.name||''}</b> · ${o.phone||''}${o.email?' · '+o.email:''}<br>${o.address||''}${o.landmark?', '+o.landmark:''}, ${o.city||''}, ${o.state||''} - ${o.pincode||''}</div>
+        <div class="ord-controls">
+          <select data-status>${ORDER_STATUSES.map(s=>`<option value="${s}" ${s===status?'selected':''}>${s}</option>`).join('')}</select>
+          <input type="text" data-carrier placeholder="Carrier" value="${o.carrier||''}">
+          <input type="text" data-tracking placeholder="Tracking no." value="${o.tracking||''}">
+          <button class="btn btn-primary" data-save-order>Save</button>
+          <button class="btn btn-danger" data-del-order>Delete</button>
+        </div>
+      </div>`;
+    }).join('') : '<p class="hint">Abhi koi order nahi.</p>';
+  }
+  $('ordersBtn').addEventListener('click', async ()=>{
+    show('orders');
+    $('ordersList').innerHTML = '<p class="hint">Load ho raha hai…</p>';
+    try{ const data = await api({action:'orders-list'}); ORDERS = data.orders||[]; renderOrders(); }
+    catch(err){ toast(err.message, true); $('ordersList').innerHTML=''; }
+  });
+  $('ordersBack').addEventListener('click', ()=>show('list'));
+  $('ordersRefresh').addEventListener('click', ()=>$('ordersBtn').click());
+  $('ordersList').addEventListener('click', async e=>{
+    const saveBtn = e.target.closest('[data-save-order]');
+    const delBtn = e.target.closest('[data-del-order]');
+    if(!saveBtn && !delBtn) return;
+    const card = (saveBtn||delBtn).closest('.ord-card'); const oid = card.dataset.oid;
+
+    if(delBtn){
+      if(!confirm(`Order ${oid} permanently delete karein?`)) return;
+      delBtn.disabled = true;
+      try{ await api({action:'orders-delete', oid}); toast('Order delete ho gaya'); ORDERS = ORDERS.filter(o=>o.oid!==oid); renderOrders(); }
+      catch(err){ toast(err.message, true); delBtn.disabled = false; }
+      return;
+    }
+
+    const status = card.querySelector('[data-status]').value;
+    const carrier = card.querySelector('[data-carrier]').value;
+    const tracking = card.querySelector('[data-tracking]').value;
+    saveBtn.disabled = true;
+    try{
+      await api({action:'orders-update', oid, status, carrier, tracking});
+      toast('Order update ho gaya ✓');
+      const idx = ORDERS.findIndex(o=>o.oid===oid);
+      if(idx>=0) ORDERS[idx] = {...ORDERS[idx], status, carrier, tracking};
+      renderOrders();
+    }catch(err){ toast(err.message, true); }
+    saveBtn.disabled = false;
   });
 
   async function unlock(){

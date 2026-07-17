@@ -10,8 +10,10 @@
 import { getStore } from '@netlify/blobs';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { getCatalog, saveCatalog } from './lib/catalog.mjs';
+import { getAllOrders, updateOrderStatus, deleteOrder } from './lib/orders.mjs';
+import { sendOrderStatusEmail } from './lib/notify.mjs';
 
-const COLLECTIONS = ['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection', 'Metal Wall Art & Décor'];
+const COLLECTIONS = ['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection', 'Metal Wall Art & Décor', 'Kansa Dinnerware'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
@@ -55,6 +57,9 @@ function cleanProduct(raw) {
   const opt = {
     construction: str(raw.construction, 120), sizes: str(raw.sizes, 160),
     moq: str(raw.moq, 60), hsn: str(raw.hsn, 20), tag: str(raw.tag, 60),
+    /* optional Google Shopping taxonomy path — merchant feed uses it when
+       present, else the site-wide Serveware default */
+    google_category: str(raw.google_category, 150),
   };
   for (const [k, v] of Object.entries(opt)) if (v) p[k] = v;
   if (raw.signature) p.signature = true;
@@ -169,6 +174,34 @@ export default async (req) => {
       const store = getStore('xanvor-images');
       await store.set(name, bytes);
       return json({ ok: true, path: `/img/${name}` });
+    }
+
+    if (body.action === 'orders-list') {
+      const orders = await getAllOrders();
+      return json({ orders });
+    }
+
+    if (body.action === 'orders-update') {
+      const oid = str(body.oid, 24);
+      const status = str(body.status, 20);
+      const ORDER_STATUSES = ['placed', 'confirmed', 'shipped', 'delivered', 'cancelled', 'paid'];
+      if (!oid) return json({ error: 'oid chahiye' }, 400);
+      if (status && !ORDER_STATUSES.includes(status)) return json({ error: 'unknown status' }, 400);
+      const result = await updateOrderStatus(oid, { status: status || undefined, tracking: body.tracking, carrier: body.carrier });
+      if (!result) return json({ error: 'order not found' }, 404);
+      /* email the customer only when there's a fresh notification to send (see
+         updateOrderStatus: notify-worthy status not already emailed, incl. a
+         shipped order that just gained its tracking number). sendOrderStatusEmail
+         never throws — awaited for serverless reliability. */
+      if (result.shouldNotify) await sendOrderStatusEmail(result.order);
+      return json({ ok: true, order: result.order });
+    }
+
+    if (body.action === 'orders-delete') {
+      const oid = str(body.oid, 24);
+      const ok = await deleteOrder(oid);
+      if (!ok) return json({ error: 'order not found' }, 404);
+      return json({ ok: true });
     }
 
     return json({ error: 'unknown action' }, 400);
