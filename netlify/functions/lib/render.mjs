@@ -84,7 +84,7 @@ export function renderFeed(products) {
       p.desc,
       (p.highlights || []).join('. '),
       p.sizes ? `Sizes: ${p.sizes}.` : '',
-      'Hand-hammered in Moradabad, India.',
+      'Handcrafted in Moradabad, India.',
     ].filter(Boolean).join(' ').replace(/\.\./g, '.');
     return `  <item>
     <g:id>${esc(p.id)}</g:id>
@@ -98,7 +98,7 @@ export function renderFeed(products) {
     <g:identifier_exists>no</g:identifier_exists>
     <g:price>${p.mrp}.00 INR</g:price>
     <g:sale_price>${incl}.00 INR</g:sale_price>
-    <g:google_product_category>Home &amp; Garden &gt; Kitchen &amp; Dining &gt; Tableware &gt; Serveware</g:google_product_category>
+    <g:google_product_category>${esc(p.google_category || 'Home & Garden > Kitchen & Dining > Tableware > Serveware')}</g:google_product_category>
     <g:product_type>${esc(`XANVOR > ${p.collection}`)}</g:product_type>
     <g:shipping>
       <g:country>IN</g:country>

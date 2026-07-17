@@ -824,6 +824,7 @@
         <a role="menuitem" class="cm-new" href="#c-canister"><span class="cm-num">X</span><span class="cm-t"><b>Canisters &amp; Vanity</b><span>Jars · boxes · canisters</span></span><span class="cm-badge">New</span></a>
         <a role="menuitem" class="cm-new" href="#c-ribbed"><span class="cm-num">XI</span><span class="cm-t"><b>Ribbed Storage</b><span>Bronze · gold · silver cases</span></span><span class="cm-badge">New</span></a>
         <a role="menuitem" class="cm-new" href="#c-wallart"><span class="cm-num">XII</span><span class="cm-t"><b>Metal Wall Art &amp; Décor</b><span>Wall panels · mirrors · décor</span></span><span class="cm-badge">New</span></a>
+        <a role="menuitem" class="cm-new" href="#c-kansa"><span class="cm-num">XIII</span><span class="cm-t"><b>Kansa Dinnerware</b><span>Bronze thalis · katoris · glasses</span></span><span class="cm-badge">New</span></a>
       </div>
     </div>
     <a href="#catalogue">Catalogue</a>
@@ -936,6 +937,7 @@
     <a href="#c-canister"><span>X</span>Canisters</a>
     <a href="#c-ribbed"><span>XI</span>Ribbed</a>
     <a href="#c-wallart"><span>XII</span>Wall Art</a>
+    <a href="#c-kansa"><span>XIII</span>Kansa</a>
   </div>
 
   <div class="cat-pages">
@@ -1575,6 +1577,24 @@
         </div>
       </div>
     </article>
+
+    <article class="cat-group" id="c-kansa">
+      <header class="cat-group-head reveal">
+        <span class="num">XIII</span>
+        <h3>Kansa Dinnerware</h3>
+        <p>Bronze thali sets · katoris · glasses</p>
+      </header>
+      <div class="cat-grid reveal">
+        <div class="cat-lead">
+          <div>
+            <div class="lead-num">&#x2767;</div>
+            <h5>The Ayurvedic Metal</h5>
+            <div class="lead-rule"></div>
+          </div>
+          <p>Pure Kansa (bronze) dinnerware, hand-crafted the traditional way — lead-free, food-safe thalis, katoris and glasses for everyday wellbeing.</p>
+        </div>
+      </div>
+    </article>
   </div>
 </section>
 
@@ -1913,7 +1933,7 @@
    3. admin ke ↑/↓ se set kiya gaya home_order har grid ke andar cards ko
       sort karta hai (jinka order set nahi, wo apni maujooda jagah rakhte hain). */
 (function(){
-  var MAP={'Silver & Gold':'c-silvergold','Copper':'c-copper','Brass':'c-brass','Sheesham & Wood':'c-wood','Wireform Furniture':'c-furniture','Artisanal Serving Trays':'c-trays','Copper Home Collection':'c-copperhome','The Jewel Collection':'c-jewel','Canister & Vanity Series':'c-canister','Ribbed Storage Collection':'c-ribbed','Metal Wall Art & Décor':'c-wallart'};
+  var MAP={'Silver & Gold':'c-silvergold','Copper':'c-copper','Brass':'c-brass','Sheesham & Wood':'c-wood','Wireform Furniture':'c-furniture','Artisanal Serving Trays':'c-trays','Copper Home Collection':'c-copperhome','The Jewel Collection':'c-jewel','Canister & Vanity Series':'c-canister','Ribbed Storage Collection':'c-ribbed','Metal Wall Art & Décor':'c-wallart','Kansa Dinnerware':'c-kansa'};
   var products=window.XANVOR_PRODUCTS||[];
   var byId={}; products.forEach(function(p){ byId[p.id]=p; });
 
@@ -1987,9 +2007,27 @@
     moveByOrder(document.querySelector('.nav-cat .cat-menu'), hrefId);
     moveByOrder(document.querySelector('.cat-jump'), hrefId);
   }
+
+  /* Bulletproof catalogue reveal — DO NOT rely on the IntersectionObserver here.
+     This single page is 30000px+ tall; a full-collection single-column .cat-grid
+     (esp. on mobile, e.g. Fold) can be tall enough that the observer never fires
+     on the way past, leaving a whole collection blank (opacity:0). Every catalogue
+     .reveal is force-shown the moment cards are built. CRITICAL: we also kill the
+     CSS transition — on this giant page the opacity 0->1 fade can stall (throttled
+     rAF / mobile scroll / backgrounded tab), leaving the grid stuck at opacity 0
+     forever. transition:none makes opacity JUMP to 1 instantly, so it can never
+     hang. Inline !important wins the cascade on every device. Empty (display:none)
+     sections stay hidden; hero/process/featured above keep their scroll-fade. */
+  document.querySelectorAll('.cat-pages .reveal').forEach(function(el){
+    el.classList.add('in');
+    el.style.setProperty('transition','none','important');
+    el.style.setProperty('opacity','1','important');
+    el.style.setProperty('transform','none','important');
+  });
 })();
 </script>
 <script src="shop-cart.js?v=hs3"></script>
+<script src="assets/account.js?v=1"></script>
 <script src="enquiry-basket.js?v=hs1"></script>
 <script>
 (function(){
