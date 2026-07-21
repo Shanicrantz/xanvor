@@ -1,4 +1,5 @@
-/* XANVOR — Mass utility SKUs (sku-01 … sku-50)
+/* XANVOR — Mass utility SKUs (kitchen utilities with real renders only)
+   Hero/main image = use-case lifestyle shot.
    Merges into window.XANVOR_PRODUCTS after /api/products.js or assets/products.js.
    Does NOT remove or replace existing catalogue pieces.
 */
@@ -29,14 +30,14 @@
       "Metal weight 35g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_01_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_01_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_01_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_01_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_01_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_01_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_01_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_01_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_01_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_01_shot_5_badges.jpg"
     ]
   },
   {
@@ -64,14 +65,14 @@
       "Metal weight 75g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_02_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_02_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_02_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_02_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_02_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_02_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_02_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_02_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_02_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_02_shot_5_badges.jpg"
     ]
   },
   {
@@ -99,14 +100,14 @@
       "Metal weight 110g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_03_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_03_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_03_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_03_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_03_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_03_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_03_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_03_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_03_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_03_shot_5_badges.jpg"
     ]
   },
   {
@@ -134,14 +135,14 @@
       "Metal weight 18g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_04_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_04_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_04_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_04_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_04_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_04_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_04_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_04_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_04_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_04_shot_5_badges.jpg"
     ]
   },
   {
@@ -169,14 +170,14 @@
       "Metal weight 110g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_05_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_05_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_05_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_05_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_05_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_05_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_05_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_05_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_05_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_05_shot_5_badges.jpg"
     ]
   },
   {
@@ -204,14 +205,14 @@
       "Metal weight 50g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_06_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_06_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_06_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_06_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_06_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_06_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_06_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_06_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_06_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_06_shot_5_badges.jpg"
     ]
   },
   {
@@ -239,14 +240,14 @@
       "Metal weight 25g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_07_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_07_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_07_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_07_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_07_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_07_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_07_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_07_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_07_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_07_shot_5_badges.jpg"
     ]
   },
   {
@@ -274,14 +275,14 @@
       "Metal weight 40g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_08_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_08_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_08_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_08_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_08_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_08_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_08_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_08_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_08_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_08_shot_5_badges.jpg"
     ]
   },
   {
@@ -309,14 +310,14 @@
       "Metal weight 35g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_09_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_09_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_09_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_09_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_09_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_09_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_09_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_09_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_09_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_09_shot_5_badges.jpg"
     ]
   },
   {
@@ -344,14 +345,14 @@
       "Metal weight 40g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_10_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_10_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_10_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_10_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_10_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_10_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_10_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_10_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_10_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_10_shot_5_badges.jpg"
     ]
   },
   {
@@ -379,14 +380,14 @@
       "Metal weight 60g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_11_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_11_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_11_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_11_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_11_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_11_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_11_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_11_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_11_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_11_shot_5_badges.jpg"
     ]
   },
   {
@@ -414,14 +415,14 @@
       "Metal weight 75g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_12_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_12_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_12_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_12_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_12_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_12_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_12_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_12_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_12_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_12_shot_5_badges.jpg"
     ]
   },
   {
@@ -449,14 +450,14 @@
       "Metal weight 55g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_13_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_13_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_13_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_13_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_13_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_13_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_13_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_13_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_13_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_13_shot_5_badges.jpg"
     ]
   },
   {
@@ -484,14 +485,14 @@
       "Metal weight 90g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_14_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_14_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_14_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_14_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_14_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_14_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_14_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_14_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_14_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_14_shot_5_badges.jpg"
     ]
   },
   {
@@ -519,14 +520,14 @@
       "Metal weight 85g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_15_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_15_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_15_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_15_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_15_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_15_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_15_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_15_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_15_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_15_shot_5_badges.jpg"
     ]
   },
   {
@@ -554,14 +555,14 @@
       "Metal weight 160g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_16_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_16_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_16_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_16_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_16_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_16_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_16_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_16_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_16_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_16_shot_5_badges.jpg"
     ]
   },
   {
@@ -589,14 +590,14 @@
       "Metal weight 50g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_17_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_17_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_17_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_17_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_17_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_17_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_17_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_17_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_17_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_17_shot_5_badges.jpg"
     ]
   },
   {
@@ -624,14 +625,14 @@
       "Metal weight 85g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_18_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_18_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_18_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_18_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_18_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_18_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_18_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_18_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_18_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_18_shot_5_badges.jpg"
     ]
   },
   {
@@ -659,14 +660,14 @@
       "Metal weight 95g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_19_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_19_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_19_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_19_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_19_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_19_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_19_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_19_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_19_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_19_shot_5_badges.jpg"
     ]
   },
   {
@@ -694,14 +695,14 @@
       "Metal weight 70g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_20_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_20_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_20_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_20_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_20_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_20_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_20_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_20_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_20_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_20_shot_5_badges.jpg"
     ]
   },
   {
@@ -729,14 +730,14 @@
       "Metal weight 65g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_21_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_21_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_21_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_21_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_21_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_21_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_21_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_21_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_21_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_21_shot_5_badges.jpg"
     ]
   },
   {
@@ -764,14 +765,14 @@
       "Metal weight 110g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_22_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_22_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_22_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_22_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_22_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_22_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_22_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_22_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_22_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_22_shot_5_badges.jpg"
     ]
   },
   {
@@ -799,14 +800,14 @@
       "Metal weight 28g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_23_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_23_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_23_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_23_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_23_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_23_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_23_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_23_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_23_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_23_shot_5_badges.jpg"
     ]
   },
   {
@@ -834,14 +835,14 @@
       "Metal weight 170g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_24_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_24_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_24_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_24_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_24_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_24_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_24_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_24_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_24_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_24_shot_5_badges.jpg"
     ]
   },
   {
@@ -869,14 +870,14 @@
       "Metal weight 45g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_25_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_25_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_25_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_25_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_25_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_25_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_25_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_25_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_25_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_25_shot_5_badges.jpg"
     ]
   },
   {
@@ -904,14 +905,14 @@
       "Metal weight 120g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_26_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_26_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_26_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_26_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_26_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_26_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_26_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_26_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_26_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_26_shot_5_badges.jpg"
     ]
   },
   {
@@ -939,14 +940,14 @@
       "Metal weight 135g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_27_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_27_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_27_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_27_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_27_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_27_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_27_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_27_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_27_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_27_shot_5_badges.jpg"
     ]
   },
   {
@@ -974,14 +975,14 @@
       "Metal weight 110g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_28_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_28_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_28_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_28_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_28_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_28_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_28_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_28_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_28_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_28_shot_5_badges.jpg"
     ]
   },
   {
@@ -1009,14 +1010,14 @@
       "Metal weight 65g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_29_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_29_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_29_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_29_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_29_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_29_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_29_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_29_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_29_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_29_shot_5_badges.jpg"
     ]
   },
   {
@@ -1044,14 +1045,14 @@
       "Metal weight 75g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_30_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_30_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_30_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_30_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_30_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_30_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_30_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_30_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_30_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_30_shot_5_badges.jpg"
     ]
   },
   {
@@ -1079,14 +1080,14 @@
       "Metal weight 50g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_31_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_31_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_31_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_31_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_31_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_31_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_31_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_31_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_31_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_31_shot_5_badges.jpg"
     ]
   },
   {
@@ -1114,14 +1115,14 @@
       "Metal weight 120g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_32_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_32_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_32_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_32_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_32_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_32_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_32_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_32_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_32_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_32_shot_5_badges.jpg"
     ]
   },
   {
@@ -1149,14 +1150,14 @@
       "Metal weight 95g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_33_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_33_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_33_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_33_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_33_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_33_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_33_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_33_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_33_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_33_shot_5_badges.jpg"
     ]
   },
   {
@@ -1184,14 +1185,14 @@
       "Metal weight 60g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_34_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_34_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_34_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_34_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_34_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_34_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_34_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_34_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_34_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_34_shot_5_badges.jpg"
     ]
   },
   {
@@ -1219,14 +1220,14 @@
       "Metal weight 130g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_35_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_35_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_35_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_35_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_35_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_35_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_35_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_35_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_35_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_35_shot_5_badges.jpg"
     ]
   },
   {
@@ -1254,14 +1255,14 @@
       "Metal weight 65g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_36_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_36_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_36_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_36_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_36_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_36_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_36_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_36_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_36_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_36_shot_5_badges.jpg"
     ]
   },
   {
@@ -1289,14 +1290,14 @@
       "Metal weight 70g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_37_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_37_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_37_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_37_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_37_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_37_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_37_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_37_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_37_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_37_shot_5_badges.jpg"
     ]
   },
   {
@@ -1324,14 +1325,14 @@
       "Metal weight 180g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_38_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_38_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_38_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_38_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_38_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_38_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_38_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_38_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_38_shot_6_lifestyle.jpg"
+      "xanvor_generated_renders/SKU_38_shot_5_badges.jpg"
     ]
   },
   {
@@ -1359,399 +1360,14 @@
       "Metal weight 75g",
       "Moradabad production"
     ],
-    "image": "xanvor_generated_renders/SKU_39_shot_1_hero.jpg",
+    "image": "xanvor_generated_renders/SKU_39_shot_6_lifestyle.jpg",
     "images": [
+      "xanvor_generated_renders/SKU_39_shot_6_lifestyle.jpg",
       "xanvor_generated_renders/SKU_39_shot_1_hero.jpg",
       "xanvor_generated_renders/SKU_39_shot_2_angle.jpg",
       "xanvor_generated_renders/SKU_39_shot_3_top.jpg",
       "xanvor_generated_renders/SKU_39_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_39_shot_5_badges.jpg",
-      "xanvor_generated_renders/SKU_39_shot_6_lifestyle.jpg"
-    ]
-  },
-  {
-    "id": "sku-40",
-    "name": "Under-Shelf Wire Storage Basket",
-    "code": "XV·SKU·40",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Pantry & Wall",
-    "materials": "MS wire · Under-shelf",
-    "construction": "3.0mm MS Wire slide-under shelf hanging basket",
-    "sizes": "160g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Pantry",
-    "mrp": 399,
-    "retail": 253,
-    "offer": 236,
-    "desc": "Basket that slides under a shelf to claim the dead space below for wraps and packs.",
-    "highlights": [
-      "Under-shelf hang",
-      "Slide fit",
-      "Extra storage",
-      "Pantry",
-      "Metal weight 160g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_40_shot_1_hero.jpg",
-    "images": [
-      "xanvor_generated_renders/SKU_40_shot_1_hero.jpg",
-      "xanvor_generated_renders/SKU_40_shot_2_angle.jpg",
-      "xanvor_generated_renders/SKU_40_shot_3_top.jpg",
-      "xanvor_generated_renders/SKU_40_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_40_shot_4_size.jpg",
-      "xanvor_generated_renders/SKU_40_shot_4_size.jpg"
-    ]
-  },
-  {
-    "id": "sku-41",
-    "name": "Heavy Plant Pot Hanging Hooks (Set 4)",
-    "code": "XV·SKU·41",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Home Utility",
-    "materials": "Heavy MS · Leaf plate · Set 4",
-    "construction": "4.0mm MS Wire S-hook with leaf mounting plate",
-    "sizes": "110g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Home",
-    "mrp": 249,
-    "retail": 169,
-    "offer": 152,
-    "desc": "Four heavy S-hooks with leaf plates for hanging planters on balcony rails or beams.",
-    "highlights": [
-      "Set of 4",
-      "Heavy 4mm wire",
-      "Leaf plate",
-      "Balcony / garden",
-      "Metal weight 110g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_41_shot_1_hero.svg",
-    "images": [
-      "xanvor_generated_renders/SKU_41_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_41_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_41_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_41_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_41_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_41_shot_1_hero.svg"
-    ]
-  },
-  {
-    "id": "sku-42",
-    "name": "Smooth Cabinet Pull Knobs (Set of 4)",
-    "code": "XV·SKU·42",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Home Utility",
-    "materials": "Pressed metal · Antique polish",
-    "construction": "Domed pressed metal knobs + antique polish + screws",
-    "sizes": "80g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Home",
-    "mrp": 349,
-    "retail": 228,
-    "offer": 211,
-    "desc": "Four domed metal knobs with antique polish and screws for cabinet refresh.",
-    "highlights": [
-      "Set of 4",
-      "Domed press",
-      "Antique polish",
-      "Hardware",
-      "Metal weight 80g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_42_shot_1_hero.svg",
-    "images": [
-      "xanvor_generated_renders/SKU_42_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_42_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_42_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_42_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_42_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_42_shot_1_hero.svg"
-    ]
-  },
-  {
-    "id": "sku-43",
-    "name": "Toilet Paper Holder with Top Shelf",
-    "code": "XV·SKU·43",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Home Utility",
-    "materials": "MS wire + sheet shelf",
-    "construction": "3.0mm MS Wire loop + smooth sheet top mini shelf",
-    "sizes": "115g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Home",
-    "mrp": 249,
-    "retail": 169,
-    "offer": 152,
-    "desc": "Wire roll holder with a mini top shelf for phone or wipes in the restroom.",
-    "highlights": [
-      "Roll holder",
-      "Top shelf",
-      "Restroom",
-      "Wall mount",
-      "Metal weight 115g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_43_shot_1_hero.svg",
-    "images": [
-      "xanvor_generated_renders/SKU_43_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_43_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_43_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_43_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_43_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_43_shot_1_hero.svg"
-    ]
-  },
-  {
-    "id": "sku-44",
-    "name": "Pressed Metal Shoe Horn",
-    "code": "XV·SKU·44",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Home Utility",
-    "materials": "Pressed metal · Antique polish",
-    "construction": "0.8mm Pressed metal shoe horn + antique polish",
-    "sizes": "55g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Home",
-    "mrp": 159,
-    "retail": 109,
-    "offer": 92,
-    "desc": "Long pressed-metal shoe horn with an antique polish — hallway utility.",
-    "highlights": [
-      "Pressed form",
-      "Antique polish",
-      "Entry utility",
-      "Light",
-      "Metal weight 55g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_44_shot_1_hero.svg",
-    "images": [
-      "xanvor_generated_renders/SKU_44_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_44_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_44_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_44_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_44_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_44_shot_1_hero.svg"
-    ]
-  },
-  {
-    "id": "sku-45",
-    "name": "Curved Agarbatti Ash Strip",
-    "code": "XV·SKU·45",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Home Utility",
-    "materials": "Metal channel · Lotus punch",
-    "construction": "Long metal sheet channel with lotus punched end",
-    "sizes": "40g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Home",
-    "mrp": 179,
-    "retail": 118,
-    "offer": 101,
-    "desc": "Long channel for agarbatti ash with a lotus-punched end — worship utility.",
-    "highlights": [
-      "Ash channel",
-      "Lotus punch",
-      "Pooja utility",
-      "Compact",
-      "Metal weight 40g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_45_shot_1_hero.svg",
-    "images": [
-      "xanvor_generated_renders/SKU_45_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_45_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_45_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_45_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_45_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_45_shot_1_hero.svg"
-    ]
-  },
-  {
-    "id": "sku-46",
-    "name": "Door & Wall Key Rack (4 Hooks)",
-    "code": "XV·SKU·46",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Home Utility",
-    "materials": "MS strip · 4 hooks",
-    "construction": "Stamped MS Strip + 4 Wire Hooks (Matte Black)",
-    "sizes": "70g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Home",
-    "mrp": 249,
-    "retail": 160,
-    "offer": 143,
-    "desc": "Matte-black strip with four wire hooks for keys by the door.",
-    "highlights": [
-      "4 hooks",
-      "Matte black",
-      "Door / wall",
-      "Hardware",
-      "Metal weight 70g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_46_shot_1_hero.svg",
-    "images": [
-      "xanvor_generated_renders/SKU_46_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_46_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_46_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_46_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_46_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_46_shot_1_hero.svg"
-    ]
-  },
-  {
-    "id": "sku-47",
-    "name": "Desktop Wire Cable Organizer",
-    "code": "XV·SKU·47",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Home Utility",
-    "materials": "Wire coil · Multi-groove",
-    "construction": "Multi-groove wire coil desktop cord holder",
-    "sizes": "35g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Home",
-    "mrp": 149,
-    "retail": 101,
-    "offer": 84,
-    "desc": "Desktop cord holder with grooves so charging cables stay put.",
-    "highlights": [
-      "Multi-groove",
-      "Desktop",
-      "Cable tidy",
-      "Light",
-      "Metal weight 35g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_47_shot_1_hero.svg",
-    "images": [
-      "xanvor_generated_renders/SKU_47_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_47_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_47_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_47_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_47_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_47_shot_1_hero.svg"
-    ]
-  },
-  {
-    "id": "sku-48",
-    "name": "Engravable Dual Metal Name Plate",
-    "code": "XV·SKU·48",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Home Utility",
-    "materials": "Brass on iron · Engravable",
-    "construction": "Brass shim plate layered on black iron backplate",
-    "sizes": "90g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Home",
-    "mrp": 299,
-    "retail": 203,
-    "offer": 186,
-    "desc": "Brass face on a dark iron backplate — ready for name engraving at the entrance.",
-    "highlights": [
-      "Dual metal",
-      "Engravable",
-      "Entrance plate",
-      "Gifting",
-      "Metal weight 90g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_48_shot_1_hero.svg",
-    "images": [
-      "xanvor_generated_renders/SKU_48_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_48_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_48_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_48_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_48_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_48_shot_1_hero.svg"
-    ]
-  },
-  {
-    "id": "sku-49",
-    "name": "Sunburst Mini Accent Mirror (10 Inch)",
-    "code": "XV·SKU·49",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Home Utility",
-    "materials": "Glass + MS rays · Ø10\"",
-    "construction": "Central glass mirror + radial MS sheet rays",
-    "sizes": "180g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Home",
-    "mrp": 499,
-    "retail": 321,
-    "offer": 296,
-    "desc": "Ten-inch sunburst mirror with radial metal rays for a wall accent.",
-    "highlights": [
-      "10 inch",
-      "Sunburst rays",
-      "Wall decor",
-      "Statement mini",
-      "Metal weight 180g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_49_shot_1_hero.svg",
-    "images": [
-      "xanvor_generated_renders/SKU_49_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_49_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_49_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_49_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_49_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_49_shot_1_hero.svg"
-    ]
-  },
-  {
-    "id": "sku-50",
-    "name": "Wire Specs & Eyeglass Desk Stand",
-    "code": "XV·SKU·50",
-    "collection": "Kitchen Utility Crafts",
-    "series": "The High-Volume Utility Line · Home Utility",
-    "materials": "Bent wire · Nose form",
-    "construction": "Nose-shaped bent wire stand holding eyeglasses upright",
-    "sizes": "45g",
-    "moq": "50 pcs",
-    "hsn": "7323",
-    "gst": "18%",
-    "tag": "Home",
-    "mrp": 169,
-    "retail": 109,
-    "offer": 101,
-    "desc": "Bent-wire stand that holds eyeglasses upright on the desk or bedside.",
-    "highlights": [
-      "Nose form",
-      "Eyeglass stand",
-      "Desk / bedside",
-      "Light",
-      "Metal weight 45g",
-      "Moradabad production"
-    ],
-    "image": "xanvor_generated_renders/SKU_50_shot_1_hero.svg",
-    "images": [
-      "xanvor_generated_renders/SKU_50_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_50_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_50_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_50_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_50_shot_1_hero.svg",
-      "xanvor_generated_renders/SKU_50_shot_1_hero.svg"
+      "xanvor_generated_renders/SKU_39_shot_5_badges.jpg"
     ]
   }
 ];
