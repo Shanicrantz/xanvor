@@ -2533,5 +2533,215 @@
     alert("🎉 Thank you, " + name + "! Order " + orderId + " for \"" + p.name + "\" placed successfully!\n\nYou can track order status in the Admin Portal.");
   };
 </script>
+<!-- ============ FOOTER ============ -->
+<footer>
+  <img class="f-mark" src="assets/logo_mark.png" alt="XANVOR">
+  <div class="f-rule"></div>
+  <div class="f-tag">Manufacturer · Exporter · Ecommerce</div>
+  <div class="f-policy" role="navigation" aria-label="Policies">
+    <a href="about.html">About</a>
+    <span class="sep">&middot;</span>
+    <a href="contact.html">Contact</a>
+    <span class="sep">&middot;</span>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <span class="sep">·</span>
+    <a href="refund-policy.html">Refund &amp; Return</a>
+    <span class="sep">·</span>
+    <a href="shipping-policy.html">Shipping</a>
+    <span class="sep">·</span>
+    <a href="terms.html">Terms</a>
+  </div>
+  <div class="f-legal">
+    XANVOR is a house brand of Zenko Inc · Moradabad, India<br>
+    © 2026 Zenko Inc. All rights reserved · <a href="mailto:hello@xanvor.com">hello@xanvor.com</a>
+  </div>
+</footer>
+
+<script>
+  // nav background on scroll
+  const nav=document.getElementById('nav');
+  const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>40);
+  onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+
+  // scroll reveal — threshold 0 (not .16): a full-collection .cat-grid on
+  // mobile is single-column and can be >10000px tall, so 16% of it is never
+  // simultaneously in view → it never revealed → the section showed only its
+  // (short) header, grid blank. Firing on ANY intersection fixes tall grids.
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+  },{threshold:0,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* Anchor-jump fix — the live-catalogue enhancer adds ~90 cards into the
+     collection sections AFTER the browser has already jumped to a #c-…
+     hash, so the target slides thousands of px down (page is very tall) and
+     the viewport lands on stale/blank .reveal content. Re-scroll to the hash
+     once layout settles, and force-reveal the target so it never shows blank.
+     Retries cover slow mobile where products.js + images arrive late. */
+  (function(){
+    if(!location.hash || location.hash.length<2) return;
+    var cancelled=false;
+    var stop=function(){ cancelled=true; };
+    ['wheel','touchmove','keydown'].forEach(function(ev){ window.addEventListener(ev, stop, {passive:true, once:true}); });
+    var jump=function(){
+      if(cancelled) return;
+      var t; try{ t=document.querySelector(location.hash); }catch(e){ return; }
+      if(!t) return;
+      if(t.classList.contains('reveal')) t.classList.add('in');
+      t.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+      t.scrollIntoView();
+    };
+    requestAnimationFrame(function(){ requestAnimationFrame(jump); });
+    [250,700,1500,3000].forEach(function(ms){ setTimeout(jump, ms); });
+    window.addEventListener('load', jump);
+  })();
+
+  // enquiry-form success state + product pre-fill from product.html
+  (function(){
+    const qp = new URLSearchParams(location.search);
+    if(qp.get('enquiry')==='sent'){
+      const ok=document.getElementById('form-success');
+      if(ok){ ok.classList.add('show'); ok.scrollIntoView({behavior:'smooth',block:'center'}); }
+    }
+    const code = qp.get('product');
+    const name = qp.get('name');
+    const qty = qp.get('qty');
+    const finish = qp.get('finish');
+    const kind = qp.get('kind');
+    if(code){
+      const msg = document.getElementById('ef-message');
+      if(msg && !msg.value){
+        const head = kind === 'sample'
+          ? `Sample request: ${name || ''} (${code}).`
+          : `Bulk quote request: ${name || ''} (${code}).`;
+        msg.value =
+          `${head}\n\n` +
+          `Quantity:        ${qty || ''}\n` +
+          `Finish:          ${finish || ''}\n` +
+          `Ship-to city:    \n` +
+          `Target timeline: \n` +
+          `Packaging:       (plain / retail / branded)\n\n` +
+          `Additional notes:\n`;
+      }
+    }
+  })();
+</script>
+<script src="assets/img-opt.js?v=2"></script>
+<script src="/api/products.js"></script>
+<script>
+/* Live-catalogue enhancer:
+   1. admin se add hue products jinka card is static HTML me nahi hai, unke
+      cards apni collection ke aakhri grid me jod deta hai.
+   2. admin me "Homepage se hatao" wale products ka card (static ya dynamic
+      dono) hata deta hai — page/SEO/sitemap unaffected, sirf homepage grid se.
+   3. admin ke ↑/↓ se set kiya gaya home_order har grid ke andar cards ko
+      sort karta hai (jinka order set nahi, wo apni maujooda jagah rakhte hain). */
+(function(){
+  var MAP={'Silver & Gold':'c-silvergold','Copper':'c-copper','Brass':'c-brass','Sheesham & Wood':'c-wood','Wireform Furniture':'c-furniture','Artisanal Serving Trays':'c-trays','Copper Home Collection':'c-copperhome','The Jewel Collection':'c-jewel','Canister & Vanity Series':'c-canister','Ribbed Storage Collection':'c-ribbed','Metal Wall Art & Décor':'c-wallart','Kansa Dinnerware':'c-kansa'};
+  var products=window.XANVOR_PRODUCTS||[];
+  var byId={}; products.forEach(function(p){ byId[p.id]=p; });
+
+  products.forEach(function(p){
+    if(p.homepage!=='hide') return;
+    var el=document.querySelector('.cat-item[href$="id='+p.id+'"]');
+    if(el) el.remove();
+  });
+
+  products.forEach(function(p){
+    if(p.homepage==='hide') return;
+    var gid=MAP[p.collection]; if(!gid) return;
+    if(document.querySelector('.cat-item[href$="id='+p.id+'"]')) return;
+    var grids=document.querySelectorAll('#'+gid+' .cat-grid'); if(!grids.length) return;
+    var a=document.createElement('a'); a.className='cat-item'; a.href='product.html?id='+encodeURIComponent(p.id);
+    a.innerHTML='<div class="cat-photo"><img loading="lazy" decoding="async"></div><div class="cat-item-body"><span class="ornament">&#x2767;</span><h4></h4><p class="desc"></p><div class="foot"><span class="code"></span><span class="mat"></span></div></div>';
+    var img=a.querySelector('img'); img.src=p.image||''; img.alt=p.name;
+    a.querySelector('h4').textContent=p.name; a.querySelector('.desc').textContent=p.desc||'';
+    a.querySelector('.code').textContent=p.code||''; a.querySelector('.mat').textContent=p.materials||'';
+    grids[grids.length-1].appendChild(a);
+  });
+
+  document.querySelectorAll('.cat-grid').forEach(function(grid){
+    var items=[].slice.call(grid.children).filter(function(el){ return el.classList.contains('cat-item'); });
+    if(!items.length) return;
+    var hasOrder=items.some(function(el){
+      var m=(el.getAttribute('href')||'').match(/id=([^&]+)/);
+      var p=m&&byId[decodeURIComponent(m[1])];
+      return p&&typeof p.home_order==='number';
+    });
+    if(!hasOrder) return;
+    items.forEach(function(el,idx){ el.__origIdx=idx; });
+    items.sort(function(a,b){
+      var ma=(a.getAttribute('href')||'').match(/id=([^&]+)/), mb=(b.getAttribute('href')||'').match(/id=([^&]+)/);
+      var pa=ma&&byId[decodeURIComponent(ma[1])], pb=mb&&byId[decodeURIComponent(mb[1])];
+      var oa=(pa&&typeof pa.home_order==='number')?pa.home_order:(1e9+a.__origIdx);
+      var ob=(pb&&typeof pb.home_order==='number')?pb.home_order:(1e9+b.__origIdx);
+      return oa-ob;
+    });
+    items.forEach(function(el){ grid.appendChild(el); });
+  });
+
+  /* Empty sections chhupao — jis collection me abhi koi live product-card
+     nahi (sirf lead card), us .cat-group + uske dropdown/jump-nav entries
+     ko hide kar do. Live product aate hi apne aap wapas dikh jayega. */
+  document.querySelectorAll('.cat-pages > .cat-group').forEach(function(sec){
+    if(sec.querySelector('.cat-item')) return;
+    sec.style.display='none';
+    var sel='a[href="#'+sec.id+'"]';
+    document.querySelectorAll('.cat-menu '+sel+', .cat-jump '+sel).forEach(function(a){ a.style.display='none'; });
+  });
+
+  /* Category (homepage section) order — admin ke "Categories order" panel se.
+     Sections (.cat-group), dropdown menu aur jump-nav teeno ek hi sequence
+     me la diye jaate hain; jo collection yahan list nahi (jaise Hot-Serve,
+     jiska is page pe koi section nahi), wo apni jagah untouched rehta hai. */
+  var order=window.XANVOR_COLLECTION_ORDER;
+  if(Array.isArray(order)&&order.length){
+    var moveByOrder=function(container,getId){
+      if(!container) return;
+      order.forEach(function(name){
+        var id=MAP[name]; if(!id) return;
+        var kids=[].slice.call(container.children);
+        for(var i=0;i<kids.length;i++){
+          if(getId(kids[i])===id){ container.appendChild(kids[i]); break; }
+        }
+      });
+    };
+    var hrefId=function(el){ var m=(el.getAttribute&&el.getAttribute('href')||'').match(/(c-[a-z]+)/); return m?m[1]:null; };
+    moveByOrder(document.querySelector('.cat-pages'), function(el){ return el.id||null; });
+    moveByOrder(document.querySelector('.nav-cat .cat-menu'), hrefId);
+    moveByOrder(document.querySelector('.cat-jump'), hrefId);
+  }
+
+  /* Bulletproof catalogue reveal — DO NOT rely on the IntersectionObserver here.
+     This single page is 30000px+ tall; a full-collection single-column .cat-grid
+     (esp. on mobile, e.g. Fold) can be tall enough that the observer never fires
+     on the way past, leaving a whole collection blank (opacity:0). Every catalogue
+     .reveal is force-shown the moment cards are built. CRITICAL: we also kill the
+     CSS transition — on this giant page the opacity 0->1 fade can stall (throttled
+     rAF / mobile scroll / backgrounded tab), leaving the grid stuck at opacity 0
+     forever. transition:none makes opacity JUMP to 1 instantly, so it can never
+     hang. Inline !important wins the cascade on every device. Empty (display:none)
+     sections stay hidden; hero/process/featured above keep their scroll-fade. */
+  document.querySelectorAll('.cat-pages .reveal').forEach(function(el){
+    el.classList.add('in');
+    el.style.setProperty('transition','none','important');
+    el.style.setProperty('opacity','1','important');
+    el.style.setProperty('transform','none','important');
+  });
+})();
+</script>
+<script src="shop-cart.js?v=hs3"></script>
+<script src="assets/account.js?v=1"></script>
+<script src="enquiry-basket.js?v=hs1"></script>
+<script>
+(function(){
+  var nc=document.getElementById('navCat'); if(!nc) return;
+  var btn=nc.querySelector('.nav-cat-btn');
+  btn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var o=nc.classList.toggle('open');btn.setAttribute('aria-expanded',o);});
+  document.addEventListener('click',function(e){ if(!nc.contains(e.target)){nc.classList.remove('open');btn.setAttribute('aria-expanded','false');} });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'){nc.classList.remove('open');btn.setAttribute('aria-expanded','false');} });
+})();
+</script>
+
 </body>
 </html>
