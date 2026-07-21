@@ -62,8 +62,7 @@
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  body{
-    background:var(--ink); color:var(--bone);
+  body{background:var(--bone-warm,#FBF6E8); color:var(--claret-deep,#241510);
     font-family:'Cormorant Garamond',serif; font-size:19px; line-height:1.6;
     -webkit-font-smoothing:antialiased; overflow-x:hidden;
   }
@@ -89,17 +88,17 @@
     border-bottom:1px solid transparent;
   }
   nav.scrolled{
-    background:rgba(10,9,8,.92); backdrop-filter:blur(10px);
+    background:rgba(251,246,232,.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--line-strong,#D8CBB0);
     padding:13px 6vw; border-bottom:1px solid rgba(182,139,92,.22);
   }
   nav .brand{
     font-family:'Fraunces',serif; font-weight:400; font-size:21px;
-    letter-spacing:.16em; color:var(--bone);
+    letter-spacing:.16em; color:var(--claret-deep,#241510);
   }
   nav .links{display:flex;gap:34px;}
   nav .links a{
     font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:400;
-    letter-spacing:.2em; text-transform:uppercase; color:var(--parchment);
+    letter-spacing:.2em; text-transform:uppercase; color:var(--ink-soft);
     padding-bottom:3px; border-bottom:1px solid transparent; transition:all .25s;
   }
   nav .links a:hover{color:var(--brass);border-bottom-color:var(--brass);}
@@ -451,7 +450,7 @@
   }
   .col-meta p{
     font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.14em;
-    text-transform:uppercase; color:var(--parchment);
+    text-transform:uppercase; color:var(--ink-soft);
   }
 
   /* ============ HOUSE + CONTACT ============ */
@@ -496,7 +495,7 @@
 
   /* contact */
   .contact{
-    background:var(--claret); color:var(--bone);
+    background:var(--claret); color:var(--claret-deep);
     position:relative; padding:clamp(70px,9vw,110px) 6vw;
   }
   .contact::before{
@@ -1597,6 +1596,7 @@
       </div>
     </article>
 
+    
     
     
     <!-- XIV · MASS-SELLING MORADABAD METAL UTILITY CRAFTS -->
