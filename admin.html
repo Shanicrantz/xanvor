@@ -4,250 +4,800 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>XANVOR — Catalogue Admin</title>
+<title>XANVOR — Admin</title>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500&family=Cormorant+Garamond:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --claret-deep:#241510; --ink:#1F140C; --brass:#B68B5C; --bone:#F4EEE2;
-    --rust:#A85D2A; --paper:#FCFAF4; --line:#E6DCC8; --line-strong:#D8CBB0;
-    --ink-soft:#6E6151; --ink-faint:#9A8E7C; --ok:#1F8A5B; --bad:#A32D2D;
+    --ink:#0F0C0A; --storm:#1A1410; --claret:#241510;
+    --brass:#B68B5C; --brass-bright:#C9A06E; --rust:#A85D2A;
+    --bone:#F4EEE2; --paper:#FCFAF4; --cream:#F8F4EC;
+    --line:#E8DFD0; --line-strong:#D9CCB4;
+    --muted:#7A6E5E; --faint:#A39684;
+    --ok:#1F8A5B; --ok-bg:#E8F5EE;
+    --bad:#A32D2D; --bad-bg:#F8E8E8;
+    --info:#1F5C8A; --info-bg:#E8F1F8;
+    --warn:#7A5A2E; --warn-bg:#F5EDD8;
+    --purple:#5A3A9A; --purple-bg:#EDE8F7;
+    --side-w:240px;
+    --header-h:60px;
+    --ui:'Space Grotesk',system-ui,sans-serif;
+    --display:'Fraunces',Georgia,serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--bone);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;}
-  a{color:inherit;text-decoration:none;}
-  button{font-family:inherit;cursor:pointer;}
-  .mono{font-family:'JetBrains Mono',monospace;}
-  header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 4vw;background:rgba(252,250,244,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
-  header .brand{font-family:'Fraunces',serif;font-size:19px;letter-spacing:.15em;color:var(--claret-deep);}
-  header .sub{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--rust);}
-  .wrap{max-width:1080px;margin:0 auto;padding:26px 4vw 90px;}
-  .panel{background:var(--paper);border:1px solid var(--line-strong);border-radius:10px;padding:22px;margin-bottom:20px;}
-  h2{font-family:'Fraunces',serif;font-weight:400;font-size:21px;color:var(--claret-deep);margin-bottom:14px;}
-  label{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#5A4636;margin:0 0 5px;}
-  input,select,textarea{width:100%;background:#fff;color:var(--claret-deep);border:1px solid var(--line-strong);padding:10px 12px;font-family:'Cormorant Garamond',serif;font-size:16px;border-radius:6px;}
-  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--rust);}
-  textarea{min-height:74px;resize:vertical;}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-  .grid .span2{grid-column:span 2;} .grid .span3{grid-column:1 / -1;}
-  @media(max-width:720px){ .grid{grid-template-columns:1fr 1fr;} .grid .span2,.grid .span3{grid-column:1 / -1;} }
-  .btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:50px;padding:11px 22px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;transition:all .2s;}
-  .btn-primary{background:var(--rust);color:#FBF6E8;} .btn-primary:hover{background:#C0712F;}
-  .btn-ghost{background:none;border:1px solid var(--line-strong);color:#5A4636;} .btn-ghost:hover{border-color:var(--rust);color:var(--rust);}
-  .btn-danger{background:none;border:1px solid #E4B9B9;color:var(--bad);}
-  .btn[disabled]{opacity:.5;pointer-events:none;}
-  .row{display:grid;grid-template-columns:54px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);}
-  .row:last-child{border-bottom:none;}
-  .thumb{width:54px;height:54px;border-radius:6px;border:1px solid var(--line);background:#fff;object-fit:cover;}
-  .r-name{font-family:'Fraunces',serif;font-size:16.5px;color:var(--claret-deep);}
-  .r-meta{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:var(--ink-faint);margin-top:3px;text-transform:uppercase;}
-  .r-meta b{color:var(--rust);font-weight:500;}
-  .r-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
-  .r-actions .btn{padding:7px 14px;font-size:9px;}
-  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:6px;}
-  .toolbar input{max-width:280px;}
-  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--claret-deep);color:#FBF6E8;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;padding:12px 20px;border-radius:50px;opacity:0;pointer-events:none;transition:opacity .3s;max-width:90vw;text-align:center;z-index:99;}
-  .toast.show{opacity:1;}
-  .toast.bad{background:var(--bad);}
-  .imgbox{display:flex;gap:14px;align-items:center;}
-  .imgbox img{width:84px;height:84px;border-radius:8px;border:1px solid var(--line-strong);object-fit:cover;background:#fff;}
-  .hint{font-size:14px;color:var(--ink-soft);font-style:italic;margin-top:5px;}
-  .price-hint{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--ok);margin-top:6px;}
+  html,body{height:100%;}
+  body{
+    background:var(--bone); color:var(--ink);
+    font-family:var(--ui); font-size:14.5px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none;}
+  input,select,textarea{
+    width:100%; background:#fff; color:var(--ink);
+    border:1px solid var(--line-strong); padding:10px 12px;
+    font-family:var(--ui); font-size:14px; border-radius:8px;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input:focus,select:focus,textarea:focus{
+    outline:none; border-color:var(--brass);
+    box-shadow:0 0 0 3px rgba(182,139,92,.18);
+  }
+  textarea{min-height:88px; resize:vertical;}
+  label.field-label{
+    display:block; font-family:var(--mono); font-size:10px;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--muted);
+    margin:0 0 6px; font-weight:500;
+  }
   .hidden{display:none !important;}
-  .count{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);}
-  .toolbar select{width:auto;max-width:180px;}
-  .chip{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;padding:3px 8px;border-radius:20px;vertical-align:middle;display:inline-block;}
-  .chip-draft{background:#EFE3CB;color:#7A5A2E;}
-  .chip-hide{background:#F3D9D9;color:#8A3A3A;margin-left:4px;}
-  .r-actions .btn[disabled]{opacity:.3;}
-  .reorder-hint{font-size:14px;color:var(--ink-soft);font-style:italic;margin:0 0 10px;min-height:18px;}
-  .ord-card{border:1px solid var(--line-strong);border-radius:8px;padding:14px 16px;margin-bottom:12px;background:#fff;}
-  .ord-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;}
-  .ord-oid{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.06em;color:var(--rust);}
-  .ord-meta{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--ink-faint);margin-top:3px;}
-  .ord-items{font-size:15px;color:var(--ink-soft);margin-top:8px;line-height:1.5;}
-  .ord-ship{font-size:14.5px;color:var(--ink-soft);margin-top:6px;line-height:1.5;}
-  .ord-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);}
-  .ord-controls select,.ord-controls input{width:auto;min-width:110px;padding:7px 10px;font-size:14px;}
-  .chip-placed{background:#EFE3CB;color:#7A5A2E;}
-  .chip-paid,.chip-confirmed{background:#DCEAF7;color:#1F5C8A;}
-  .chip-shipped{background:#E4DCF7;color:#5A3A9A;}
-  .chip-delivered{background:#E9F5EE;color:var(--ok);}
-  .chip-cancelled{background:#F3D9D9;color:#8A3A3A;}
+  .mono{font-family:var(--mono);}
+
+  /* ── Buttons ── */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:7px;
+    border-radius:8px; padding:9px 16px; font-family:var(--ui);
+    font-size:13px; font-weight:600; letter-spacing:.01em;
+    transition:background .15s, border-color .15s, color .15s, transform .1s;
+    white-space:nowrap; border:1px solid transparent;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn-primary{background:var(--rust); color:#FBF6E8;}
+  .btn-primary:hover{background:#C0712F;}
+  .btn-secondary{background:var(--ink); color:var(--bone);}
+  .btn-secondary:hover{background:#2A2018;}
+  .btn-ghost{background:#fff; border-color:var(--line-strong); color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--brass); color:var(--rust); background:var(--cream);}
+  .btn-danger{background:#fff; border:1px solid #E8B8B8; color:var(--bad);}
+  .btn-danger:hover{background:var(--bad-bg);}
+  .btn-sm{padding:6px 11px; font-size:12px; border-radius:7px;}
+  .btn-icon{width:34px; height:34px; padding:0; border-radius:8px;}
+  .btn[disabled]{opacity:.45; pointer-events:none;}
+
+  /* ── Chips ── */
+  .chip{
+    font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+    padding:3px 8px; border-radius:20px; font-weight:500;
+    display:inline-block; vertical-align:middle; text-transform:uppercase;
+  }
+  .chip-draft{background:var(--warn-bg); color:var(--warn);}
+  .chip-hide{background:var(--bad-bg); color:var(--bad);}
+  .chip-oos{background:#F0E8E0; color:#6B4A30;}
+  .chip-live{background:var(--ok-bg); color:var(--ok);}
+  .chip-placed{background:var(--warn-bg); color:var(--warn);}
+  .chip-paid,.chip-confirmed{background:var(--info-bg); color:var(--info);}
+  .chip-shipped{background:var(--purple-bg); color:var(--purple);}
+  .chip-delivered{background:var(--ok-bg); color:var(--ok);}
+  .chip-cancelled{background:var(--bad-bg); color:var(--bad);}
+
+  /* ── Login gate ── */
+  #gate{
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:24px; background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(182,139,92,.12), transparent),
+      var(--bone);
+  }
+  .gate-card{
+    width:100%; max-width:420px; background:var(--paper);
+    border:1px solid var(--line-strong); border-radius:16px;
+    padding:36px 32px; box-shadow:0 12px 40px rgba(36,21,16,.06);
+  }
+  .gate-brand{
+    font-family:var(--display); font-size:22px; letter-spacing:.18em;
+    color:var(--claret); text-align:center; margin-bottom:4px;
+  }
+  .gate-sub{
+    font-family:var(--mono); font-size:10px; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--rust); text-align:center; margin-bottom:28px;
+  }
+  .gate-card h1{
+    font-family:var(--display); font-weight:400; font-size:24px;
+    color:var(--claret); margin-bottom:8px; text-align:center;
+  }
+  .gate-hint{color:var(--muted); font-size:13px; text-align:center; margin-bottom:22px; line-height:1.55;}
+  .gate-row{display:flex; flex-direction:column; gap:10px;}
+  .gate-row .btn{width:100%; padding:12px;}
+
+  /* ── App shell ── */
+  #app{display:flex; min-height:100vh;}
+  #app.hidden{display:none !important;}
+
+  /* Sidebar */
+  .sidebar{
+    width:var(--side-w); flex-shrink:0; background:var(--claret); color:var(--bone);
+    display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0;
+    z-index:40; transition:transform .25s ease;
+  }
+  .side-brand{
+    padding:22px 20px 18px; border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .side-brand .name{
+    font-family:var(--display); font-size:18px; letter-spacing:.16em; color:#FBF6E8;
+  }
+  .side-brand .role{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--brass-bright); margin-top:4px;
+  }
+  .side-nav{padding:14px 12px; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:4px;}
+  .nav-item{
+    display:flex; align-items:center; gap:11px; width:100%;
+    padding:11px 12px; border-radius:9px; color:rgba(251,246,232,.72);
+    font-size:13.5px; font-weight:500; text-align:left; transition:all .15s;
+  }
+  .nav-item:hover{background:rgba(255,255,255,.06); color:#FBF6E8;}
+  .nav-item.active{background:rgba(182,139,92,.22); color:#FBF6E8; box-shadow:inset 3px 0 0 var(--brass-bright);}
+  .nav-item .ico{width:20px; text-align:center; font-size:15px; opacity:.9;}
+  .nav-item .badge{
+    margin-left:auto; background:var(--rust); color:#fff;
+    font-family:var(--mono); font-size:10px; padding:2px 7px; border-radius:10px;
+    min-width:20px; text-align:center;
+  }
+  .nav-item .badge:empty,.nav-item .badge.zero{display:none;}
+  .side-foot{
+    padding:14px 12px 18px; border-top:1px solid rgba(255,255,255,.08);
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .side-foot .nav-item{color:rgba(251,246,232,.55); font-size:12.5px;}
+  .side-foot .nav-item:hover{color:#FBF6E8;}
+
+  /* Main */
+  .main{
+    flex:1; margin-left:var(--side-w); min-width:0;
+    display:flex; flex-direction:column; min-height:100vh;
+  }
+  .topbar{
+    position:sticky; top:0; z-index:30; height:var(--header-h);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:0 28px; background:rgba(252,250,244,.92); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-left{display:flex; align-items:center; gap:12px; min-width:0;}
+  .menu-btn{
+    display:none; width:38px; height:38px; border-radius:8px;
+    border:1px solid var(--line-strong); background:#fff; font-size:18px;
+    align-items:center; justify-content:center;
+  }
+  .page-title{
+    font-family:var(--display); font-size:20px; font-weight:500; color:var(--claret);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .page-sub{font-size:12.5px; color:var(--muted); margin-top:1px;}
+  .topbar-right{display:flex; align-items:center; gap:8px; flex-shrink:0;}
+
+  .content{padding:24px 28px 80px; max-width:1200px; width:100%;}
+
+  /* Overlay for mobile sidebar */
+  .side-overlay{
+    display:none; position:fixed; inset:0; background:rgba(15,12,10,.45);
+    z-index:35;
+  }
+  .side-overlay.show{display:block;}
+
+  /* ── Panels ── */
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* Stats */
+  .stats-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;
+  }
+  .stat-card{
+    background:var(--paper); border:1px solid var(--line-strong);
+    border-radius:12px; padding:18px 18px 16px;
+  }
+  .stat-label{
+    font-family:var(--mono); font-size:10px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); margin-bottom:8px;
+  }
+  .stat-value{
+    font-family:var(--display); font-size:28px; font-weight:500; color:var(--claret);
+    line-height:1.1;
+  }
+  .stat-meta{font-size:12.5px; color:var(--faint); margin-top:6px;}
+
+  /* Cards / sections */
+  .card{
+    background:var(--paper); border:1px solid var(--line-strong);
+    border-radius:12px; padding:20px 22px; margin-bottom:16px;
+  }
+  .card-head{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; flex-wrap:wrap; margin-bottom:16px;
+  }
+  .card-head h2{
+    font-family:var(--display); font-weight:500; font-size:18px; color:var(--claret);
+  }
+  .section-title{
+    font-family:var(--display); font-weight:500; font-size:15px;
+    color:var(--claret); margin:20px 0 12px; padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+  .hint{font-size:13px; color:var(--muted); line-height:1.5;}
+  .hint-box{
+    background:var(--cream); border:1px solid var(--line); border-radius:8px;
+    padding:10px 14px; font-size:13px; color:var(--muted); margin-bottom:14px;
+  }
+
+  /* Toolbar */
+  .toolbar{
+    display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:14px;
+  }
+  .toolbar .search-wrap{flex:1; min-width:180px; max-width:320px; position:relative;}
+  .toolbar .search-wrap input{padding-left:36px;}
+  .toolbar .search-wrap::before{
+    content:"⌕"; position:absolute; left:12px; top:50%; transform:translateY(-50%);
+    color:var(--faint); font-size:15px; pointer-events:none;
+  }
+  .toolbar select{width:auto; min-width:140px; max-width:200px;}
+
+  /* Product list */
+  .plist{display:flex; flex-direction:column; gap:0;}
+  .prow{
+    display:grid; grid-template-columns:56px 1fr auto; gap:14px; align-items:center;
+    padding:14px 4px; border-bottom:1px solid var(--line);
+  }
+  .prow:last-child{border-bottom:none;}
+  .prow:hover{background:rgba(182,139,92,.04); margin:0 -10px; padding-left:14px; padding-right:14px; border-radius:8px;}
+  .pthumb{
+    width:56px; height:56px; border-radius:8px; border:1px solid var(--line);
+    background:#fff; object-fit:cover;
+  }
+  .p-name{
+    font-family:var(--display); font-size:16px; font-weight:500; color:var(--claret);
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px;
+  }
+  .p-meta{
+    font-family:var(--mono); font-size:11px; letter-spacing:.04em;
+    color:var(--faint); margin-top:4px;
+  }
+  .p-meta b{color:var(--rust); font-weight:500;}
+  .p-actions{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; align-items:center;}
+  .p-menu{position:relative;}
+  .p-menu-drop{
+    display:none; position:absolute; right:0; top:calc(100% + 4px); z-index:20;
+    background:#fff; border:1px solid var(--line-strong); border-radius:10px;
+    box-shadow:0 8px 28px rgba(15,12,10,.12); min-width:180px; padding:6px;
+  }
+  .p-menu.open .p-menu-drop{display:block;}
+  .p-menu-drop button{
+    display:block; width:100%; text-align:left; padding:9px 12px;
+    border-radius:7px; font-size:13px; color:var(--ink); font-weight:500;
+  }
+  .p-menu-drop button:hover{background:var(--cream);}
+  .p-menu-drop button.danger{color:var(--bad);}
+
+  /* Dashboard quick lists */
+  .quick-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .quick-list{display:flex; flex-direction:column; gap:8px;}
+  .quick-item{
+    display:flex; align-items:center; gap:12px; padding:10px 12px;
+    background:#fff; border:1px solid var(--line); border-radius:9px;
+    cursor:pointer; transition:border-color .15s;
+  }
+  .quick-item:hover{border-color:var(--brass);}
+  .quick-item img{width:40px; height:40px; border-radius:6px; object-fit:cover; border:1px solid var(--line);}
+  .quick-item .qi-name{font-weight:600; font-size:13.5px; color:var(--claret);}
+  .quick-item .qi-meta{font-size:11.5px; color:var(--faint); margin-top:2px;}
+
+  /* Form grid */
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  .grid .span2{grid-column:span 2;}
+  .grid .span3{grid-column:1 / -1;}
+  .price-hint{
+    font-family:var(--mono); font-size:12px; letter-spacing:.03em;
+    color:var(--ok); padding:10px 12px; background:var(--ok-bg);
+    border-radius:8px; min-height:20px;
+  }
+  .price-hint:empty{display:none;}
+  .form-actions{
+    display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;
+    padding-top:16px; border-top:1px solid var(--line);
+  }
+  .check-row{display:flex; gap:10px; align-items:center;}
+  .check-row input{width:auto;}
+  .check-row label{margin:0; font-size:14px; color:var(--ink); text-transform:none; letter-spacing:0; font-family:var(--ui);}
+
+  /* Gallery thumbs */
+  .gallery-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;}
+  .g-card{
+    border:1px solid var(--line-strong); border-radius:8px; overflow:hidden;
+    width:88px; background:#fff;
+  }
+  .g-card img{width:88px; height:88px; object-fit:cover; display:block;}
+  .g-card .g-actions{display:flex; border-top:1px solid var(--line);}
+  .g-card .g-actions button{
+    flex:1; border:none; background:var(--cream); font-size:13px; padding:5px; cursor:pointer;
+  }
+  .g-card .g-actions button.del{color:var(--bad);}
+  .g-main-badge{
+    position:absolute; top:4px; left:4px; background:var(--rust); color:#FBF6E8;
+    font-family:var(--mono); font-size:8px; letter-spacing:.1em; padding:2px 7px; border-radius:20px;
+  }
+
+  /* Orders */
+  .ord-card{
+    border:1px solid var(--line-strong); border-radius:12px; padding:16px 18px;
+    margin-bottom:12px; background:#fff;
+  }
+  .ord-top{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:flex-start;}
+  .ord-oid{font-family:var(--mono); font-size:13px; letter-spacing:.04em; color:var(--rust); font-weight:500;}
+  .ord-total{font-family:var(--display); font-size:20px; color:var(--claret); font-weight:500;}
+  .ord-meta{font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:4px;}
+  .ord-items{font-size:14px; color:var(--muted); margin-top:10px; line-height:1.5;}
+  .ord-ship{font-size:13.5px; color:var(--muted); margin-top:8px; line-height:1.55;}
+  .ord-ship b{color:var(--ink); font-weight:600;}
+  .ord-controls{
+    display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+    margin-top:14px; padding-top:14px; border-top:1px solid var(--line);
+  }
+  .ord-controls select,.ord-controls input{width:auto; min-width:120px; padding:8px 10px; font-size:13px;}
+
+  /* Category order rows */
+  .cat-row{
+    display:grid; grid-template-columns:40px 1fr auto; gap:12px; align-items:center;
+    padding:12px 0; border-bottom:1px solid var(--line);
+  }
+  .cat-row:last-child{border-bottom:none;}
+  .cat-num{font-family:var(--mono); font-size:12px; color:var(--faint);}
+  .cat-name{font-family:var(--display); font-size:16px; color:var(--claret);}
+
+  /* Studio boxes */
+  .studio-box{
+    margin-top:14px; border:1px solid var(--line-strong); border-radius:10px;
+    padding:16px; background:#fff;
+  }
+  .studio-modes{display:flex; flex-direction:column; gap:8px; margin:10px 0;}
+  .studio-modes label{
+    display:flex; gap:9px; align-items:center; cursor:pointer;
+    font-size:14px; color:var(--ink); text-transform:none; letter-spacing:0; font-family:var(--ui);
+  }
+  .studio-modes input{width:auto;}
+  .imgbox{display:flex; gap:14px; align-items:flex-start; flex-wrap:wrap;}
+
+  /* Empty / loading */
+  .empty{
+    text-align:center; padding:40px 20px; color:var(--muted);
+  }
+  .empty .empty-ico{font-size:32px; margin-bottom:10px; opacity:.5;}
+
+  /* Toast */
+  .toast{
+    position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(12px);
+    background:var(--claret); color:#FBF6E8; font-size:13px; font-weight:500;
+    padding:12px 22px; border-radius:10px; opacity:0; pointer-events:none;
+    transition:opacity .25s, transform .25s; max-width:92vw; text-align:center; z-index:100;
+    box-shadow:0 8px 32px rgba(15,12,10,.2);
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .toast.bad{background:var(--bad);}
+
+  /* Responsive */
+  @media(max-width:960px){
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .quick-grid{grid-template-columns:1fr;}
+    .grid{grid-template-columns:1fr 1fr;}
+    .grid .span2,.grid .span3{grid-column:1 / -1;}
+  }
+  @media(max-width:760px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0);}
+    .main{margin-left:0;}
+    .menu-btn{display:inline-flex;}
+    .content{padding:18px 16px 70px;}
+    .topbar{padding:0 14px;}
+    .stats-grid{grid-template-columns:1fr 1fr; gap:10px;}
+    .stat-value{font-size:22px;}
+    .prow{grid-template-columns:48px 1fr; gap:10px;}
+    .p-actions{grid-column:1 / -1; justify-content:flex-start; margin-top:4px;}
+    .grid{grid-template-columns:1fr;}
+    .ord-controls select,.ord-controls input{min-width:0; flex:1 1 100%;}
+  }
 </style>
 </head>
 <body>
-<header>
-  <div><div class="brand">XANVOR</div><div class="sub">Catalogue admin</div></div>
-  <div style="display:flex;gap:10px;">
-    <a class="btn btn-ghost" href="index.html">Site dekho</a>
-    <button class="btn btn-ghost hidden" id="lockBtn">Lock</button>
-  </div>
-</header>
-<div class="wrap">
 
-  <div class="panel" id="gate">
-    <h2>Admin key</h2>
-    <div class="grid">
-      <div class="span2"><label>Key</label><input type="password" id="keyInput" placeholder="Admin key daalo" autocomplete="current-password"></div>
-      <div style="align-self:end;"><button class="btn btn-primary" id="unlockBtn">Kholo</button></div>
+<!-- ════════ LOGIN ════════ -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-brand">XANVOR</div>
+    <div class="gate-sub">Catalogue Admin</div>
+    <h1>Sign in</h1>
+    <p class="gate-hint">Admin key daalo — yeh Netlify environment variable <span class="mono">XANVOR_ADMIN_KEY</span> hai.</p>
+    <div class="gate-row">
+      <div>
+        <label class="field-label" for="keyInput">Admin key</label>
+        <input type="password" id="keyInput" placeholder="••••••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" id="unlockBtn">Unlock admin →</button>
     </div>
-    <p class="hint">Key galat hone par list nahi khulegi. Key Netlify ke environment variable XANVOR_ADMIN_KEY me set hai.</p>
   </div>
+</div>
 
-  <div class="panel hidden" id="listPanel">
-    <div class="toolbar">
-      <h2 style="margin:0;flex:1;">Products <span class="count" id="count"></span></h2>
-      <select id="filterCollection"><option value="">Sab collections</option></select>
-      <select id="sortBy">
-        <option value="">Default order</option>
-        <option value="name_asc">Naam A→Z</option>
-        <option value="name_desc">Naam Z→A</option>
-        <option value="price_asc">Price: kam→zyada</option>
-        <option value="price_desc">Price: zyada→kam</option>
-        <option value="updated_desc">Abhi update hua</option>
-        <option value="collection">Collection</option>
-      </select>
-      <input type="search" id="search" placeholder="Search — naam ya id">
-      <button class="btn btn-ghost" id="categoriesBtn">📐 Categories order</button>
-      <button class="btn btn-ghost" id="listingBtn">🎨 Listing studio</button>
-      <button class="btn btn-ghost" id="ordersBtn">📦 Orders</button>
-      <button class="btn btn-primary" id="addBtn">+ Naya product</button>
+<!-- ════════ APP ════════ -->
+<div id="app" class="hidden">
+  <div class="side-overlay" id="sideOverlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="side-brand">
+      <div class="name">XANVOR</div>
+      <div class="role">Atelier Admin</div>
     </div>
-    <p class="reorder-hint" id="reorderHint"></p>
-    <div id="list"></div>
-  </div>
-
-  <div class="panel hidden" id="categoriesPanel">
-    <h2>Homepage categories ka order</h2>
-    <p class="hint" style="margin:-8px 0 16px;">Yeh homepage pe collection-sections (Silver &amp; Gold, Copper, …) ka sequence set karta hai. Hot-Serve isme nahi hai — wo alag page hai.</p>
-    <div id="catOrderList"></div>
-    <div style="margin-top:14px;"><button type="button" class="btn btn-ghost" id="catOrderBack">← Products</button></div>
-  </div>
-
-  <div class="panel hidden" id="ordersPanel">
-    <div class="toolbar">
-      <h2 style="margin:0;flex:1;">Orders <span class="count" id="ordersCount"></span></h2>
-      <button class="btn btn-ghost" id="ordersRefresh">↻ Refresh</button>
+    <nav class="side-nav" id="sideNav">
+      <button type="button" class="nav-item active" data-nav="dashboard">
+        <span class="ico">◈</span> Dashboard
+      </button>
+      <button type="button" class="nav-item" data-nav="list">
+        <span class="ico">▣</span> Products
+        <span class="badge zero" id="navBadgeProducts"></span>
+      </button>
+      <button type="button" class="nav-item" data-nav="orders">
+        <span class="ico">▤</span> Orders
+        <span class="badge zero" id="navBadgeOrders"></span>
+      </button>
+      <button type="button" class="nav-item" data-nav="categories">
+        <span class="ico">☰</span> Categories
+      </button>
+      <button type="button" class="nav-item" data-nav="listing">
+        <span class="ico">✎</span> Listing studio
+      </button>
+    </nav>
+    <div class="side-foot">
+      <a class="nav-item" href="index.html" target="_blank" rel="noopener">
+        <span class="ico">↗</span> View live site
+      </a>
+      <button type="button" class="nav-item" id="lockBtn">
+        <span class="ico">✕</span> Lock &amp; sign out
+      </button>
     </div>
-    <div id="ordersList"></div>
-    <div style="margin-top:14px;"><button type="button" class="btn btn-ghost" id="ordersBack">← Products</button></div>
-  </div>
+  </aside>
 
-  <div class="panel hidden" id="formPanel">
-    <h2 id="formTitle">Naya product</h2>
-    <div class="grid">
-      <div><label>ID * <span class="mono">(jaise fw-113)</span></label><input id="f_id" placeholder="fw-113"></div>
-      <div class="span2"><label>Naam *</label><input id="f_name" placeholder="Royal Dome Hot-Pot"></div>
-      <div><label>Collection *</label><select id="f_collection"></select></div>
-      <div class="span2"><label>Series</label><input id="f_series" placeholder="The Hot-Serve Collection · Hand-hammered…"></div>
-      <div class="span2"><label>Materials ( · se alag karo)</label><input id="f_materials" placeholder="Solid Brass · Hand-Hammered · Lacquered"></div>
-      <div><label>Tag</label><input id="f_tag" placeholder="The Centrepiece"></div>
-      <div class="span3"><label>Description</label><textarea id="f_desc" placeholder="2–3 line ki achhi description — Google me yahi dikhegi"></textarea></div>
-      <div><label>Sizes</label><input id="f_sizes" placeholder="1500 / 2500 ml (rep: 2500)"></div>
-      <div><label>Construction</label><input id="f_construction" placeholder="Double-wall, insulated"></div>
-      <div><label>MOQ (B2B)</label><input id="f_moq" placeholder="20 pcs"></div>
-      <div><label>HSN</label><input id="f_hsn" placeholder="7323"></div>
-      <div><label>GST</label><select id="f_gst"><option value="">—</option><option>18%</option><option>12%</option><option>5%</option></select></div>
-      <div><label>Stock</label><select id="f_availability"><option value="">In stock</option><option value="out_of_stock">Out of stock</option></select></div>
-      <div><label>Status</label><select id="f_status"><option value="">Live — website pe dikhe</option><option value="draft">Draft — abhi chhupa rahe</option></select></div>
-      <div><label>Homepage</label><select id="f_homepage"><option value="">Dikhe (default)</option><option value="hide">Chhupao — sirf link/SEO se milega</option></select></div>
-      <div><label>MRP ₹</label><input id="f_mrp" inputmode="numeric" placeholder="4499"></div>
-      <div><label>Retail ₹ (ex-GST)</label><input id="f_retail" inputmode="numeric" placeholder="3399"></div>
-      <div><label>Offer ₹ (B2B/trade)</label><input id="f_offer" inputmode="numeric" placeholder="2100"></div>
-      <div class="span3"><div class="price-hint" id="priceHint"></div></div>
-      <div class="span3"><label>Highlights — ek line me ek</label><textarea id="f_highlights" placeholder="Solid brass, double-wall&#10;Food-safe SS304 inner"></textarea></div>
-      <div class="span3">
-        <label>Photos — pehli wali main hai (cards, Google feed); baaki PDP gallery me</label>
-        <div id="galleryRow" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;"></div>
-        <div class="imgbox">
-          <div style="flex:1;">
-            <input type="file" id="f_file" accept="image/jpeg,image/png,image/webp" multiple>
-            <p class="hint" id="imgStatus">Ek saath kayi photos select kar sakte ho — mode sab pe ek saath lagega.</p>
-          </div>
-          <button type="button" class="btn btn-ghost" id="openStudioBtn">🎨 Listing studio</button>
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button type="button" class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+        <div>
+          <div class="page-title" id="pageTitle">Dashboard</div>
+          <div class="page-sub" id="pageSub">Overview</div>
         </div>
-        <div id="studio" class="hidden" style="margin-top:14px;border:1px solid var(--line-strong);border-radius:8px;padding:16px;background:#fff;">
-          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
-            <canvas id="studioCv" width="10" height="10" style="width:220px;height:220px;border:1px solid var(--line);border-radius:6px;background:#fff;object-fit:contain;"></canvas>
-            <div style="flex:1;min-width:230px;">
-              <label style="margin-bottom:10px;">Photo studio</label>
-              <div style="display:flex;flex-direction:column;gap:9px;font-size:16px;">
-                <label style="display:flex;gap:9px;align-items:center;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ink);cursor:pointer;"><input type="radio" name="studioMode" value="studio" style="width:auto;" checked> ✨ White studio background (AI) + 1:1</label>
-                <label style="display:flex;gap:9px;align-items:center;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ink);cursor:pointer;"><input type="radio" name="studioMode" value="square" style="width:auto;"> ▣ Sirf 1:1 square (white padding)</label>
-                <label style="display:flex;gap:9px;align-items:center;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ink);cursor:pointer;"><input type="radio" name="studioMode" value="original" style="width:auto;"> ▢ Original jaisa hai waisa</label>
-              </div>
-              <p class="hint" id="studioStatus" style="min-height:20px;"></p>
-              <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
-                <button type="button" class="btn btn-primary" id="studioApply">Apply &amp; upload</button>
-                <button type="button" class="btn btn-ghost" id="studioCancel">Cancel</button>
-              </div>
+      </div>
+      <div class="topbar-right">
+        <button type="button" class="btn btn-primary btn-sm hidden" id="addBtnTop">+ New product</button>
+        <button type="button" class="btn btn-ghost btn-sm hidden" id="ordersRefreshTop">↻ Refresh</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <section class="panel active" id="dashboardPanel">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total products</div>
+            <div class="stat-value" id="statTotal">—</div>
+            <div class="stat-meta" id="statLiveMeta">Live catalogue</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Drafts</div>
+            <div class="stat-value" id="statDrafts">—</div>
+            <div class="stat-meta">Hidden from site</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Out of stock</div>
+            <div class="stat-value" id="statOos">—</div>
+            <div class="stat-meta">Need restock</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Orders</div>
+            <div class="stat-value" id="statOrders">—</div>
+            <div class="stat-meta" id="statOrdersMeta">All time</div>
+          </div>
+        </div>
+
+        <div class="quick-grid">
+          <div class="card">
+            <div class="card-head">
+              <h2>Needs attention</h2>
+              <button type="button" class="btn btn-ghost btn-sm" data-nav="list">All products →</button>
+            </div>
+            <div class="quick-list" id="dashAttention">
+              <p class="hint">Loading…</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h2>Recent orders</h2>
+              <button type="button" class="btn btn-ghost btn-sm" data-nav="orders">All orders →</button>
+            </div>
+            <div class="quick-list" id="dashOrders">
+              <p class="hint">Loading…</p>
             </div>
           </div>
         </div>
-      </div>
-      <div class="span3" style="display:flex;gap:10px;align-items:center;">
-        <input type="checkbox" id="f_signature" style="width:auto;"><label for="f_signature" style="margin:0;">Signature piece</label>
-      </div>
-      <div class="span3" style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button class="btn btn-primary" id="saveBtn">Save — live karo</button>
-        <button class="btn btn-ghost" id="cancelBtn">Cancel</button>
-      </div>
-    </div>
-  </div>
 
-  <div class="panel hidden" id="listingPanel">
-    <h2>Listing studio <span class="count">· Amazon-style images, 1600×1600</span></h2>
-    <div class="grid">
-      <div class="span2">
-        <label>Product (naam / features auto-bharne ke liye)</label>
-        <select id="ls_product"><option value="">— koi product chuno —</option></select>
-      </div>
-      <div>
-        <label>Template</label>
-        <select id="ls_template">
-          <option value="callout">Callouts — photo pe feature labels</option>
-          <option value="collage">Collage — 2–4 photos grid</option>
-          <option value="hero">Hero + feature list</option>
-        </select>
-      </div>
-      <div class="span3">
-        <label>Photos (1–4 chuno; collage ke liye 2+)</label>
-        <input type="file" id="ls_files" accept="image/jpeg,image/png,image/webp" multiple>
-        <div id="ls_thumbs" style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;"></div>
-        <label style="display:flex;gap:8px;align-items:center;margin-top:10px;text-transform:none;letter-spacing:0;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--ink);">
-          <input type="checkbox" id="ls_whitebg" checked style="width:auto;"> ✨ AI white studio background sab photos pe
-        </label>
-      </div>
-      <div class="span3" id="ls_calloutBox">
-        <label>Callout add karo — text likho, phir preview me product ke us hisse pe click karo</label>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <input id="ls_calloutText" placeholder="jaise: Hand-hammered brass" style="flex:1;min-width:200px;">
-          <button type="button" class="btn btn-ghost" id="ls_undoCallout">Undo last</button>
+        <div class="card" style="margin-top:4px;">
+          <div class="card-head"><h2>Quick actions</h2></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-primary" id="dashAddBtn">+ Add product</button>
+            <button type="button" class="btn btn-ghost" data-nav="orders">Manage orders</button>
+            <button type="button" class="btn btn-ghost" data-nav="listing">Open listing studio</button>
+            <button type="button" class="btn btn-ghost" data-nav="categories">Reorder categories</button>
+          </div>
         </div>
-        <p class="hint" id="ls_calloutHint">Pehle text likho (ya neeche chip dabao), phir photo pe click — label wahan lag jayega.</p>
-        <div id="ls_chipRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;"></div>
-      </div>
-      <div class="span3 hidden" id="ls_featBox">
-        <label>Feature list — ek line me ek (product chunne par highlights se khud bharta hai)</label>
-        <textarea id="ls_features" placeholder="Solid brass, double-wall&#10;Food-safe SS304 inner"></textarea>
-      </div>
-      <div class="span3">
-        <canvas id="ls_canvas" width="1600" height="1600" style="width:100%;max-width:480px;border:1px solid var(--line-strong);border-radius:8px;background:#fff;cursor:crosshair;"></canvas>
-        <p class="hint" id="ls_status"></p>
-      </div>
-      <div class="span3" style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button type="button" class="btn btn-primary" id="ls_generate">Generate</button>
-        <button type="button" class="btn btn-ghost" id="ls_download" disabled>⬇ Download JPG</button>
-        <button type="button" class="btn btn-ghost" id="ls_setImage" disabled>Product gallery me daal do</button>
-        <button type="button" class="btn btn-ghost" id="ls_back">← Products</button>
-      </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section class="panel" id="listPanel">
+        <div class="card">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <input type="search" id="search" placeholder="Search name or id…">
+            </div>
+            <select id="filterCollection"><option value="">All collections</option></select>
+            <select id="sortBy">
+              <option value="">Default order</option>
+              <option value="name_asc">Name A→Z</option>
+              <option value="name_desc">Name Z→A</option>
+              <option value="price_asc">Price: low→high</option>
+              <option value="price_desc">Price: high→low</option>
+              <option value="updated_desc">Recently updated</option>
+              <option value="collection">By collection</option>
+            </select>
+            <span class="hint mono" id="count" style="margin-left:auto;"></span>
+          </div>
+          <div class="hint-box" id="reorderHint"></div>
+          <div class="plist" id="list"></div>
+        </div>
+      </section>
+
+      <!-- CATEGORIES -->
+      <section class="panel" id="categoriesPanel">
+        <div class="card">
+          <div class="card-head">
+            <h2>Homepage category order</h2>
+          </div>
+          <p class="hint" style="margin:-8px 0 16px;">
+            Homepage pe collection sections ka sequence. Hot-Serve alag page hai — yahan nahi.
+          </p>
+          <div id="catOrderList"></div>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section class="panel" id="ordersPanel">
+        <div class="card">
+          <div class="toolbar">
+            <span class="hint mono" id="ordersCount"></span>
+            <div style="margin-left:auto;"></div>
+          </div>
+          <div id="ordersList"></div>
+        </div>
+      </section>
+
+      <!-- PRODUCT FORM -->
+      <section class="panel" id="formPanel">
+        <div class="card">
+          <div class="card-head">
+            <h2 id="formTitle">New product</h2>
+            <button type="button" class="btn btn-ghost btn-sm" id="cancelBtn">← Back</button>
+          </div>
+
+          <div class="section-title">Basics</div>
+          <div class="grid">
+            <div>
+              <label class="field-label" for="f_id">ID * <span class="mono">(e.g. fw-113)</span></label>
+              <input id="f_id" placeholder="fw-113">
+            </div>
+            <div class="span2">
+              <label class="field-label" for="f_name">Name *</label>
+              <input id="f_name" placeholder="Royal Dome Hot-Pot">
+            </div>
+            <div>
+              <label class="field-label" for="f_collection">Collection *</label>
+              <select id="f_collection"></select>
+            </div>
+            <div class="span2">
+              <label class="field-label" for="f_series">Series</label>
+              <input id="f_series" placeholder="The Hot-Serve Collection · Hand-hammered…">
+            </div>
+            <div class="span2">
+              <label class="field-label" for="f_materials">Materials ( · separated)</label>
+              <input id="f_materials" placeholder="Solid Brass · Hand-Hammered · Lacquered">
+            </div>
+            <div>
+              <label class="field-label" for="f_tag">Tag</label>
+              <input id="f_tag" placeholder="The Centrepiece">
+            </div>
+            <div class="span3">
+              <label class="field-label" for="f_desc">Description</label>
+              <textarea id="f_desc" placeholder="2–3 lines — Google me yahi dikhegi"></textarea>
+            </div>
+          </div>
+
+          <div class="section-title">Specs &amp; visibility</div>
+          <div class="grid">
+            <div>
+              <label class="field-label" for="f_sizes">Sizes</label>
+              <input id="f_sizes" placeholder="1500 / 2500 ml">
+            </div>
+            <div>
+              <label class="field-label" for="f_construction">Construction</label>
+              <input id="f_construction" placeholder="Double-wall, insulated">
+            </div>
+            <div>
+              <label class="field-label" for="f_moq">MOQ (B2B)</label>
+              <input id="f_moq" placeholder="20 pcs">
+            </div>
+            <div>
+              <label class="field-label" for="f_hsn">HSN</label>
+              <input id="f_hsn" placeholder="7323">
+            </div>
+            <div>
+              <label class="field-label" for="f_gst">GST</label>
+              <select id="f_gst"><option value="">—</option><option>18%</option><option>12%</option><option>5%</option></select>
+            </div>
+            <div>
+              <label class="field-label" for="f_availability">Stock</label>
+              <select id="f_availability"><option value="">In stock</option><option value="out_of_stock">Out of stock</option></select>
+            </div>
+            <div>
+              <label class="field-label" for="f_status">Status</label>
+              <select id="f_status"><option value="">Live on website</option><option value="draft">Draft — hidden</option></select>
+            </div>
+            <div>
+              <label class="field-label" for="f_homepage">Homepage</label>
+              <select id="f_homepage"><option value="">Show (default)</option><option value="hide">Hide — link/SEO only</option></select>
+            </div>
+            <div class="span3">
+              <div class="check-row">
+                <input type="checkbox" id="f_signature">
+                <label for="f_signature">Signature piece</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">Pricing (₹)</div>
+          <div class="grid">
+            <div>
+              <label class="field-label" for="f_mrp">MRP</label>
+              <input id="f_mrp" inputmode="numeric" placeholder="4499">
+            </div>
+            <div>
+              <label class="field-label" for="f_retail">Retail (ex-GST)</label>
+              <input id="f_retail" inputmode="numeric" placeholder="3399">
+            </div>
+            <div>
+              <label class="field-label" for="f_offer">Offer / B2B</label>
+              <input id="f_offer" inputmode="numeric" placeholder="2100">
+            </div>
+            <div class="span3"><div class="price-hint" id="priceHint"></div></div>
+            <div class="span3">
+              <label class="field-label" for="f_highlights">Highlights — one per line</label>
+              <textarea id="f_highlights" placeholder="Solid brass, double-wall&#10;Food-safe SS304 inner"></textarea>
+            </div>
+          </div>
+
+          <div class="section-title">Photos</div>
+          <div class="grid">
+            <div class="span3">
+              <p class="hint" style="margin-bottom:10px;">First photo = main (cards + Google feed). Rest go to PDP gallery.</p>
+              <div class="gallery-row" id="galleryRow"></div>
+              <div class="imgbox">
+                <div style="flex:1;min-width:200px;">
+                  <input type="file" id="f_file" accept="image/jpeg,image/png,image/webp" multiple>
+                  <p class="hint" id="imgStatus" style="margin-top:8px;">Multiple photos select kar sakte ho — mode sab pe lagega.</p>
+                </div>
+                <button type="button" class="btn btn-ghost" id="openStudioBtn">Listing studio →</button>
+              </div>
+              <div id="studio" class="studio-box hidden">
+                <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
+                  <canvas id="studioCv" width="10" height="10" style="width:200px;height:200px;border:1px solid var(--line);border-radius:8px;background:#fff;object-fit:contain;"></canvas>
+                  <div style="flex:1;min-width:220px;">
+                    <label class="field-label">Photo mode</label>
+                    <div class="studio-modes">
+                      <label><input type="radio" name="studioMode" value="studio" checked> ✨ White studio (AI) + 1:1</label>
+                      <label><input type="radio" name="studioMode" value="square"> ▣ Square only (white pad)</label>
+                      <label><input type="radio" name="studioMode" value="original"> ▢ Keep original</label>
+                    </div>
+                    <p class="hint" id="studioStatus" style="min-height:20px;"></p>
+                    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                      <button type="button" class="btn btn-primary btn-sm" id="studioApply">Apply &amp; upload</button>
+                      <button type="button" class="btn btn-ghost btn-sm" id="studioCancel">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveBtn">Save — go live</button>
+            <button class="btn btn-ghost" id="cancelBtn2">Cancel</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- LISTING STUDIO -->
+      <section class="panel" id="listingPanel">
+        <div class="card">
+          <div class="card-head">
+            <h2>Listing studio</h2>
+            <span class="hint mono">Amazon-style · 1600×1600</span>
+          </div>
+          <div class="grid">
+            <div class="span2">
+              <label class="field-label" for="ls_product">Product (auto-fill features)</label>
+              <select id="ls_product"><option value="">— choose product —</option></select>
+            </div>
+            <div>
+              <label class="field-label" for="ls_template">Template</label>
+              <select id="ls_template">
+                <option value="callout">Callouts — feature labels on photo</option>
+                <option value="collage">Collage — 2–4 photo grid</option>
+                <option value="hero">Hero + feature list</option>
+              </select>
+            </div>
+            <div class="span3">
+              <label class="field-label" for="ls_files">Photos (1–4; collage needs 2+)</label>
+              <input type="file" id="ls_files" accept="image/jpeg,image/png,image/webp" multiple>
+              <div id="ls_thumbs" style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;"></div>
+              <label class="check-row" style="margin-top:12px;">
+                <input type="checkbox" id="ls_whitebg" checked>
+                <span>✨ AI white studio background on all photos</span>
+              </label>
+            </div>
+            <div class="span3" id="ls_calloutBox">
+              <label class="field-label">Callout — type text, then click photo</label>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <input id="ls_calloutText" placeholder="e.g. Hand-hammered brass" style="flex:1;min-width:200px;">
+                <button type="button" class="btn btn-ghost btn-sm" id="ls_undoCallout">Undo last</button>
+              </div>
+              <p class="hint" id="ls_calloutHint" style="margin-top:6px;">Text likho (ya chip dabao), phir photo pe click.</p>
+              <div id="ls_chipRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;"></div>
+            </div>
+            <div class="span3 hidden" id="ls_featBox">
+              <label class="field-label" for="ls_features">Feature list — one per line</label>
+              <textarea id="ls_features" placeholder="Solid brass, double-wall&#10;Food-safe SS304 inner"></textarea>
+            </div>
+            <div class="span3">
+              <canvas id="ls_canvas" width="1600" height="1600" style="width:100%;max-width:480px;border:1px solid var(--line-strong);border-radius:10px;background:#fff;cursor:crosshair;"></canvas>
+              <p class="hint" id="ls_status" style="margin-top:8px;"></p>
+            </div>
+            <div class="span3" style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button type="button" class="btn btn-primary" id="ls_generate">Generate</button>
+              <button type="button" class="btn btn-ghost" id="ls_download" disabled>⬇ Download JPG</button>
+              <button type="button" class="btn btn-ghost" id="ls_setImage" disabled>Add to product gallery</button>
+              <button type="button" class="btn btn-ghost" id="ls_back">← Back</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   </div>
-
 </div>
+
 <div class="toast" id="toast"></div>
 <script src="assets/img-opt.js?v=2"></script>
 <script>
@@ -255,40 +805,109 @@
   const $ = id => document.getElementById(id);
   const COLLECTIONS = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Hot-Serve','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection','Metal Wall Art & Décor','Kansa Dinnerware'];
   $('f_collection').innerHTML = COLLECTIONS.map(c=>`<option>${c}</option>`).join('');
-  $('filterCollection').innerHTML = '<option value="">Sab collections</option>' + COLLECTIONS.map(c=>`<option>${c}</option>`).join('');
+  $('filterCollection').innerHTML = '<option value="">All collections</option>' + COLLECTIONS.map(c=>`<option>${c}</option>`).join('');
+
   let KEY = sessionStorage.getItem('xv_admin_key') || '';
   let CATALOG = [];
   let editingId = null;
-  /* homepage section order — mirrors index.html's MAP (Hot-Serve excluded, alag page hai) */
+  let currentViewName = 'gate';
   const DEFAULT_CAT_ORDER = ['Silver & Gold','Copper','Brass','Sheesham & Wood','Wireform Furniture','Artisanal Serving Trays','Copper Home Collection','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection','Metal Wall Art & Décor','Kansa Dinnerware'];
   let COLLECTION_ORDER = [...DEFAULT_CAT_ORDER];
 
-  const toast = (msg, bad) => { const t=$('toast'); t.textContent=msg; t.className='toast show'+(bad?' bad':''); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), 3600); };
+  const PAGE_META = {
+    dashboard: { title:'Dashboard', sub:'Overview & quick actions' },
+    list:      { title:'Products', sub:'Live catalogue' },
+    form:      { title:'Product editor', sub:'Add or edit SKU' },
+    orders:    { title:'Orders', sub:'Fulfillment & tracking' },
+    categories:{ title:'Categories', sub:'Homepage section order' },
+    listing:   { title:'Listing studio', sub:'Amazon-style images' },
+  };
+
+  const toast = (msg, bad) => {
+    const t=$('toast'); t.textContent=msg; t.className='toast show'+(bad?' bad':'');
+    clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), 3600);
+  };
 
   async function api(payload){
-    const r = await fetch('/api/admin', { method:'POST', headers:{'content-type':'application/json','x-admin-key':KEY}, body: JSON.stringify(payload) });
+    const r = await fetch('/api/admin', {
+      method:'POST',
+      headers:{'content-type':'application/json','x-admin-key':KEY},
+      body: JSON.stringify(payload)
+    });
     const data = await r.json().catch(()=>({error:'bad response'}));
     if(!r.ok) throw new Error(data.error || ('HTTP '+r.status));
     return data;
   }
 
+  /* ── Mobile sidebar ── */
+  const closeSide = () => {
+    $('sidebar').classList.remove('open');
+    $('sideOverlay').classList.remove('show');
+  };
+  $('menuBtn').addEventListener('click', ()=>{
+    $('sidebar').classList.toggle('open');
+    $('sideOverlay').classList.toggle('show');
+  });
+  $('sideOverlay').addEventListener('click', closeSide);
+
+  function setNavActive(view){
+    document.querySelectorAll('#sideNav .nav-item').forEach(el=>{
+      el.classList.toggle('active', el.dataset.nav === view);
+    });
+    const meta = PAGE_META[view] || PAGE_META.dashboard;
+    $('pageTitle').textContent = meta.title;
+    $('pageSub').textContent = meta.sub;
+    $('addBtnTop').classList.toggle('hidden', view!=='list');
+    $('ordersRefreshTop').classList.toggle('hidden', view!=='orders');
+  }
+
   function show(view){
-    $('gate').classList.toggle('hidden', view!=='gate');
-    $('listPanel').classList.toggle('hidden', view!=='list');
-    $('formPanel').classList.toggle('hidden', view!=='form');
-    $('listingPanel').classList.toggle('hidden', view!=='listing');
-    $('categoriesPanel').classList.toggle('hidden', view!=='categories');
-    $('ordersPanel').classList.toggle('hidden', view!=='orders');
-    $('lockBtn').classList.toggle('hidden', view==='gate');
+    currentViewName = view;
+    if(view === 'gate'){
+      $('gate').classList.remove('hidden');
+      $('app').classList.add('hidden');
+      window.scrollTo({top:0});
+      return;
+    }
+    $('gate').classList.add('hidden');
+    $('app').classList.remove('hidden');
+    closeSide();
+
+    const map = {
+      dashboard: 'dashboardPanel',
+      list: 'listPanel',
+      form: 'formPanel',
+      orders: 'ordersPanel',
+      categories: 'categoriesPanel',
+      listing: 'listingPanel',
+    };
+    Object.values(map).forEach(id => $(id).classList.remove('active'));
+    const panelId = map[view];
+    if(panelId) $(panelId).classList.add('active');
+
+    setNavActive(view === 'form' ? 'list' : view);
+    if(view === 'form'){
+      $('pageTitle').textContent = $('formTitle').textContent;
+      $('pageSub').textContent = 'Edit product details';
+    }
     window.scrollTo({top:0});
   }
+
+  /* nav clicks */
+  document.querySelectorAll('[data-nav]').forEach(el=>{
+    el.addEventListener('click', async ()=>{
+      const v = el.dataset.nav;
+      if(v==='orders'){ await loadOrders(); show('orders'); return; }
+      if(v==='categories'){ renderCatOrder(); show('categories'); return; }
+      if(v==='listing'){ LS.fromForm=false; LS.formCtx=null; renderCalloutChips(); show('listing'); return; }
+      if(v==='list'){ show('list'); return; }
+      if(v==='dashboard'){ renderDashboard(); show('dashboard'); return; }
+    });
+  });
 
   const inclOf = p => { const r=(parseFloat(p.gst)||18)/100; return (p.retail||p.offer) ? Math.round((p.retail||p.offer)*(1+r)) : null; };
   const fmt = n => '₹'+Number(n).toLocaleString('en-IN');
 
-  /* Collection filter chuni ho to list us collection ke home_order me fix
-     hoti hai (search ignore, taaki ↑/↓ hamesha poore-collection ka sahi,
-     unambiguous sequence dekhe) — warna Sort-by dropdown lagu hota hai. */
   function currentView(){
     const q = ($('search').value||'').toLowerCase();
     const col = $('filterCollection').value;
@@ -317,45 +936,106 @@
     return { items: items.map(x=>x.p), reorderMode, collection: col };
   }
 
+  function closeAllMenus(){
+    document.querySelectorAll('.p-menu.open').forEach(m=>m.classList.remove('open'));
+  }
+  document.addEventListener('click', e=>{
+    if(!e.target.closest('.p-menu')) closeAllMenus();
+  });
+
   function renderList(){
     const { items, reorderMode } = currentView();
     $('search').disabled = reorderMode;
     $('sortBy').disabled = reorderMode;
-    $('count').textContent = '· '+CATALOG.length+' total'+(items.length!==CATALOG.length?` (${items.length} dikh rahe)`:'');
+    $('count').textContent = CATALOG.length+' total'+(items.length!==CATALOG.length?` · ${items.length} shown`:'');
     $('reorderHint').textContent = reorderMode
-      ? 'Homepage order mode — ↑ ↓ se is collection ke products ka sequence badlo (search yahan kaam nahi karta).'
-      : 'Tip: kisi collection ka product-order badalna ho to upar "Collection" filter chuno — ↑ ↓ arrows aa jayenge. Categories (sections) ka order "📐 Categories order" se.';
-    $('list').innerHTML = items.map((p,idx) => `
-      <div class="row">
-        <img class="thumb" loading="lazy" src="${window.xvImg?xvImg(p.image||'',120):(p.image||'')}" alt="">
+      ? 'Reorder mode: ↑ ↓ se is collection ka homepage sequence badlo. Search yahan off hai.'
+      : 'Tip: collection filter chuno → ↑ ↓ se homepage product order set hota hai.';
+    $('reorderHint').style.display = items.length ? 'block' : 'none';
+
+    $('list').innerHTML = items.length ? items.map((p,idx) => {
+      const img = window.xvImg ? xvImg(p.image||'',120) : (p.image||'');
+      const chips = [
+        p.status==='draft' ? '<span class="chip chip-draft">Draft</span>' : '',
+        p.homepage==='hide' ? '<span class="chip chip-hide">Hidden</span>' : '',
+        p.availability==='out_of_stock' ? '<span class="chip chip-oos">OOS</span>' : '',
+      ].join('');
+      return `
+      <div class="prow">
+        <img class="pthumb" loading="lazy" src="${img}" alt="">
         <div>
-          <div class="r-name">${p.name}${p.status==='draft'?' <span class="chip chip-draft">DRAFT</span>':''}${p.homepage==='hide'?' <span class="chip chip-hide">HOME PE NAHI</span>':''}</div>
-          <div class="r-meta">${p.id} · ${p.collection}${inclOf(p)&&p.retail?` · <b>${fmt(inclOf(p))} incl. GST</b>`:' · B2B only'}${p.availability==='out_of_stock'?' · OUT OF STOCK':''}</div>
+          <div class="p-name">${esc(p.name)} ${chips}</div>
+          <div class="p-meta">${esc(p.id)} · ${esc(p.collection)}${inclOf(p)&&p.retail?` · <b>${fmt(inclOf(p))} incl. GST</b>`:' · B2B only'}</div>
         </div>
-        <div class="r-actions">
+        <div class="p-actions">
           ${reorderMode?`
-          <button class="btn btn-ghost" data-up="${p.id}" title="Upar" ${idx===0?'disabled':''}>↑</button>
-          <button class="btn btn-ghost" data-dn="${p.id}" title="Neeche" ${idx===items.length-1?'disabled':''}>↓</button>`:''}
-          <button class="btn btn-ghost" data-stat="${p.id}" title="Live/Draft badlo">${p.status==='draft'?'Live karo':'Draft karo'}</button>
-          <button class="btn btn-ghost" data-home="${p.id}" title="Homepage pe dikhe/chhupao">${p.homepage==='hide'?'Home pe laao':'Home se hatao'}</button>
-          ${p.status==='draft'?'':`<a class="btn btn-ghost" href="product.html?id=${encodeURIComponent(p.id)}" target="_blank">View</a>`}
-          <button class="btn btn-ghost" data-edit="${p.id}">Edit</button>
-          <button class="btn btn-danger" data-del="${p.id}">Delete</button>
+          <button class="btn btn-ghost btn-icon btn-sm" data-up="${p.id}" title="Up" ${idx===0?'disabled':''}>↑</button>
+          <button class="btn btn-ghost btn-icon btn-sm" data-dn="${p.id}" title="Down" ${idx===items.length-1?'disabled':''}>↓</button>`:''}
+          <button class="btn btn-ghost btn-sm" data-edit="${p.id}">Edit</button>
+          ${p.status==='draft'?'':`<a class="btn btn-ghost btn-sm" href="product.html?id=${encodeURIComponent(p.id)}" target="_blank">View</a>`}
+          <div class="p-menu">
+            <button type="button" class="btn btn-ghost btn-icon btn-sm" data-menu-toggle aria-label="More">⋯</button>
+            <div class="p-menu-drop">
+              <button type="button" data-stat="${p.id}">${p.status==='draft'?'✓ Make live':'Draft karo'}</button>
+              <button type="button" data-home="${p.id}">${p.homepage==='hide'?'⌂ Show on home':'⌂ Hide from home'}</button>
+              <button type="button" class="danger" data-del="${p.id}">Delete</button>
+            </div>
+          </div>
         </div>
-      </div>`).join('') || '<p class="hint">Kuch nahi mila.</p>';
+      </div>`;
+    }).join('') : '<div class="empty"><div class="empty-ico">▣</div><p>No products match.</p></div>';
+  }
+
+  function esc(s){
+    return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function renderDashboard(){
+    const drafts = CATALOG.filter(p=>p.status==='draft');
+    const oos = CATALOG.filter(p=>p.availability==='out_of_stock');
+    const live = CATALOG.filter(p=>p.status!=='draft');
+    $('statTotal').textContent = CATALOG.length;
+    $('statLiveMeta').textContent = live.length + ' live · ' + drafts.length + ' draft';
+    $('statDrafts').textContent = drafts.length;
+    $('statOos').textContent = oos.length;
+    $('navBadgeProducts').textContent = CATALOG.length || '';
+    $('navBadgeProducts').classList.toggle('zero', !CATALOG.length);
+
+    const attention = [...drafts, ...oos.filter(p=>p.status!=='draft')].slice(0,6);
+    $('dashAttention').innerHTML = attention.length ? attention.map(p=>{
+      const img = window.xvImg ? xvImg(p.image||'',80) : (p.image||'');
+      const why = p.status==='draft' ? 'Draft' : 'Out of stock';
+      return `<div class="quick-item" data-edit="${p.id}">
+        <img src="${img}" alt="">
+        <div><div class="qi-name">${esc(p.name)}</div><div class="qi-meta">${esc(p.id)} · ${why}</div></div>
+      </div>`;
+    }).join('') : '<p class="hint">Sab clean — no drafts or OOS items.</p>';
+
+    const recent = (ORDERS||[]).slice(0,5);
+    $('dashOrders').innerHTML = recent.length ? recent.map(o=>{
+      const st = o.status || 'placed';
+      const itemsTxt = (o.items||[]).slice(0,2).map(it=>it.name).join(', ');
+      return `<div class="quick-item" data-goto-orders>
+        <div style="flex:1;min-width:0;">
+          <div class="qi-name">${esc(o.oid)} <span class="chip chip-${st}">${st}</span></div>
+          <div class="qi-meta">${esc(itemsTxt)} · ${fmt(o.totals&&o.totals.total||0)}</div>
+        </div>
+      </div>`;
+    }).join('') : '<p class="hint">Abhi koi order nahi.</p>';
   }
 
   function priceHint(){
     const gst=(parseFloat($('f_gst').value)||18)/100, retail=Number($('f_retail').value), mrp=Number($('f_mrp').value);
-    if(retail>0){ const incl=Math.round(retail*(1+gst));
-      $('priceHint').textContent = `Customer payega ${fmt(incl)} (incl. GST)` + (mrp>0 ? ` · MRP ${fmt(mrp)} se ${Math.round((1-incl/mrp)*100)}% off` : '') + (mrp>0 && incl>mrp ? '  ⚠ MRP se zyada!' : '');
+    if(retail>0){
+      const incl=Math.round(retail*(1+gst));
+      $('priceHint').textContent = `Customer pays ${fmt(incl)} (incl. GST)` + (mrp>0 ? ` · ${Math.round((1-incl/mrp)*100)}% off MRP ${fmt(mrp)}` : '') + (mrp>0 && incl>mrp ? '  ⚠ Over MRP!' : '');
     } else $('priceHint').textContent='';
   }
   ['f_retail','f_mrp','f_gst'].forEach(id=>$(id).addEventListener('input', priceHint));
 
   function openForm(p){
     editingId = p ? p.id : null;
-    $('formTitle').textContent = p ? ('Edit — '+p.name) : 'Naya product';
+    $('formTitle').textContent = p ? ('Edit — '+p.name) : 'New product';
     $('f_id').value = p?.id||''; $('f_id').readOnly = !!p;
     $('f_name').value=p?.name||''; $('f_collection').value=p?.collection||'Hot-Serve';
     $('f_series').value=p?.series||''; $('f_materials').value=p?.materials||'';
@@ -371,24 +1051,23 @@
     galleryArr = p ? (Array.isArray(p.images)&&p.images.length ? [...p.images] : (p.image?[p.image]:[])) : [];
     renderGallery();
     $('f_file').value=''; stagedList=[]; $('studio').classList.add('hidden');
-    $('imgStatus').textContent='Ek saath kayi photos select kar sakte ho — mode sab pe ek saath lagega.';
+    $('imgStatus').textContent='Multiple photos select kar sakte ho — mode sab pe lagega.';
     priceHint(); show('form');
   }
 
-  /* ---- form photo gallery (pehli = main) ---- */
   let galleryArr = [];
   function renderGallery(){
     $('galleryRow').innerHTML = galleryArr.length ? galleryArr.map((g,i)=>`
-      <div style="border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;width:88px;background:#fff;">
+      <div class="g-card">
         <div style="position:relative;">
-          <img src="${window.xvImg?xvImg(g,160):g}" style="width:88px;height:88px;object-fit:cover;display:block;">
-          ${i===0?'<span style="position:absolute;top:4px;left:4px;background:#A85D2A;color:#FBF6E8;font-family:\'JetBrains Mono\',monospace;font-size:8px;letter-spacing:.1em;padding:2px 7px;border-radius:20px;">MAIN</span>':''}
+          <img src="${window.xvImg?xvImg(g,160):g}" alt="">
+          ${i===0?'<span class="g-main-badge">MAIN</span>':''}
         </div>
-        <div style="display:flex;border-top:1px solid var(--line);">
-          ${i>0?`<button type="button" data-gmain="${i}" title="Main banao" style="flex:1;border:none;background:#F8F2E6;font-size:13px;padding:4px;cursor:pointer;">★</button>`:''}
-          <button type="button" data-gdel="${i}" title="Hatao" style="flex:1;border:none;background:#F8F2E6;font-size:13px;padding:4px;cursor:pointer;color:#A32D2D;">✕</button>
+        <div class="g-actions">
+          ${i>0?`<button type="button" data-gmain="${i}" title="Make main">★</button>`:''}
+          <button type="button" class="del" data-gdel="${i}" title="Remove">✕</button>
         </div>
-      </div>`).join('') : '<p class="hint" style="margin:0;">Abhi koi photo nahi — neeche se add karo.</p>';
+      </div>`).join('') : '<p class="hint" style="margin:0;">No photos yet — add below.</p>';
   }
   $('galleryRow').addEventListener('click', e=>{
     const m=e.target.closest('[data-gmain]'), d=e.target.closest('[data-gdel]');
@@ -396,7 +1075,6 @@
     if(d){ galleryArr.splice(+d.dataset.gdel,1); renderGallery(); }
   });
   $('openStudioBtn').addEventListener('click', async ()=>{
-    /* form se studio — save zaroori NAHI; form ka naam/features/photos saath jaate hain */
     LS.fromForm = true;
     LS.formCtx = { name: $('f_name').value.trim(), highlights: $('f_highlights').value };
     $('ls_product').value = editingId || '';
@@ -404,42 +1082,40 @@
     renderCalloutChips();
     show('listing');
     if(galleryArr.length){
-      lsStatus('Form ki photos studio me la rahe…');
+      lsStatus('Form photos loading…');
       try{
         LS.photos = []; LS.processed = []; LS.callouts = []; LS.ready = false;
         for(const g of galleryArr) LS.photos.push(await urlToCanvas(g));
         renderLsThumbs();
-        lsStatus(LS.photos.length+' photo'+(LS.photos.length>1?'s':'')+' form se aa gayi — Generate dabao.');
-      }catch(e){ lsStatus('Photos load nahi hui — neeche se file chuno.'); }
-    } else lsStatus('Photos chuno (form me abhi koi photo nahi).');
+        lsStatus(LS.photos.length+' photo'+(LS.photos.length>1?'s':'')+' from form — Generate.');
+      }catch(e){ lsStatus('Photos load fail — choose files below.'); }
+    } else lsStatus('Choose photos (form has none yet).');
   });
 
   async function refresh(){
     const data = await api({action:'list'});
     CATALOG = data.products; renderList();
-    $('ls_product').innerHTML = '<option value="">— koi product chuno —</option>' +
+    $('ls_product').innerHTML = '<option value="">— choose product —</option>' +
       CATALOG.map(p=>`<option value="${p.id}">${p.id} · ${p.name}</option>`).join('');
     const saved = Array.isArray(data.collection_order) ? data.collection_order : [];
     COLLECTION_ORDER = [
       ...saved.filter(c=>DEFAULT_CAT_ORDER.includes(c)),
       ...DEFAULT_CAT_ORDER.filter(c=>!saved.includes(c)),
     ];
+    renderDashboard();
   }
 
-  /* ---- Homepage categories order ---- */
   function renderCatOrder(){
     $('catOrderList').innerHTML = COLLECTION_ORDER.map((name,idx)=>`
-      <div class="row" style="grid-template-columns:36px 1fr auto;">
-        <div class="mono" style="color:var(--ink-faint);">${idx+1}</div>
-        <div class="r-name">${name}</div>
-        <div class="r-actions">
-          <button class="btn btn-ghost" data-catup="${name}" ${idx===0?'disabled':''} title="Upar">↑</button>
-          <button class="btn btn-ghost" data-catdn="${name}" ${idx===COLLECTION_ORDER.length-1?'disabled':''} title="Neeche">↓</button>
+      <div class="cat-row">
+        <div class="cat-num">${idx+1}</div>
+        <div class="cat-name">${esc(name)}</div>
+        <div class="p-actions">
+          <button class="btn btn-ghost btn-icon btn-sm" data-catup="${esc(name)}" ${idx===0?'disabled':''} title="Up">↑</button>
+          <button class="btn btn-ghost btn-icon btn-sm" data-catdn="${esc(name)}" ${idx===COLLECTION_ORDER.length-1?'disabled':''} title="Down">↓</button>
         </div>
       </div>`).join('');
   }
-  $('categoriesBtn').addEventListener('click', ()=>{ renderCatOrder(); show('categories'); });
-  $('catOrderBack').addEventListener('click', ()=>show('list'));
   $('catOrderList').addEventListener('click', async e=>{
     const up = e.target.closest('[data-catup]'); const dn = e.target.closest('[data-catdn]');
     if(!up && !dn) return;
@@ -449,72 +1125,77 @@
     if(swapWith<0 || swapWith>=COLLECTION_ORDER.length) return;
     [COLLECTION_ORDER[idx], COLLECTION_ORDER[swapWith]] = [COLLECTION_ORDER[swapWith], COLLECTION_ORDER[idx]];
     renderCatOrder();
-    try{ await api({action:'reorder-collections', order:COLLECTION_ORDER}); toast('Order save ✓ — turant save ho gaya, homepage 60 sec cache ke baad dikhega (koi deploy nahi hota)'); }
+    try{ await api({action:'reorder-collections', order:COLLECTION_ORDER}); toast('Category order saved ✓ — homepage ~60s cache'); }
     catch(err){ toast(err.message, true); }
   });
 
   /* ---- Orders ---- */
   let ORDERS = [];
   const ORDER_STATUSES = ['placed','paid','confirmed','shipped','delivered','cancelled'];
+
   function renderOrders(){
-    $('ordersCount').textContent = '· '+ORDERS.length+' total';
+    $('ordersCount').textContent = ORDERS.length+' total';
+    $('statOrders').textContent = ORDERS.length;
+    const open = ORDERS.filter(o=>!['delivered','cancelled'].includes(o.status||'placed')).length;
+    $('statOrdersMeta').textContent = open ? open+' open' : 'All time';
+    $('navBadgeOrders').textContent = open || '';
+    $('navBadgeOrders').classList.toggle('zero', !open);
+
     $('ordersList').innerHTML = ORDERS.length ? ORDERS.map(o=>{
       const date = o.createdAt ? new Date(o.createdAt).toLocaleString('en-IN', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
-      const itemsTxt = (o.items||[]).map(it=>`${it.qty}× ${it.name}`).join(', ');
+      const itemsTxt = (o.items||[]).map(it=>`${it.qty}× ${esc(it.name)}`).join(', ');
       const status = o.status || 'placed';
       return `
-      <div class="ord-card" data-oid="${o.oid}">
+      <div class="ord-card" data-oid="${esc(o.oid)}">
         <div class="ord-top">
           <div>
-            <div class="ord-oid">${o.oid} <span class="chip chip-${status}">${status.toUpperCase()}</span></div>
-            <div class="ord-meta">${date} · ${o.paymentMethod||''}${o.paymentId?' · '+o.paymentId:''}</div>
+            <div class="ord-oid">${esc(o.oid)} <span class="chip chip-${status}">${status}</span></div>
+            <div class="ord-meta">${date} · ${esc(o.paymentMethod||'')}${o.paymentId?' · '+esc(o.paymentId):''}</div>
           </div>
-          <div class="ord-oid">${fmt(o.totals&&o.totals.total||0)}</div>
+          <div class="ord-total">${fmt(o.totals&&o.totals.total||0)}</div>
         </div>
         <div class="ord-items">${itemsTxt}</div>
-        <div class="ord-ship"><b>${o.name||''}</b> · ${o.phone||''}${o.email?' · '+o.email:''}<br>${o.address||''}${o.landmark?', '+o.landmark:''}, ${o.city||''}, ${o.state||''} - ${o.pincode||''}</div>
+        <div class="ord-ship"><b>${esc(o.name||'')}</b> · ${esc(o.phone||'')}${o.email?' · '+esc(o.email):''}<br>${esc(o.address||'')}${o.landmark?', '+esc(o.landmark):''}, ${esc(o.city||'')}, ${esc(o.state||'')} - ${esc(o.pincode||'')}</div>
         <div class="ord-controls">
           <select data-status>${ORDER_STATUSES.map(s=>`<option value="${s}" ${s===status?'selected':''}>${s}</option>`).join('')}</select>
-          <input type="text" data-carrier placeholder="Carrier" value="${o.carrier||''}">
-          <input type="text" data-tracking placeholder="Tracking no." value="${o.tracking||''}">
-          <button class="btn btn-primary" data-save-order>Save</button>
-          <button class="btn btn-danger" data-del-order>Delete</button>
+          <input type="text" data-carrier placeholder="Carrier" value="${esc(o.carrier||'')}">
+          <input type="text" data-tracking placeholder="Tracking no." value="${esc(o.tracking||'')}">
+          <button class="btn btn-primary btn-sm" data-save-order>Save</button>
+          <button class="btn btn-danger btn-sm" data-del-order>Delete</button>
         </div>
       </div>`;
-    }).join('') : '<p class="hint">Abhi koi order nahi.</p>';
+    }).join('') : '<div class="empty"><div class="empty-ico">◈</div><p>No orders yet.</p></div>';
   }
-  $('ordersBtn').addEventListener('click', async ()=>{
-    show('orders');
-    $('ordersList').innerHTML = '<p class="hint">Load ho raha hai…</p>';
-    try{ const data = await api({action:'orders-list'}); ORDERS = data.orders||[]; renderOrders(); }
+
+  async function loadOrders(){
+    $('ordersList').innerHTML = '<p class="hint">Loading orders…</p>';
+    try{ const data = await api({action:'orders-list'}); ORDERS = data.orders||[]; renderOrders(); renderDashboard(); }
     catch(err){ toast(err.message, true); $('ordersList').innerHTML=''; }
-  });
-  $('ordersBack').addEventListener('click', ()=>show('list'));
-  $('ordersRefresh').addEventListener('click', ()=>$('ordersBtn').click());
+  }
+  $('ordersRefreshTop').addEventListener('click', ()=>loadOrders());
+
   $('ordersList').addEventListener('click', async e=>{
     const saveBtn = e.target.closest('[data-save-order]');
     const delBtn = e.target.closest('[data-del-order]');
     if(!saveBtn && !delBtn) return;
     const card = (saveBtn||delBtn).closest('.ord-card'); const oid = card.dataset.oid;
-
     if(delBtn){
-      if(!confirm(`Order ${oid} permanently delete karein?`)) return;
+      if(!confirm(`Delete order ${oid} permanently?`)) return;
       delBtn.disabled = true;
-      try{ await api({action:'orders-delete', oid}); toast('Order delete ho gaya'); ORDERS = ORDERS.filter(o=>o.oid!==oid); renderOrders(); }
+      try{ await api({action:'orders-delete', oid}); toast('Order deleted'); ORDERS = ORDERS.filter(o=>o.oid!==oid); renderOrders(); renderDashboard(); }
       catch(err){ toast(err.message, true); delBtn.disabled = false; }
       return;
     }
-
     const status = card.querySelector('[data-status]').value;
     const carrier = card.querySelector('[data-carrier]').value;
     const tracking = card.querySelector('[data-tracking]').value;
     saveBtn.disabled = true;
     try{
       await api({action:'orders-update', oid, status, carrier, tracking});
-      toast('Order update ho gaya ✓');
+      toast('Order updated ✓');
       const idx = ORDERS.findIndex(o=>o.oid===oid);
       if(idx>=0) ORDERS[idx] = {...ORDERS[idx], status, carrier, tracking};
-      renderOrders();
+      renderOrders(); renderDashboard();
     }catch(err){ toast(err.message, true); }
     saveBtn.disabled = false;
   });
@@ -522,45 +1203,70 @@
   async function unlock(){
     KEY = $('keyInput').value.trim();
     if(!KEY) return toast('Key daalo', true);
-    try{ await refresh(); sessionStorage.setItem('xv_admin_key', KEY); show('list'); }
-    catch(e){ toast(e.message, true); }
+    try{
+      await refresh();
+      sessionStorage.setItem('xv_admin_key', KEY);
+      try{ await loadOrders(); }catch(_){}
+      show('dashboard');
+    }catch(e){ toast(e.message, true); }
   }
   $('unlockBtn').addEventListener('click', unlock);
   $('keyInput').addEventListener('keydown', e=>{ if(e.key==='Enter') unlock(); });
-  $('lockBtn').addEventListener('click', ()=>{ sessionStorage.removeItem('xv_admin_key'); KEY=''; show('gate'); });
+  $('lockBtn').addEventListener('click', ()=>{
+    sessionStorage.removeItem('xv_admin_key'); KEY=''; show('gate');
+  });
+
   $('search').addEventListener('input', renderList);
   $('filterCollection').addEventListener('change', renderList);
   $('sortBy').addEventListener('change', renderList);
-  $('addBtn').addEventListener('click', ()=>openForm(null));
+  $('addBtnTop').addEventListener('click', ()=>openForm(null));
+  $('dashAddBtn').addEventListener('click', ()=>openForm(null));
   $('cancelBtn').addEventListener('click', ()=>show('list'));
+  $('cancelBtn2').addEventListener('click', ()=>show('list'));
 
   $('list').addEventListener('click', async e=>{
-    const ed = e.target.closest('[data-edit]'); const del = e.target.closest('[data-del]');
-    const stat = e.target.closest('[data-stat]'); const home = e.target.closest('[data-home]');
-    const up = e.target.closest('[data-up]'); const dn = e.target.closest('[data-dn]');
+    const menuToggle = e.target.closest('[data-menu-toggle]');
+    if(menuToggle){
+      e.stopPropagation();
+      const menu = menuToggle.closest('.p-menu');
+      const wasOpen = menu.classList.contains('open');
+      closeAllMenus();
+      if(!wasOpen) menu.classList.add('open');
+      return;
+    }
 
-    if(ed) return openForm(CATALOG.find(p=>p.id===ed.dataset.edit));
+    const ed = e.target.closest('[data-edit]');
+    const del = e.target.closest('[data-del]');
+    const stat = e.target.closest('[data-stat]');
+    const home = e.target.closest('[data-home]');
+    const up = e.target.closest('[data-up]');
+    const dn = e.target.closest('[data-dn]');
+
+    if(ed){ closeAllMenus(); return openForm(CATALOG.find(p=>p.id===ed.dataset.edit)); }
 
     if(del){
+      closeAllMenus();
       const p = CATALOG.find(x=>x.id===del.dataset.del);
-      if(!confirm(`"${p.name}" (${p.id}) delete karein? Website, sitemap aur Google feed sab se hat jayega.`)) return;
-      try{ await api({action:'delete', id:p.id}); toast('Delete ho gaya'); await refresh(); }
+      if(!confirm(`Delete "${p.name}" (${p.id})? Site, sitemap & Google feed se hat jayega.`)) return;
+      try{ await api({action:'delete', id:p.id}); toast('Deleted'); await refresh(); }
       catch(err){ toast(err.message, true); }
       return;
     }
 
     if(stat){
+      closeAllMenus();
       const p = CATALOG.find(x=>x.id===stat.dataset.stat);
       const next = p.status==='draft' ? '' : 'draft';
-      try{ await api({action:'save', product:{...p, status:next}}); toast(next==='draft'?'Draft me daal diya':'Live kar diya ✓'); await refresh(); }
+      try{ await api({action:'save', product:{...p, status:next}}); toast(next==='draft'?'Moved to draft':'Now live ✓'); await refresh(); }
       catch(err){ toast(err.message, true); }
       return;
     }
 
     if(home){
+      closeAllMenus();
       const p = CATALOG.find(x=>x.id===home.dataset.home);
       const next = p.homepage==='hide' ? '' : 'hide';
-      try{ await api({action:'save', product:{...p, homepage:next}}); toast(next==='hide'?'Homepage se hata diya (link/SEO se milega)':'Homepage pe wapas dikhega'); await refresh(); }
+      try{ await api({action:'save', product:{...p, homepage:next}}); toast(next==='hide'?'Hidden from homepage':'Shown on homepage'); await refresh(); }
       catch(err){ toast(err.message, true); }
       return;
     }
@@ -578,14 +1284,20 @@
     }
   });
 
-  /* ---- Photo studio: file → mode chuno → Apply & upload ----
-     White-studio mode @imgly/background-removal se browser me hi chalta hai
-     (free, koi API nahi); model pehli baar ~40MB download hota hai. */
+  $('dashAttention').addEventListener('click', e=>{
+    const ed = e.target.closest('[data-edit]');
+    if(ed) openForm(CATALOG.find(p=>p.id===ed.dataset.edit));
+  });
+  $('dashOrders').addEventListener('click', e=>{
+    if(e.target.closest('[data-goto-orders]')){ loadOrders(); show('orders'); }
+  });
+
+  /* ---- Photo studio ---- */
   let stagedList = [];
   let rbFn = null;
 
   const urlToCanvas = async (u) => {
-    const img = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=u; });
+    const img = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.crossOrigin='anonymous'; i.src=u; });
     const cv=document.createElement('canvas'); cv.width=img.width; cv.height=img.height;
     cv.getContext('2d').drawImage(img,0,0);
     return cv;
@@ -608,11 +1320,11 @@
     return out;
   };
 
-  const stStatus = t => { $('studioStatus').textContent=t; const l=$('ls_status'); if(l && !$('listingPanel').classList.contains('hidden')) l.textContent=t; };
+  const stStatus = t => { $('studioStatus').textContent=t; const l=$('ls_status'); if(l && $('listingPanel').classList.contains('active')) l.textContent=t; };
 
   const getRB = async () => {
     if(rbFn) return rbFn;
-    stStatus('AI model download ho raha hai (~40MB, sirf pehli baar)…');
+    stStatus('AI model downloading (~40MB, first time only)…');
     const m = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm');
     rbFn = m.removeBackground || m.default;
     return rbFn;
@@ -620,7 +1332,7 @@
 
   const studioWhite = async (cv) => {
     const rb = await getRB();
-    stStatus('Background hata rahe… (10–30 sec lag sakte hain)');
+    stStatus('Removing background… (10–30s)');
     const blob = await new Promise(res=>cv.toBlob(res,'image/png'));
     const cutBlob = await rb(blob);
     const cut = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=URL.createObjectURL(cutBlob); });
@@ -631,7 +1343,7 @@
     for(let y=0;y<t.height;y++)for(let x=0;x<t.width;x++){
       if(d[(y*t.width+x)*4+3]>16){ found=true; if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; }
     }
-    if(!found) throw new Error('AI ko product nahi mila — "Sirf 1:1 square" try karo');
+    if(!found) throw new Error('AI could not find product — try square mode');
     const bw=x1-x0+1, bh=y1-y0+1;
     const S=1600, mg=Math.round(S*0.07), fit=S-2*mg, sc=Math.min(fit/bw, fit/bh);
     const out=document.createElement('canvas'); out.width=S; out.height=S;
@@ -645,27 +1357,27 @@
     if(!stagedList.length) return;
     const mode=document.querySelector('input[name="studioMode"]:checked').value;
     drawPreview(mode==='square' ? padSquare(stagedList[0]) : stagedList[0]);
-    const extra = stagedList.length>1 ? ` (+${stagedList.length-1} aur — same mode sab pe)` : '';
-    $('studioStatus').textContent = (mode==='studio' ? 'White-studio result Apply dabane par banega.' : '') + extra;
+    const extra = stagedList.length>1 ? ` (+${stagedList.length-1} more — same mode)` : '';
+    $('studioStatus').textContent = (mode==='studio' ? 'White-studio applies on Apply.' : '') + extra;
   };
   document.querySelectorAll('input[name="studioMode"]').forEach(r=>r.addEventListener('change', previewMode));
 
   $('f_file').addEventListener('change', async ()=>{
     const files=[...$('f_file').files]; if(!files.length) return;
     const room = 8 - galleryArr.length;
-    if(room <= 0){ toast('8 photos ki limit ho gayi — pehle koi hatao', true); $('f_file').value=''; return; }
-    if(files.length > room) toast('Sirf '+room+' aur photo aa sakti hain (limit 8) — pehli '+room+' li gayi', true);
+    if(room <= 0){ toast('8 photo limit — remove some first', true); $('f_file').value=''; return; }
+    if(files.length > room) toast('Only '+room+' more allowed (max 8)', true);
     try{
       stagedList = [];
       for(const f of files.slice(0, room)) stagedList.push(await fileToCanvas(f));
       $('studio').classList.remove('hidden'); previewMode();
       $('imgStatus').textContent = stagedList.length>1
-        ? stagedList.length+' photos — mode chuno, phir "Apply & upload" (sab pe lagega).'
-        : 'Mode chuno, phir "Apply & upload".';
+        ? stagedList.length+' photos — choose mode, then Apply & upload.'
+        : 'Choose mode, then Apply & upload.';
     }
-    catch(err){ toast('Photo padh nahi paye: '+err.message, true); }
+    catch(err){ toast('Could not read photo: '+err.message, true); }
   });
-  $('studioCancel').addEventListener('click', ()=>{ stagedList=[]; $('studio').classList.add('hidden'); $('f_file').value=''; $('imgStatus').textContent='Ek saath kayi photos select kar sakte ho — mode sab pe ek saath lagega.'; });
+  $('studioCancel').addEventListener('click', ()=>{ stagedList=[]; $('studio').classList.add('hidden'); $('f_file').value=''; $('imgStatus').textContent='Multiple photos select kar sakte ho — mode sab pe lagega.'; });
 
   $('studioApply').addEventListener('click', async ()=>{
     if(!stagedList.length) return;
@@ -676,22 +1388,22 @@
     try{
       const base=($('f_id').value.trim()||'product').toLowerCase().replace(/[^a-z0-9-]/g,'-');
       for(let i=0;i<n;i++){
-        $('studioStatus').textContent='Photo '+(i+1)+'/'+n+' process ho rahi…';
+        $('studioStatus').textContent='Photo '+(i+1)+'/'+n+' processing…';
         let cv=stagedList[i];
         if(mode==='studio') cv=await studioWhite(stagedList[i]);
         else if(mode==='square') cv=padSquare(stagedList[i]);
         drawPreview(cv);
-        $('studioStatus').textContent='Photo '+(i+1)+'/'+n+' upload ho rahi…';
+        $('studioStatus').textContent='Photo '+(i+1)+'/'+n+' uploading…';
         const jpeg=cv.toDataURL('image/jpeg',0.9).split(',')[1];
         const out=await api({action:'upload-image', name: base+'.jpg', dataBase64: jpeg});
         galleryArr.push(out.path); renderGallery(); done++;
       }
       stagedList=[]; $('studio').classList.add('hidden'); $('f_file').value='';
-      $('imgStatus').textContent=done+' photo'+(done>1?'s':'')+' jud gayi ✓ (total '+galleryArr.length+') — aur chuno ya "Save — live karo" dabao.';
-      toast(done+' photo'+(done>1?'s':'')+' gallery me ✓ — Save dabana mat bhoolna');
+      $('imgStatus').textContent=done+' photo'+(done>1?'s':'')+' added (total '+galleryArr.length+') — Save to publish.';
+      toast(done+' photo'+(done>1?'s':'')+' in gallery ✓ — remember Save');
     }catch(err){
       $('studioStatus').textContent='';
-      toast('Photo process fail ('+(done+1)+'/'+n+'): '+err.message + (done?` — pehli ${done} jud chuki hain`:''), true);
+      toast('Process fail ('+(done+1)+'/'+n+'): '+err.message + (done?` — ${done} already added`:''), true);
     }
     $('studioApply').disabled=false;
   });
@@ -710,17 +1422,17 @@
       signature: $('f_signature').checked,
       images: galleryArr, image: galleryArr[0] || '',
     };
-    if(!galleryArr.length) { if(!confirm('Koi photo nahi lagi — bina photo ke save karein? (Card pe khali thumbnail dikhega)')) return; }
+    if(!galleryArr.length){ if(!confirm('No photos — save anyway?')) return; }
     $('saveBtn').disabled = true;
     try{
       await api({action:'save', product});
-      toast('Save ✓ — turant save ho gaya (koi deploy nahi), website 60 sec cache ke baad dikhega. Google feed agle fetch pe.');
+      toast('Saved ✓ — site updates in ~60s (no deploy needed)');
       await refresh(); show('list');
     }catch(err){ toast(err.message, true); }
     $('saveBtn').disabled = false;
   });
 
-  /* ================= Listing studio — Amazon-style images ================= */
+  /* ================= Listing studio ================= */
   const LS = { photos: [], processed: [], callouts: [], ready: false, fromForm: false, formCtx: null };
   const lsC = $('ls_canvas'), lsX = lsC.getContext('2d');
   const FOOT = 'XANVOR · MORADABAD · IN';
@@ -728,7 +1440,6 @@
   const lsStatus = t => { $('ls_status').textContent = t; };
   const lsProduct = () => CATALOG.find(p=>p.id===$('ls_product').value);
 
-  $('listingBtn').addEventListener('click', ()=>{ LS.fromForm=false; LS.formCtx=null; renderCalloutChips(); show('listing'); });
   $('ls_back').addEventListener('click', ()=>{ if(LS.fromForm){ LS.fromForm=false; show('form'); } else show('list'); });
 
   function renderLsThumbs(){
@@ -741,7 +1452,6 @@
     }).join('');
   }
 
-  /* product chuna = uska sab kuch fetch: highlights (features + callout chips) aur gallery photos */
   function currentHighlights(){
     const p = lsProduct();
     if(p && p.highlights && p.highlights.length) return p.highlights;
@@ -751,13 +1461,13 @@
   function renderCalloutChips(){
     const hs = currentHighlights().slice(0,8);
     $('ls_chipRow').innerHTML = hs.length
-      ? hs.map(h=>`<button type="button" class="btn btn-ghost" data-chip="${h.replace(/"/g,'&quot;')}" style="padding:6px 12px;font-size:9px;letter-spacing:.1em;">${h}</button>`).join('')
-      : '<span class="hint" style="margin:0;">Product chuno — uske highlights yahan chips ban ke aayenge.</span>';
+      ? hs.map(h=>`<button type="button" class="btn btn-ghost btn-sm" data-chip="${h.replace(/"/g,'&quot;')}">${esc(h)}</button>`).join('')
+      : '<span class="hint" style="margin:0;">Pick a product — highlights become chips.</span>';
   }
   $('ls_chipRow').addEventListener('click', e=>{
     const b = e.target.closest('[data-chip]'); if(!b) return;
     $('ls_calloutText').value = b.dataset.chip;
-    $('ls_calloutHint').textContent = 'Ab photo pe us jagah click karo jahan "'+b.dataset.chip+'" lagana hai.';
+    $('ls_calloutHint').textContent = 'Ab photo pe click karo jahan "'+b.dataset.chip+'" lagana hai.';
   });
 
   $('ls_product').addEventListener('change', async ()=>{
@@ -766,16 +1476,15 @@
     renderCalloutChips();
     if(!p) return;
     const gal = (Array.isArray(p.images)&&p.images.length) ? p.images : (p.image?[p.image]:[]);
-    if(!gal.length){ lsStatus('Is product me photo nahi — Choose files se chuno.'); return; }
-    lsStatus('Product ki photos la rahe…');
+    if(!gal.length){ lsStatus('No photos on product — choose files.'); return; }
+    lsStatus('Loading product photos…');
     try{
       LS.photos=[]; LS.processed=[]; LS.callouts=[]; LS.ready=false;
       for(const g of gal) LS.photos.push(await urlToCanvas(g));
       renderLsThumbs();
-      /* gallery photos pipeline se pehle hi optimize hain — AI dobara chalane ki zaroorat nahi */
       $('ls_whitebg').checked = false;
-      lsStatus(LS.photos.length+' photo'+(LS.photos.length>1?'s':'')+' product se aa gayi (white-bg pehle se) — Generate dabao. Alag photos chahiye to Choose files.');
-    }catch(e){ lsStatus('Photos load nahi hui — Choose files se chuno.'); }
+      lsStatus(LS.photos.length+' photo'+(LS.photos.length>1?'s':'')+' loaded — Generate.');
+    }catch(e){ lsStatus('Load failed — choose files.'); }
   });
 
   $('ls_template').addEventListener('change', ()=>{
@@ -789,18 +1498,18 @@
   $('ls_files').addEventListener('change', async ()=>{
     const files = [...$('ls_files').files].slice(0,4);
     if(!files.length) return;
-    lsStatus('Photos load ho rahi…');
+    lsStatus('Loading photos…');
     LS.photos = []; LS.processed = []; LS.callouts = []; LS.ready = false;
     for(const f of files) LS.photos.push(await fileToCanvas(f));
     renderLsThumbs();
-    lsStatus(LS.photos.length+' photo'+(LS.photos.length>1?'s':'')+' ready — Generate dabao.');
+    lsStatus(LS.photos.length+' photo'+(LS.photos.length>1?'s':'')+' ready — Generate.');
   });
 
   async function lsPrepPhotos(){
     if(LS.processed.length === LS.photos.length) return LS.processed;
     LS.processed = [];
     for(let i=0;i<LS.photos.length;i++){
-      lsStatus('Photo '+(i+1)+'/'+LS.photos.length+' process ho rahi…');
+      lsStatus('Photo '+(i+1)+'/'+LS.photos.length+' processing…');
       LS.processed.push($('ls_whitebg').checked ? await studioWhite(LS.photos[i]) : padSquare(LS.photos[i]));
     }
     return LS.processed;
@@ -900,7 +1609,7 @@
   }
 
   async function lsGenerate(){
-    if(!LS.photos.length){ toast('Pehle photos chuno', true); return; }
+    if(!LS.photos.length){ toast('Choose photos first', true); return; }
     $('ls_generate').disabled = true;
     try{
       await document.fonts.ready;
@@ -914,7 +1623,7 @@
       LS.ready = true;
       $('ls_download').disabled = false;
       $('ls_setImage').disabled = !(p || LS.fromForm);
-      lsStatus(t==='callout' ? 'Ab text likh ke photo pe click karo — callout lagta jayega.' : 'Ready — Download karo ya site photo banao.');
+      lsStatus(t==='callout' ? 'Type text + click photo for callouts.' : 'Ready — download or add to gallery.');
     }catch(err){ toast('Generate fail: '+err.message, true); lsStatus(''); }
     $('ls_generate').disabled = false;
   }
@@ -923,10 +1632,10 @@
   lsC.addEventListener('click', e=>{
     if($('ls_template').value!=='callout' || !LS.ready) return;
     const txt = $('ls_calloutText').value.trim();
-    if(!txt){ toast('Pehle callout text likho', true); $('ls_calloutText').focus(); return; }
+    if(!txt){ toast('Type callout text first', true); $('ls_calloutText').focus(); return; }
     const r = lsC.getBoundingClientRect();
     const x = (e.clientX-r.left)/r.width*1600, y=(e.clientY-r.top)/r.height*1600;
-    if(x<200||x>1400||y<120||y>1420){ toast('Product ke upar click karo', true); return; }
+    if(x<200||x>1400||y<120||y>1420){ toast('Click on the product', true); return; }
     LS.callouts.push({x,y,text:txt.slice(0,40)});
     $('ls_calloutText').value='';
     renderCallout(LS.processed);
@@ -944,7 +1653,6 @@
   $('ls_setImage').addEventListener('click', async ()=>{
     if(!LS.ready) return;
     const p = lsProduct();
-    /* form se aaye the aur product abhi saved nahi — image wapas form ki gallery me */
     if(!p && LS.fromForm){
       $('ls_setImage').disabled = true;
       try{
@@ -953,13 +1661,13 @@
         const out = await api({action:'upload-image', name: base+'-listing.jpg', dataBase64: jpeg});
         galleryArr.push(out.path); renderGallery();
         LS.fromForm = false; show('form');
-        toast('Image form ki gallery me jud gayi ✓ — Save karna mat bhoolna');
+        toast('Image added to form gallery ✓ — Save to publish');
       }catch(err){ toast(err.message, true); }
       $('ls_setImage').disabled = false;
       return;
     }
     if(!p) return;
-    if(!confirm(`Yeh image "${p.name}" ki photo gallery me jod dein? (Product page pe thumbnail ban ke dikhegi)`)) return;
+    if(!confirm(`Add this image to "${p.name}" gallery?`)) return;
     $('ls_setImage').disabled = true;
     try{
       const jpeg = lsC.toDataURL('image/jpeg',0.9).split(',')[1];
@@ -967,14 +1675,17 @@
       const imgs = (Array.isArray(p.images)&&p.images.length) ? [...p.images] : (p.image?[p.image]:[]);
       imgs.push(out.path);
       await api({action:'save', product: {...p, images: imgs, image: imgs[0]}});
-      toast('Gallery me jud gayi ('+imgs.length+' photos) ✓ — 60 sec cache ke baad website pe (koi deploy nahi)');
+      toast('In gallery ('+imgs.length+' photos) ✓ — ~60s cache');
       await refresh();
     }catch(err){ toast(err.message, true); }
     $('ls_setImage').disabled = false;
   });
 
-  if(KEY){ refresh().then(()=>show('list')).catch(()=>{ KEY=''; sessionStorage.removeItem('xv_admin_key'); show('gate'); }); }
-  else show('gate');
+  if(KEY){
+    refresh()
+      .then(async ()=>{ try{ await loadOrders(); }catch(_){ } show('dashboard'); })
+      .catch(()=>{ KEY=''; sessionStorage.removeItem('xv_admin_key'); show('gate'); });
+  } else show('gate');
 })();
 </script>
 </body>
