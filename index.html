@@ -177,15 +177,17 @@
 
   .btn{
     font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
-    letter-spacing:.2em; text-transform:uppercase;
-    padding:16px 30px; border:1px solid var(--brass); transition:all .3s ease;
+    letter-spacing:.18em; text-transform:uppercase;
+    padding:15px 26px; border:1px solid var(--brass); border-radius:4px;
+    transition:all .3s ease;
     display:inline-flex; align-items:center; gap:10px; cursor:pointer;
   }
-  .btn-primary{background:var(--brass);color:var(--claret-deep);}
+  .btn-primary{background:var(--brass);color:var(--claret-deep);box-shadow:0 12px 28px -14px rgba(168,93,42,.55);}
   .btn-primary:hover{background:var(--brass-soft);border-color:var(--brass-soft);transform:translateY(-2px);}
   .btn-ghost{background:transparent;color:var(--brass);}
   .btn-ghost:hover{background:rgba(182,139,92,.12);transform:translateY(-2px);}
   .btn svg{width:13px;height:13px;}
+  .hero .cta-row{gap:12px;}
 
   .scroll-cue{
     position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
@@ -803,6 +805,7 @@
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
 
 </style>
+<link rel="stylesheet" href="assets/site-chrome.css?v=1">
 </head>
 <body>
 
@@ -845,8 +848,9 @@
     <h1 class="display">Metal handicrafts,<br>hand-finished in <em>Moradabad</em></h1>
     <p class="lead">Brass, copper, silver-gilt and sheesham — cast, hammered and engraved for the modern table.</p>
     <div class="cta-row">
-      <a href="#catalogue" class="btn btn-primary">View the Collection</a>
-      <a href="#contact" class="btn btn-ghost">Trade Enquiry</a>
+      <a href="all-products.html" class="btn btn-primary">Shop the collection</a>
+      <a href="#catalogue" class="btn btn-ghost">Browse catalogue</a>
+      <a href="#contact" class="btn btn-ghost">Trade enquiry</a>
     </div>
   </div>
   <div class="scroll-cue">Scroll</div>
@@ -2372,6 +2376,7 @@
   });
 })();
 </script>
+<script src="assets/site-chrome.js?v=1"></script>
 <script src="shop-cart.js?v=hs3"></script>
 <script src="assets/account.js?v=1"></script>
 <script src="enquiry-basket.js?v=hs1"></script>

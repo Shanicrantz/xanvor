@@ -8,7 +8,7 @@
 <link rel="icon" href="assets/logo_mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --claret:#1F2226; --claret-deep:#14161A; --storm:#1A1C20; --ink:#0B0C0E;
@@ -108,7 +108,60 @@
   }
   footer .f-legal a{color:#6A6157;text-decoration:none;}
   footer .f-legal a:hover{color:var(--brass);}
+
+/* xv-light-policy */
+
+  :root{
+    --claret:#3A2718; --claret-deep:#241510; --storm:#3F2C1B; --ink:#1F140C;
+    --brass:#B68B5C; --brass-soft:#C9A57E; --bone:#F4EEE2; --parchment:#D9CBAE;
+    --rust:#A85D2A; --bone-warm:#FBF6E8;
+    --paper:#FCFAF4; --paper-2:#F8F2E6; --line:#E6DCC8; --line-strong:#D8CBB0;
+    --soft:#6E6151; --faint:#9A8E7C;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Space Grotesk','Inter',system-ui,sans-serif;
+    background:var(--bone-warm); color:var(--ink);
+    font-weight:400; line-height:1.7; -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--rust);text-decoration:underline;text-decoration-color:rgba(168,93,42,.35);text-underline-offset:3px;}
+  a:hover{color:var(--claret-deep);text-decoration-color:var(--rust);}
+  .policy-section{
+    padding:120px 6vw 80px; min-height:70vh; max-width:820px; margin:0 auto;
+  }
+  .policy-eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--rust);margin-bottom:14px;
+  }
+  .policy-section h1{
+    font-family:'Fraunces',serif;font-weight:300;font-size:clamp(28px,4.5vw,42px);
+    color:var(--claret-deep);line-height:1.15;margin-bottom:12px;
+  }
+  .policy-section h1 em{font-style:italic;color:var(--rust);}
+  .policy-meta{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--faint);margin-bottom:28px;
+  }
+  .policy-section h2{
+    font-family:'Fraunces',serif;font-weight:400;font-size:22px;
+    color:var(--claret-deep);margin:32px 0 12px;
+  }
+  .policy-section p{margin-bottom:16px;color:var(--soft);font-size:16px;}
+  .policy-section p strong{color:var(--ink);font-weight:600;}
+  .policy-section ul{margin:0 0 16px 1.2em;color:var(--soft);}
+  .policy-section li{margin-bottom:8px;}
+  .fact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0 24px;}
+  .fact{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .fact .fk{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin-bottom:6px;}
+  .fact p{margin:0;color:var(--ink);font-size:14.5px;}
+
+  nav#nav .brand{color:var(--claret-deep)!important;}
+  nav#nav .links a{color:var(--soft)!important;}
+  body{background:var(--bone-warm)!important;color:var(--ink)!important;}
+  .policy-section,.contact-section,.page-wrap{background:transparent!important;}
 </style>
+<link rel="stylesheet" href="assets/site-chrome.css?v=1">
 </head>
 <body>
 
@@ -179,5 +232,6 @@
   </div>
 </footer>
 
+<script src="assets/site-chrome.js?v=1"></script>
 </body>
 </html>

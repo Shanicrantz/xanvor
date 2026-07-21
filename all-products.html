@@ -4,42 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>XANVOR — Full site catalogue · all products & offers</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site-chrome.css?v=1">
 <style>
 :root{--ink:#1F140C;--claret:#241510;--rust:#A85D2A;--brass:#B68B5C;--bone:#F4EEE2;--paper:#FCFAF4;--paper2:#F8F2E6;--line:#E6DCC8;--soft:#6E6151;--faint:#9A8E7C}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Cormorant Garamond',serif;background:var(--bone);color:#43352B;font-size:17px;line-height:1.55}
+body{font-family:'Cormorant Garamond',serif;background:var(--bone);color:#43352B;font-size:17px;line-height:1.55;padding-top:64px}
 .banner{background:var(--claret);color:var(--bone);text-align:center;padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em}
 .banner a{color:#C9A57E}
-nav{display:flex;justify-content:space-between;align-items:center;padding:16px 5vw;border-bottom:1px solid var(--line);background:rgba(252,250,244,.95);position:sticky;top:0;z-index:20;backdrop-filter:blur(8px);flex-wrap:wrap;gap:10px}
-nav .brand{font-family:'Fraunces',serif;letter-spacing:.18em;font-size:20px;color:var(--claret);text-decoration:none}
-nav .links{display:flex;gap:16px;flex-wrap:wrap}
-nav .links a{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);text-decoration:none}
-nav .links a:hover{color:var(--rust)}
-.hero{padding:36px 5vw 12px;max-width:1280px;margin:0 auto}
-.hero h1{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(28px,4vw,46px);color:var(--claret);line-height:1.08}
+.hero{padding:36px 5vw 8px;max-width:1280px;margin:0 auto}
+.hero h1{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(28px,4vw,44px);color:var(--claret);line-height:1.08}
 .hero h1 em{font-style:italic;color:var(--rust)}
-.hero p{margin-top:12px;color:var(--soft);max-width:56ch}
+.hero p{margin-top:12px;color:var(--soft);max-width:56ch;font-size:17px}
 .stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
-.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 16px;min-width:110px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:110px}
 .stat b{display:block;font-family:'Fraunces',serif;font-size:26px;color:var(--rust);font-weight:400}
 .stat span{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
-.toc{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 8px}
-.toc a{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--line);border-radius:20px;text-decoration:none;color:var(--claret);background:var(--paper)}
-.toc a:hover{border-color:var(--rust);color:var(--rust)}
+.shop-bar{max-width:1280px;margin:0 auto;padding:8px 5vw 0}
+.shop-toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:18px 0 8px}
+.shop-toolbar input[type=search],.shop-toolbar select{
+  font-family:'Space Grotesk',system-ui,sans-serif;font-size:13.5px;
+  border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff;color:var(--ink);
+}
+.shop-toolbar input[type=search]{flex:1;min-width:200px;max-width:360px}
+.shop-count{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-left:auto}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 8px}
+.toc a{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--line);border-radius:20px;text-decoration:none;color:var(--claret);background:var(--paper);transition:border-color .15s,color .15s,background .15s}
+.toc a:hover,.toc a.on{border-color:var(--rust);color:var(--rust);background:#fff}
 .col{padding:28px 5vw 8px;max-width:1280px;margin:0 auto}
+.col.col-hidden{display:none}
 .col header{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
 .col .eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust)}
 .col h2{font-family:'Fraunces',serif;font-weight:300;font-size:26px;color:var(--claret);margin-top:4px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s}
-.card:hover{transform:translateY(-3px);border-color:var(--brass);box-shadow:0 18px 40px -24px rgba(58,39,24,.45)}
-.ph{aspect-ratio:1;background:var(--paper2);display:flex;align-items:center;justify-content:center;padding:12px;border-bottom:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);border-color:var(--brass);box-shadow:0 20px 44px -24px rgba(58,39,24,.5)}
+.card.card-hidden{display:none}
+.ph{aspect-ratio:1;background:var(--paper2);display:flex;align-items:center;justify-content:center;padding:14px;border-bottom:1px solid var(--line)}
 .ph img{max-width:90%;max-height:90%;object-fit:contain}
 .noimg{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
-.bd{padding:12px 14px 14px;display:flex;flex-direction:column;flex:1}
+.bd{padding:14px 14px 16px;display:flex;flex-direction:column;flex:1}
 .code{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--rust);margin-bottom:4px}
-h3{font-family:'Fraunces',serif;font-weight:400;font-size:16px;color:var(--claret);line-height:1.25;margin-bottom:4px}
+h3{font-family:'Fraunces',serif;font-weight:400;font-size:16.5px;color:var(--claret);line-height:1.25;margin-bottom:4px}
 .mat{font-size:13px;color:var(--soft);font-style:italic;margin-bottom:8px;flex:1}
 .pr{margin-bottom:8px}
 .price{font-family:'Fraunces',serif;font-size:19px;color:var(--rust);font-weight:500}
@@ -49,32 +55,45 @@ h3{font-family:'Fraunces',serif;font-weight:400;font-size:16px;color:var(--clare
 .enq{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
 .cta{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--rust)}
 .cta.ghost{color:var(--faint)}
-footer{text-align:center;padding:48px 5vw;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--faint);line-height:1.8}
+.shop-empty{display:none;text-align:center;padding:48px 20px;color:var(--soft);font-size:17px}
+.shop-empty.show{display:block}
 </style>
 </head>
 <body>
-<div class="banner">FULL SITE CATALOGUE · live products + mass utilities + offers · <a href="index.html">Brand homepage</a> · <a href="index.html#c-utility">Utilities section</a></div>
-<nav>
+<div class="banner">Shop all pieces · prices GST-inclusive where shown · <a href="index.html">Brand homepage</a> · <a href="contact.html">Trade enquiry</a></div>
+<nav id="nav">
   <a class="brand" href="index.html">XANVOR</a>
-  <div class="links">
-    <a href="index.html">Homepage</a>
-    <a href="index.html#catalogue">Site catalogue</a>
-    <a href="Hot-Serve Collection.html">Hot-Serve</a>
-    <a href="index.html#c-utility">Utilities XIV</a>
-    <a href="checkout.html">Checkout</a>
-    <a href="contact.html">Contact</a>
-  </div>
+  <div class="links"></div>
 </nav>
 <div class="hero">
-  <h1>Full catalogue — <em>all products &amp; offers</em></h1>
-  <p>Live XANVOR catalogue merged with the 50 kitchen utility SKUs. Prices show GST-inclusive retail; struck MRP and % off where available. Trade-only pieces show “Trade enquiry”.</p>
+  <h1>Shop — <em>all products &amp; offers</em></h1>
+  <p>Full XANVOR catalogue with kitchen utilities. Search and filter by collection. Retail prices include GST where listed; trade-only pieces show enquiry.</p>
   <div class="stats">
-    <div class="stat"><b>171</b><span>Total SKUs</span></div>
-    <div class="stat"><b>127</b><span>Priced / offers</span></div>
-    <div class="stat"><b>44</b><span>Trade enquiry</span></div>
-    <div class="stat"><b>14</b><span>Collections</span></div>
+    <div class="stat"><b id="statTotal">—</b><span>Total SKUs</span></div>
+    <div class="stat"><b id="statPriced">—</b><span>Priced / offers</span></div>
+    <div class="stat"><b id="statTrade">—</b><span>Trade enquiry</span></div>
+    <div class="stat"><b id="statCols">—</b><span>Collections</span></div>
   </div>
-  <div class="toc"><a href="#col-0">Silver & Gold (27)</a><a href="#col-1">Copper (6)</a><a href="#col-2">Brass (9)</a><a href="#col-3">Sheesham & Wood (4)</a><a href="#col-4">Wireform Furniture (5)</a><a href="#col-5">Hot-Serve (12)</a><a href="#col-6">Artisanal Serving Trays (6)</a><a href="#col-7">Copper Home Collection (4)</a><a href="#col-8">The Jewel Collection (6)</a><a href="#col-9">Canister & Vanity Series (13)</a><a href="#col-10">Ribbed Storage Collection (6)</a><a href="#col-11">Metal Wall Art & Décor (21)</a><a href="#col-12">Kansa Dinnerware (2)</a><a href="#col-13">Kitchen Utility Crafts (50)</a></div>
+</div>
+<div class="shop-bar">
+  <div class="shop-toolbar">
+    <input type="search" id="shopSearch" placeholder="Search name, code, material…" autocomplete="off">
+    <select id="shopFilter">
+      <option value="">All types</option>
+      <option value="priced">Priced only</option>
+      <option value="trade">Trade enquiry only</option>
+      <option value="offer">On offer</option>
+    </select>
+    <select id="shopSort">
+      <option value="">Default order</option>
+      <option value="name">Name A–Z</option>
+      <option value="price-asc">Price: low → high</option>
+      <option value="price-desc">Price: high → low</option>
+    </select>
+    <span class="shop-count" id="shopCount"></span>
+  </div>
+  <div class="toc" id="shopToc"><a href="#col-0">Silver & Gold (27)</a><a href="#col-1">Copper (6)</a><a href="#col-2">Brass (9)</a><a href="#col-3">Sheesham & Wood (4)</a><a href="#col-4">Wireform Furniture (5)</a><a href="#col-5">Hot-Serve (12)</a><a href="#col-6">Artisanal Serving Trays (6)</a><a href="#col-7">Copper Home Collection (4)</a><a href="#col-8">The Jewel Collection (6)</a><a href="#col-9">Canister & Vanity Series (13)</a><a href="#col-10">Ribbed Storage Collection (6)</a><a href="#col-11">Metal Wall Art & Décor (21)</a><a href="#col-12">Kansa Dinnerware (2)</a><a href="#col-13">Kitchen Utility Crafts (50)</a></div>
+  <div class="shop-empty" id="shopEmpty">No products match your filters.</div>
 </div>
 <section class="col" id="col-0"><header><span class="eyebrow">27 pieces</span><h2>Silver & Gold</h2></header><div class="grid"><a class="card" href="product.html?id=sg-201">
       <div class="ph"><img src="assets/products/sg-201.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
@@ -1629,9 +1648,95 @@ footer{text-align:center;padding:48px 5vw;font-family:'JetBrains Mono',monospace
         <span class="cta">View · Buy →</span>
       </div>
     </a></div></section>
-<footer>
-  XANVOR · house brand of Zenko Inc · Moradabad<br>
-  Local full-catalogue view · click any card for product page with gallery &amp; buy/enquire<br>
-  <a href="index.html" style="color:#B68B5C">← Back to brand homepage</a>
+<footer class="xv-footer">
+  <img class="f-mark" src="assets/logo_mark.png" alt="XANVOR">
+  <div class="f-rule"></div>
+  <div class="f-tag">Manufacturer · Exporter · Ecommerce</div>
+  <div class="f-policy" role="navigation" aria-label="Policies">
+    <a href="about.html">About</a><span class="sep">·</span>
+    <a href="contact.html">Contact</a><span class="sep">·</span>
+    <a href="privacy-policy.html">Privacy</a><span class="sep">·</span>
+    <a href="refund-policy.html">Returns</a><span class="sep">·</span>
+    <a href="shipping-policy.html">Shipping</a><span class="sep">·</span>
+    <a href="terms.html">Terms</a>
+  </div>
+  <div class="f-legal">
+    XANVOR is a house brand of Zenko Inc · Moradabad, India<br>
+    © 2026 Zenko Inc. All rights reserved · <a href="mailto:hello@xanvor.com">hello@xanvor.com</a>
+  </div>
 </footer>
+<script src="assets/site-chrome.js?v=1"></script>
+<script src="shop-cart.js?v=hs3"></script>
+<script src="assets/account.js?v=1"></script>
+<script>
+(function(){
+  function priceOf(card){
+    var el = card.querySelector('.price');
+    if(!el) return null;
+    var n = parseInt(String(el.textContent).replace(/[^\d]/g,''),10);
+    return Number.isFinite(n) ? n : null;
+  }
+  function apply(){
+    var q = (document.getElementById('shopSearch').value||'').toLowerCase().trim();
+    var f = document.getElementById('shopFilter').value;
+    var sort = document.getElementById('shopSort').value;
+    var cards = Array.from(document.querySelectorAll('.card'));
+    var shown = 0;
+    cards.forEach(function(c){
+      var text = (c.textContent||'').toLowerCase();
+      var priced = !!c.querySelector('.price');
+      var trade = !!c.querySelector('.enq');
+      var offer = !!c.querySelector('.tag:not(.trade)');
+      var ok = true;
+      if(q && text.indexOf(q) === -1) ok = false;
+      if(f==='priced' && !priced) ok = false;
+      if(f==='trade' && !trade) ok = false;
+      if(f==='offer' && !offer) ok = false;
+      c.classList.toggle('card-hidden', !ok);
+      if(ok) shown++;
+    });
+    document.querySelectorAll('.col').forEach(function(col){
+      var any = col.querySelectorAll('.card:not(.card-hidden)').length > 0;
+      col.classList.toggle('col-hidden', !any);
+    });
+    if(sort){
+      document.querySelectorAll('.grid').forEach(function(grid){
+        var items = Array.from(grid.querySelectorAll('.card'));
+        items.sort(function(a,b){
+          if(sort==='name'){
+            var na=(a.querySelector('h3')||{}).textContent||'';
+            var nb=(b.querySelector('h3')||{}).textContent||'';
+            return na.localeCompare(nb);
+          }
+          var pa=priceOf(a), pb=priceOf(b);
+          if(pa==null && pb==null) return 0;
+          if(pa==null) return 1;
+          if(pb==null) return -1;
+          return sort==='price-asc' ? pa-pb : pb-pa;
+        });
+        items.forEach(function(it){ grid.appendChild(it); });
+      });
+    }
+    document.getElementById('shopCount').textContent = shown + ' shown';
+    document.getElementById('shopEmpty').classList.toggle('show', shown===0);
+  }
+  function stats(){
+    var cards = document.querySelectorAll('.card');
+    var priced=0, trade=0;
+    cards.forEach(function(c){
+      if(c.querySelector('.price')) priced++;
+      if(c.querySelector('.enq')) trade++;
+    });
+    document.getElementById('statTotal').textContent = cards.length;
+    document.getElementById('statPriced').textContent = priced;
+    document.getElementById('statTrade').textContent = trade;
+    document.getElementById('statCols').textContent = document.querySelectorAll('.col').length;
+  }
+  ['shopSearch','shopFilter','shopSort'].forEach(function(id){
+    var el=document.getElementById(id);
+    el.addEventListener(id==='shopSearch'?'input':'change', apply);
+  });
+  stats(); apply();
+})();
+</script>
 </body></html>

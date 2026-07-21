@@ -98,18 +98,18 @@
 
   /* ============ PRODUCT PAGE ============ */
   .product-section{
-    padding:130px 6vw 80px;
+    padding:110px 5vw 80px;
     background:
       radial-gradient(ellipse 60% 50% at 50% 0%, rgba(168,93,42,.10), transparent 70%),
-      linear-gradient(180deg, var(--bone) 0%, #EDE2CD 100%);
+      linear-gradient(180deg, var(--bone-warm,#FBF6E8) 0%, var(--bone) 100%);
     min-height:100vh;
   }
-  @media(max-width:760px){ .product-section{padding:100px 5vw 60px;} }
+  @media(max-width:760px){ .product-section{padding:96px 4.5vw 60px;} }
   .product-wrap{max-width:1240px;margin:0 auto;}
 
   .crumbs{
-    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.22em;
-    text-transform:uppercase;color:#5A4636;margin-bottom:30px;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:#5A4636;margin-bottom:22px;
     display:flex;flex-wrap:wrap;gap:10px;align-items:center;
   }
   .crumbs a:hover{color:var(--rust);}
@@ -118,19 +118,20 @@
 
   /* PDP grid: gallery | details | buybox */
   .pdp{
-    display:grid; grid-template-columns:1.05fr 1fr 360px; gap:42px;
+    display:grid; grid-template-columns:1.05fr 1fr minmax(280px,340px); gap:clamp(24px,3.5vw,40px);
     align-items:start;
   }
-  @media(max-width:1080px){ .pdp{grid-template-columns:1fr 1fr;gap:36px;} .buybox{grid-column:span 2;} }
-  @media(max-width:760px){ .pdp{grid-template-columns:1fr;gap:28px;} .buybox{grid-column:auto;} }
+  @media(max-width:1080px){ .pdp{grid-template-columns:1fr 1fr;gap:28px;} .buybox{grid-column:span 2;} }
+  @media(max-width:760px){ .pdp{grid-template-columns:1fr;gap:24px;} .buybox{grid-column:auto;} }
 
   /* gallery */
-  .gallery{position:sticky;top:96px;}
+  .gallery{position:sticky;top:88px;}
   @media(max-width:760px){ .gallery{position:static;top:auto;} }
   .main-shot{
-    position:relative; background:var(--paper); border:1px solid var(--line-strong);
-    border-radius:6px; overflow:hidden; aspect-ratio:1/1;
-    display:flex;align-items:center;justify-content:center;padding:30px;
+    position:relative; background:#fff; border:1px solid var(--line-strong);
+    border-radius:12px; overflow:hidden; aspect-ratio:1/1;
+    display:flex;align-items:center;justify-content:center;padding:28px;
+    box-shadow:0 16px 40px -28px rgba(36,21,16,.35);
   }
   .main-shot img{
     max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain;
@@ -476,6 +477,7 @@
   footer .f-policy a:hover{color:var(--brass-soft);}
   footer .f-policy .sep{color:#8C7657;}
 </style>
+<link rel="stylesheet" href="assets/site-chrome.css?v=1">
 </head>
 <body>
 
@@ -534,6 +536,7 @@
 <script src="assets/products.js"></script>
 <script src="/api/products.js"></script>
 <script src="assets/mass-products.js?v=2"></script>
+<script src="assets/site-chrome.js?v=1"></script>
 <script src="shop-cart.js?v=hs3"></script>
 <script src="assets/account.js?v=1"></script>
 <script src="enquiry-basket.js?v=hs1"></script>
