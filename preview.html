@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>XANVOR · Interactive Full Website & Atelier Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --ink: #0A0908;
+      --storm: #141B24;
+      --bone: #F3EBD6;
+      --brass: #C69755;
+      --brass-bright: #E5B769;
+      --muted: #8E9AAF;
+      --ui: 'Space Grotesk', sans-serif;
+      --display: 'Fraunces', serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--ink);
+      color: var(--bone);
+      font-family: var(--ui);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Preview Control Bar */
+    .control-bar {
+      background: rgba(20, 27, 36, 0.95);
+      border-bottom: 1px solid rgba(198, 151, 85, 0.3);
+      padding: 0.8rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .brand-title {
+      font-family: var(--display);
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+      color: var(--brass-bright);
+    }
+
+    .badge {
+      background: rgba(198, 151, 85, 0.2);
+      border: 1px solid var(--brass);
+      color: var(--brass-bright);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+    }
+
+    .view-selector {
+      display: flex;
+      background: rgba(10, 9, 8, 0.8);
+      border: 1px solid rgba(198, 151, 85, 0.3);
+      border-radius: 8px;
+      padding: 0.2rem;
+      gap: 0.2rem;
+    }
+
+    .view-btn {
+      background: transparent;
+      border: none;
+      color: var(--bone);
+      padding: 0.5rem 1rem;
+      font-family: var(--ui);
+      font-size: 0.8rem;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .view-btn.active, .view-btn:hover {
+      background: var(--brass);
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .device-frame-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #050404;
+      padding: 1rem;
+      position: relative;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      transition: width 0.4s ease, height 0.4s ease, border-radius 0.4s ease;
+      background: var(--ink);
+    }
+
+    /* Device Presets */
+    .mode-desktop iframe { width: 100%; height: 100%; border-radius: 12px; }
+    .mode-tablet iframe { width: 768px; height: 95%; border: 12px solid #1c1a17; border-radius: 28px; }
+    .mode-mobile iframe { width: 390px; height: 92%; border: 14px solid #1c1a17; border-radius: 36px; }
+
+    .quick-nav-pills {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .pill-link {
+      color: var(--parchment);
+      text-decoration: none;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid rgba(198, 151, 85, 0.25);
+      border-radius: 20px;
+      transition: all 0.2s;
+    }
+
+    .pill-link:hover {
+      border-color: var(--brass);
+      color: var(--brass-bright);
+    }
+  </style>
+</head>
+<body class="mode-desktop">
+
+  <!-- TOP PREVIEW CONTROL BAR -->
+  <div class="control-bar">
+    <div class="brand-group">
+      <span class="brand-title">XANVOR</span>
+      <span class="badge">Full Interactive Site Preview</span>
+    </div>
+
+    <!-- DEVICE & PAGE SWITCHER -->
+    <div class="view-selector">
+      <button class="view-btn active" onclick="switchPage('index.html', this)">🌐 Main Website Store</button>
+      <button class="view-btn" onclick="switchPage('admin.html', this)">⚙️ Atelier Admin Portal</button>
+    </div>
+
+    <!-- SCREEN RESPONSIVE TOGGLES -->
+    <div class="view-selector">
+      <button class="view-btn active" onclick="setDeviceMode('desktop', this)">🖥️ Desktop</button>
+      <button class="view-btn" onclick="setDeviceMode('tablet', this)">📱 Tablet</button>
+      <button class="view-btn" onclick="setDeviceMode('mobile', this)">📱 Mobile</button>
+    </div>
+
+    <!-- QUICK SECTION JUMPS -->
+    <div class="quick-nav-pills">
+      <a href="javascript:void(0)" class="pill-link" onclick="jumpSection('#hero')">Hero</a>
+      <a href="javascript:void(0)" class="pill-link" onclick="jumpSection('#store')">Store Grid</a>
+      <a href="javascript:void(0)" class="pill-link" onclick="jumpSection('#mark')">The Mark</a>
+      <a href="javascript:void(0)" class="pill-link" onclick="jumpSection('#contact')">Contact</a>
+    </div>
+  </div>
+
+  <!-- FRAME DISPLAY CONTAINER -->
+  <div class="device-frame-wrap">
+    <iframe id="preview-frame" src="index.html"></iframe>
+  </div>
+
+  <script>
+    let currentPage = "index.html";
+
+    function switchPage(page, btn) {
+      currentPage = page;
+      document.getElementById("preview-frame").src = page;
+      btn.parentElement.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    }
+
+    function setDeviceMode(mode, btn) {
+      document.body.className = `mode-${mode}`;
+      btn.parentElement.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    }
+
+    function jumpSection(sectionId) {
+      if (currentPage !== "index.html") {
+        document.getElementById("preview-frame").src = `index.html${sectionId}`;
+      } else {
+        const frameWin = document.getElementById("preview-frame").contentWindow;
+        if (frameWin && frameWin.location) {
+          frameWin.location.hash = sectionId;
+        }
+      }
+    }
+  </script>
+</body>
+</html>

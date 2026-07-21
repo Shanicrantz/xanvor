@@ -2038,5 +2038,822 @@
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'){nc.classList.remove('open');btn.setAttribute('aria-expanded','false');} });
 })();
 </script>
+
+<!-- ============ SECTION · ATELIER MASS-SELLING STORE ============ -->
+<section class="catalogue" id="mass-store" style="background: var(--ink); border-top: 1px solid var(--brass); padding: 80px 6vw;">
+  <div class="cat-intro reveal">
+    <div class="eyebrow">Atelier Store · Mass-Selling Range</div>
+    <h2 class="display">Moradabad Metal <em>Utilities</em></h2>
+    <div class="cat-rule"></div>
+    <p>Everyday functional crafts engineered for fast lever-jig bending & hydraulic sheet pressing. High volume utility items with 100% metal durability.</p>
+
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 25px;">
+      <button class="btn btn-ghost active" onclick="filterMassStore('ALL', this)" style="border-radius: 20px; padding: 6px 18px; font-size: 11px;">All Utility SKUs</button>
+      <button class="btn btn-ghost" onclick="filterMassStore('BESTSELLER', this)" style="border-radius: 20px; padding: 6px 18px; font-size: 11px;">🔥 Bestsellers</button>
+      <button class="btn btn-ghost" onclick="filterMassStore('Countertop & Cooking Utilities', this)" style="border-radius: 20px; padding: 6px 18px; font-size: 11px;">🍳 Kitchen Utility</button>
+      <button class="btn btn-ghost" onclick="filterMassStore('Pooja & Spiritual', this)" style="border-radius: 20px; padding: 6px 18px; font-size: 11px;">🪔 Pooja Collection</button>
+    </div>
+  </div>
+
+  <div class="cat-grid" id="mass-store-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; margin-top: 40px;">
+    <!-- Rendered dynamically -->
+  </div>
+</section>
+
+<!-- QUICK VIEW MODAL -->
+<div id="quick-view-modal" style="position:fixed; inset:0; background:rgba(10,9,8,0.92); backdrop-filter:blur(10px); z-index:900; display:none; align-items:center; justify-content:center; padding:20px;">
+  <div style="background:var(--claret-deep); border:1px solid var(--brass); border-radius:16px; max-width:800px; width:100%; max-height:90vh; overflow-y:auto; padding:30px; position:relative;">
+    <button onclick="closeQuickView()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--bone); font-size:24px; cursor:pointer;">✕</button>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:25px;">
+      <img id="qv-img" src="" style="width:100%; height:320px; object-fit:cover; border-radius:8px; border:1px solid var(--brass);" />
+      <div style="display:flex; flex-direction:column;">
+        <span id="qv-sku" style="font-family:'JetBrains Mono',monospace; color:var(--brass); font-size:12px;">SKU</span>
+        <h2 id="qv-title" class="display" style="font-size:24px; color:var(--bone); margin:8px 0;">Product Title</h2>
+        <p id="qv-materials" style="font-style:italic; color:var(--brass-soft); margin-bottom:15px;">Materials</p>
+        <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:15px;">
+          <span id="qv-price" style="font-size:28px; font-weight:600; color:var(--brass);">₹129</span>
+          <span id="qv-mrp" style="text-decoration:line-through; color:var(--ink-faint); font-size:14px;">₹149</span>
+        </div>
+        <p id="qv-desc" style="font-size:15px; color:var(--parchment); line-height:1.5; margin-bottom:20px;">Description</p>
+        <button onclick="openCheckoutModal()" class="btn" style="background:var(--brass); color:var(--ink); padding:12px; font-weight:600; border-radius:6px; cursor:pointer; margin-top:auto;">🛒 Buy Now / Direct Order</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div id="checkout-modal" style="position:fixed; inset:0; background:rgba(10,9,8,0.92); backdrop-filter:blur(10px); z-index:1000; display:none; align-items:center; justify-content:center; padding:20px;">
+  <div style="background:var(--claret-deep); border:1px solid var(--brass); border-radius:16px; max-width:500px; width:100%; padding:30px; position:relative;">
+    <button onclick="closeCheckoutModal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--bone); font-size:24px; cursor:pointer;">✕</button>
+    <h3 class="display" style="font-size:24px; color:var(--brass); margin-bottom:10px;">Direct Order Form</h3>
+    <form onsubmit="submitCustomerOrder(event)">
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:15px;">
+        <input type="text" id="cust-name" required placeholder="Full Name" style="background:rgba(10,9,8,0.8); border:1px solid var(--line); color:var(--bone); padding:10px; border-radius:6px;" />
+        <input type="tel" id="cust-phone" required placeholder="Phone / WhatsApp Number" style="background:rgba(10,9,8,0.8); border:1px solid var(--line); color:var(--bone); padding:10px; border-radius:6px;" />
+        <textarea id="cust-address" required rows="3" placeholder="Full Delivery Address" style="background:rgba(10,9,8,0.8); border:1px solid var(--line); color:var(--bone); padding:10px; border-radius:6px;"></textarea>
+        <select id="cust-payment" style="background:rgba(10,9,8,0.8); border:1px solid var(--line); color:var(--bone); padding:10px; border-radius:6px;">
+          <option value="COD">Cash on Delivery (COD)</option>
+          <option value="Prepaid UPI">Prepaid UPI / Google Pay</option>
+        </select>
+        <button type="submit" class="btn" style="background:var(--brass); color:var(--ink); padding:12px; font-weight:600; border-radius:6px; cursor:pointer; margin-top:10px;">Confirm & Place Order ➔</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const ALL_50_STORE_SKUS = [
+  {
+    "sku_id": "SKU_01",
+    "name": "Smooth Satin Brass Karchi / Spoon Rest",
+    "category": "Countertop & Cooking Utilities",
+    "display_section": "HERO",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_01_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_02",
+    "name": "Concentric Wire Ring Hot Vessel Trivet",
+    "category": "Countertop & Cooking Utilities",
+    "display_section": "BESTSELLER",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_02_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_03",
+    "name": "Dual Oil & Ghee Bottle Wire Caddy",
+    "category": "Countertop & Cooking Utilities",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_03_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_04",
+    "name": "Smooth Sheet Metal Spice Scoop Pair",
+    "category": "Countertop & Cooking Utilities",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_04_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_05",
+    "name": "Folding Wire Cookbook & Tablet Stand",
+    "category": "Countertop & Cooking Utilities",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_05_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_06",
+    "name": "Stovetop Lighter & Chimta Wall Bracket",
+    "category": "Countertop & Cooking Utilities",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_06_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_07",
+    "name": "Chai Strainer Drip Cup Tray",
+    "category": "Countertop & Cooking Utilities",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_07_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_08",
+    "name": "Roti Chimta Cradle Rest",
+    "category": "Countertop & Cooking Utilities",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_08_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_09",
+    "name": "Lemon Squeezer & Seed Rest Dish",
+    "category": "Countertop & Cooking Utilities",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_09_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_10",
+    "name": "Ginger & Garlic Mini Grater Dish",
+    "category": "Countertop & Cooking Utilities",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_10_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_11",
+    "name": "All-Metal Over-Faucet Sponge Hook",
+    "category": "Sink, Washing & Cleaning Organizers",
+    "display_section": "BESTSELLER",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_11_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_12",
+    "name": "Dual-Layer Smooth Metal Soap Dish",
+    "category": "Sink, Washing & Cleaning Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_12_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_13",
+    "name": "Over-Sink Dish Cloth Drying Rail",
+    "category": "Sink, Washing & Cleaning Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_13_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_14",
+    "name": "Cutlery Draining Jali Bucket",
+    "category": "Sink, Washing & Cleaning Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_14_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_15",
+    "name": "Sink Corner Vegetable Strainer",
+    "category": "Sink, Washing & Cleaning Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_15_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_16",
+    "name": "Wire Cup & Mug Drying Tree",
+    "category": "Sink, Washing & Cleaning Organizers",
+    "display_section": "BESTSELLER",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_16_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_17",
+    "name": "Scrubber & Steel Wool Wire Basket",
+    "category": "Sink, Washing & Cleaning Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_17_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_18",
+    "name": "Faucet Soap Bottle & Sponge Caddy",
+    "category": "Sink, Washing & Cleaning Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_18_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_19",
+    "name": "Glass & Bottle Washing Drying Rack",
+    "category": "Sink, Washing & Cleaning Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_19_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_20",
+    "name": "Dish Towel S-Hook Bar Rail",
+    "category": "Sink, Washing & Cleaning Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_20_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_21",
+    "name": "Smooth U-Channel Metal Napkin Stand",
+    "category": "Dining Table & Serving Accessories",
+    "display_section": "HERO",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_21_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_22",
+    "name": "Square Sheet Coasters (Set of 4 + Caddy)",
+    "category": "Dining Table & Serving Accessories",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_22_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_23",
+    "name": "Toothpick & Mouth Freshener Jar",
+    "category": "Dining Table & Serving Accessories",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_23_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_24",
+    "name": "3-Compartment Buffet Cutlery Caddy",
+    "category": "Dining Table & Serving Accessories",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_24_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_25",
+    "name": "Salt & Pepper Shaker Wire Holder",
+    "category": "Dining Table & Serving Accessories",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_25_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_26",
+    "name": "Large Table Hot Serving Trivet",
+    "category": "Dining Table & Serving Accessories",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_26_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_27",
+    "name": "Wire Fruit & Bread Basket",
+    "category": "Dining Table & Serving Accessories",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_27_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_28",
+    "name": "Chutney & Sauce Cup Stand (3 Cups)",
+    "category": "Dining Table & Serving Accessories",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_28_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_29",
+    "name": "Dining Water Bottle Wire Holder",
+    "category": "Dining Table & Serving Accessories",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_29_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_30",
+    "name": "Toothpick & Tissue Combined Stand",
+    "category": "Dining Table & Serving Accessories",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_30_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_31",
+    "name": "Paper Towel Wall Holder S-Arm",
+    "category": "Pantry, Cabinet & Wall Organizers",
+    "display_section": "HERO",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_31_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_32",
+    "name": "Under-Cabinet Mug Sliding Rail",
+    "category": "Pantry, Cabinet & Wall Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_32_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_33",
+    "name": "Perforated Jali Tea Bag Caddy",
+    "category": "Pantry, Cabinet & Wall Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_33_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_34",
+    "name": "Utensil S-Hooks (Set of 6)",
+    "category": "Pantry, Cabinet & Wall Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_34_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_35",
+    "name": "Chakla Belan Wire Vertical Rack",
+    "category": "Pantry, Cabinet & Wall Organizers",
+    "display_section": "BESTSELLER",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_35_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_36",
+    "name": "Belan (Rolling Pin) Wall Hook",
+    "category": "Pantry, Cabinet & Wall Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_36_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_37",
+    "name": "Over-Cabinet Door Towel Bar",
+    "category": "Pantry, Cabinet & Wall Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_37_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_38",
+    "name": "Wire Spice Jar 2-Tier Wall Rack",
+    "category": "Pantry, Cabinet & Wall Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_38_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_39",
+    "name": "Key & Grocery List Wall Hook",
+    "category": "Pantry, Cabinet & Wall Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_39_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_40",
+    "name": "Under-Shelf Wire Storage Basket",
+    "category": "Pantry, Cabinet & Wall Organizers",
+    "display_section": "KITCHEN",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_40_shot_1_hero.jpg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_41",
+    "name": "Heavy Plant Pot Hanging Hooks (Set 4)",
+    "category": "Hardware, Storage & Home Utility",
+    "display_section": "BESTSELLER",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_41_shot_1_hero.svg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_42",
+    "name": "Smooth Cabinet Pull Knobs (Set of 4)",
+    "category": "Hardware, Storage & Home Utility",
+    "display_section": "POOJA",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_42_shot_1_hero.svg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_43",
+    "name": "Toilet Paper Holder with Top Shelf",
+    "category": "Hardware, Storage & Home Utility",
+    "display_section": "POOJA",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_43_shot_1_hero.svg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_44",
+    "name": "Pressed Metal Shoe Horn",
+    "category": "Hardware, Storage & Home Utility",
+    "display_section": "POOJA",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_44_shot_1_hero.svg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_45",
+    "name": "Curved Agarbatti Ash Strip",
+    "category": "Hardware, Storage & Home Utility",
+    "display_section": "POOJA",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_45_shot_1_hero.svg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_46",
+    "name": "Door & Wall Key Rack (4 Hooks)",
+    "category": "Hardware, Storage & Home Utility",
+    "display_section": "POOJA",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_46_shot_1_hero.svg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_47",
+    "name": "Desktop Wire Cable Organizer",
+    "category": "Hardware, Storage & Home Utility",
+    "display_section": "CATALOG",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_47_shot_1_hero.svg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_48",
+    "name": "Engravable Dual Metal Name Plate",
+    "category": "Hardware, Storage & Home Utility",
+    "display_section": "CATALOG",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_48_shot_1_hero.svg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_49",
+    "name": "Sunburst Mini Accent Mirror (10 Inch)",
+    "category": "Hardware, Storage & Home Utility",
+    "display_section": "CATALOG",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_49_shot_1_hero.svg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  },
+  {
+    "sku_id": "SKU_50",
+    "name": "Wire Specs & Eyeglass Desk Stand",
+    "category": "Hardware, Storage & Home Utility",
+    "display_section": "CATALOG",
+    "cogs": 24.95,
+    "price": 129,
+    "mrp": 149,
+    "weight": "50g",
+    "hero_img": "xanvor_generated_renders/SKU_50_shot_1_hero.svg",
+    "materials": "Moradabad Atelier Metalwork",
+    "desc": "Handmade metal utility for Indian kitchens & homes."
+  }
+];
+  let currentMassSKU = null;
+
+  function renderMassStore(filter) {
+    const grid = document.getElementById("mass-store-grid");
+    if (!grid) return;
+    grid.innerHTML = "";
+
+    const filtered = ALL_50_STORE_SKUS.filter(p => {
+      if (filter === "ALL") return true;
+      if (filter === "BESTSELLER") return p.display_section === "BESTSELLER";
+      if (filter === "Pooja & Spiritual") return p.display_section === "POOJA" || (p.category && p.category.includes("Pooja"));
+      return p.category === filter;
+    });
+
+    filtered.forEach(p => {
+      const card = document.createElement("div");
+      card.style.cssText = "background:rgba(63,44,27,0.4); border:1px solid var(--line); border-radius:12px; padding:15px; display:flex; flex-direction:column; justify-content:space-between;";
+      card.innerHTML = `
+        <div>
+          <img src="${p.hero_img}" alt="${p.name}" style="width:100%; height:200px; object-fit:cover; border-radius:8px; margin-bottom:12px;" onerror="this.onerror=null; this.src='xanvor_generated_renders/' + p.sku_id + '_shot_1_hero.svg'" />
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--brass);">${p.sku_id}</span>
+          <h4 style="font-family:'Fraunces',serif; font-size:18px; color:var(--bone); margin:4px 0 8px;">${p.name}</h4>
+          <p style="font-style:italic; font-size:13px; color:var(--parchment); opacity:0.8; margin-bottom:12px;">${p.materials}</p>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1px solid rgba(182,139,92,0.2);">
+          <div>
+            <strong style="color:var(--brass); font-size:18px;">₹${p.price}</strong>
+            <span style="text-decoration:line-through; font-size:12px; color:var(--ink-faint); margin-left:4px;">₹${p.mrp}</span>
+          </div>
+          <button onclick="openQuickView('${p.sku_id}')" style="background:transparent; border:1px solid var(--brass); color:var(--brass); padding:5px 12px; border-radius:4px; font-size:12px; cursor:pointer;">Quick View ↗</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function filterMassStore(cat, btn) {
+    document.querySelectorAll("#mass-store .btn").forEach(b => b.classList.remove("active"));
+    if (btn) btn.classList.add("active");
+    renderMassStore(cat);
+  }
+
+  function openQuickView(sku) {
+    const p = ALL_50_STORE_SKUS.find(item => item.sku_id === sku);
+    if (!p) return;
+    currentMassSKU = p;
+
+    document.getElementById("qv-sku").innerText = p.sku_id;
+    document.getElementById("qv-title").innerText = p.name;
+    document.getElementById("qv-materials").innerText = p.materials;
+    document.getElementById("qv-price").innerText = `₹${p.price}`;
+    document.getElementById("qv-mrp").innerText = `₹${p.mrp}`;
+    document.getElementById("qv-desc").innerText = p.desc;
+    document.getElementById("qv-img").src = p.hero_img;
+
+    document.getElementById("quick-view-modal").style.display = "flex";
+  }
+
+  function closeQuickView() {
+    document.getElementById("quick-view-modal").style.display = "none";
+  }
+
+  function openCheckoutModal() {
+    closeQuickView();
+    document.getElementById("checkout-modal").style.display = "flex";
+  }
+
+  function closeCheckoutModal() {
+    document.getElementById("checkout-modal").style.display = "none";
+  }
+
+  function submitCustomerOrder(e) {
+    e.preventDefault();
+    const p = currentMassSKU || ALL_50_STORE_SKUS[0];
+    const name = document.getElementById("cust-name").value;
+    const phone = document.getElementById("cust-phone").value;
+    const payment = document.getElementById("cust-payment").value;
+
+    const orderId = `ORD-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newOrder = {
+      id: orderId,
+      customer: `${name} (${phone})`,
+      items: `${p.name} (x1)`,
+      total: p.price,
+      cogs: p.cogs || 24.95,
+      profit: (p.price - (p.cogs || 24.95)).toFixed(2),
+      status: "Pending",
+      method: payment
+    };
+
+    let orders = JSON.parse(localStorage.getItem("xanvor_orders_data") || "[]");
+    orders.unshift(newOrder);
+    localStorage.setItem("xanvor_orders_data", JSON.stringify(orders));
+
+    closeCheckoutModal();
+    alert(`🎉 Thank you, ${name}! Order ${orderId} placed successfully! Status is updated in the Admin Portal.`);
+  }
+
+  window.addEventListener("DOMContentLoaded", () => renderMassStore("ALL"));
+</script>
+
 </body>
 </html>
