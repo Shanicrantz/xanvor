@@ -13,7 +13,7 @@ import { getCatalog, saveCatalog } from './lib/catalog.mjs';
 import { getAllOrders, updateOrderStatus, deleteOrder } from './lib/orders.mjs';
 import { sendOrderStatusEmail } from './lib/notify.mjs';
 
-const COLLECTIONS = ['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection', 'Metal Wall Art & Décor', 'Kansa Dinnerware'];
+const COLLECTIONS = ['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection', 'Metal Wall Art & Décor', 'Kansa Dinnerware', 'Kitchen Utility Crafts'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 const json = (obj, status = 200) => new Response(JSON.stringify(obj), {

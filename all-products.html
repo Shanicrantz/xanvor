@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XANVOR — Full site catalogue · all products & offers</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1F140C;--claret:#241510;--rust:#A85D2A;--brass:#B68B5C;--bone:#F4EEE2;--paper:#FCFAF4;--paper2:#F8F2E6;--line:#E6DCC8;--soft:#6E6151;--faint:#9A8E7C}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cormorant Garamond',serif;background:var(--bone);color:#43352B;font-size:17px;line-height:1.55}
+.banner{background:var(--claret);color:var(--bone);text-align:center;padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em}
+.banner a{color:#C9A57E}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 5vw;border-bottom:1px solid var(--line);background:rgba(252,250,244,.95);position:sticky;top:0;z-index:20;backdrop-filter:blur(8px);flex-wrap:wrap;gap:10px}
+nav .brand{font-family:'Fraunces',serif;letter-spacing:.18em;font-size:20px;color:var(--claret);text-decoration:none}
+nav .links{display:flex;gap:16px;flex-wrap:wrap}
+nav .links a{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);text-decoration:none}
+nav .links a:hover{color:var(--rust)}
+.hero{padding:36px 5vw 12px;max-width:1280px;margin:0 auto}
+.hero h1{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(28px,4vw,46px);color:var(--claret);line-height:1.08}
+.hero h1 em{font-style:italic;color:var(--rust)}
+.hero p{margin-top:12px;color:var(--soft);max-width:56ch}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 16px;min-width:110px}
+.stat b{display:block;font-family:'Fraunces',serif;font-size:26px;color:var(--rust);font-weight:400}
+.stat span{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 8px}
+.toc a{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--line);border-radius:20px;text-decoration:none;color:var(--claret);background:var(--paper)}
+.toc a:hover{border-color:var(--rust);color:var(--rust)}
+.col{padding:28px 5vw 8px;max-width:1280px;margin:0 auto}
+.col header{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.col .eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust)}
+.col h2{font-family:'Fraunces',serif;font-weight:300;font-size:26px;color:var(--claret);margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);border-color:var(--brass);box-shadow:0 18px 40px -24px rgba(58,39,24,.45)}
+.ph{aspect-ratio:1;background:var(--paper2);display:flex;align-items:center;justify-content:center;padding:12px;border-bottom:1px solid var(--line)}
+.ph img{max-width:90%;max-height:90%;object-fit:contain}
+.noimg{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
+.bd{padding:12px 14px 14px;display:flex;flex-direction:column;flex:1}
+.code{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--rust);margin-bottom:4px}
+h3{font-family:'Fraunces',serif;font-weight:400;font-size:16px;color:var(--claret);line-height:1.25;margin-bottom:4px}
+.mat{font-size:13px;color:var(--soft);font-style:italic;margin-bottom:8px;flex:1}
+.pr{margin-bottom:8px}
+.price{font-family:'Fraunces',serif;font-size:19px;color:var(--rust);font-weight:500}
+.mrp{font-size:12px;color:var(--faint);text-decoration:line-through;margin-left:5px}
+.tag{display:inline-block;margin-left:5px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;background:rgba(168,93,42,.12);color:var(--rust);padding:2px 6px;border-radius:10px}
+.tag.trade{background:rgba(58,39,24,.08);color:var(--soft)}
+.enq{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.cta{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--rust)}
+.cta.ghost{color:var(--faint)}
+footer{text-align:center;padding:48px 5vw;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--faint);line-height:1.8}
+</style>
+</head>
+<body>
+<div class="banner">FULL SITE CATALOGUE · live products + mass utilities + offers · <a href="index.html">Brand homepage</a> · <a href="index.html#c-utility">Utilities section</a></div>
+<nav>
+  <a class="brand" href="index.html">XANVOR</a>
+  <div class="links">
+    <a href="index.html">Homepage</a>
+    <a href="index.html#catalogue">Site catalogue</a>
+    <a href="Hot-Serve Collection.html">Hot-Serve</a>
+    <a href="index.html#c-utility">Utilities XIV</a>
+    <a href="checkout.html">Checkout</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+<div class="hero">
+  <h1>Full catalogue — <em>all products &amp; offers</em></h1>
+  <p>Live XANVOR catalogue merged with the 50 kitchen utility SKUs. Prices show GST-inclusive retail; struck MRP and % off where available. Trade-only pieces show “Trade enquiry”.</p>
+  <div class="stats">
+    <div class="stat"><b>171</b><span>Total SKUs</span></div>
+    <div class="stat"><b>127</b><span>Priced / offers</span></div>
+    <div class="stat"><b>44</b><span>Trade enquiry</span></div>
+    <div class="stat"><b>14</b><span>Collections</span></div>
+  </div>
+  <div class="toc"><a href="#col-0">Silver & Gold (27)</a><a href="#col-1">Copper (6)</a><a href="#col-2">Brass (9)</a><a href="#col-3">Sheesham & Wood (4)</a><a href="#col-4">Wireform Furniture (5)</a><a href="#col-5">Hot-Serve (12)</a><a href="#col-6">Artisanal Serving Trays (6)</a><a href="#col-7">Copper Home Collection (4)</a><a href="#col-8">The Jewel Collection (6)</a><a href="#col-9">Canister & Vanity Series (13)</a><a href="#col-10">Ribbed Storage Collection (6)</a><a href="#col-11">Metal Wall Art & Décor (21)</a><a href="#col-12">Kansa Dinnerware (2)</a><a href="#col-13">Kitchen Utility Crafts (50)</a></div>
+</div>
+<section class="col" id="col-0"><header><span class="eyebrow">27 pieces</span><h2>Silver & Gold</h2></header><div class="grid"><a class="card" href="product.html?id=sg-201">
+      <div class="ph"><img src="assets/products/sg-201.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·201</div>
+        <h3>Verde Agate Tray</h3>
+        <p class="mat">Agate · Gold-Gilt</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-202">
+      <div class="ph"><img src="assets/products/sg-202.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·202</div>
+        <h3>Amethyst Agate Tray</h3>
+        <p class="mat">Agate · Gold-Gilt</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-203">
+      <div class="ph"><img src="assets/products/sg-203.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·203</div>
+        <h3>Cobalt Agate Tray</h3>
+        <p class="mat">Agate · Brass</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-204">
+      <div class="ph"><img src="assets/products/sg-204.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·204</div>
+        <h3>Crystal Agate Tray</h3>
+        <p class="mat">Agate · Gold-Gilt</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-211">
+      <div class="ph"><img src="assets/products/sg-211.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·211</div>
+        <h3>Hammered Hexagon Tray</h3>
+        <p class="mat">Metal · Gold</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-212">
+      <div class="ph"><img src="assets/products/sg-212.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·212</div>
+        <h3>Gilded Rectangle Tray</h3>
+        <p class="mat">Metal · Gold</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-213">
+      <div class="ph"><img src="assets/products/sg-213.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·213</div>
+        <h3>Sunburst Platter</h3>
+        <p class="mat">Metal · Gold</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-214">
+      <div class="ph"><img src="assets/products/sg-214.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·214</div>
+        <h3>Silver Textured Tray Set</h3>
+        <p class="mat">Metal · Silver</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-215">
+      <div class="ph"><img src="assets/products/sg-215.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·215</div>
+        <h3>Chip & Dip Platter</h3>
+        <p class="mat">Metal · Silver</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-216">
+      <div class="ph"><img src="assets/products/sg-216.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·216</div>
+        <h3>Silver Oval Tray</h3>
+        <p class="mat">Metal · Silver</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-301">
+      <div class="ph"><img src="assets/products/sg-301.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·301</div>
+        <h3>Songbird Bowl</h3>
+        <p class="mat">Metal · Quartz</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-302">
+      <div class="ph"><img src="assets/products/sg-302.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·302</div>
+        <h3>Heritage Fruit Bowl</h3>
+        <p class="mat">Metal · Quartz</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-303">
+      <div class="ph"><img src="assets/products/sg-303.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·303</div>
+        <h3>Canoe Centrepiece</h3>
+        <p class="mat">Metal · Quartz</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-304">
+      <div class="ph"><img src="assets/products/sg-304.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·304</div>
+        <h3>Two-Tier Stand</h3>
+        <p class="mat">Metal · Quartz</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-305">
+      <div class="ph"><img src="assets/products/sg-305.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·305</div>
+        <h3>Fluted Dry-Fruit Bowl</h3>
+        <p class="mat">Metal · Malachite</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-306">
+      <div class="ph"><img src="assets/products/sg-306.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·306</div>
+        <h3>Leaf-Embossed Bowl</h3>
+        <p class="mat">Metal · Lacquer</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-307">
+      <div class="ph"><img src="assets/products/sg-307.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·307</div>
+        <h3>Peacock Feather Serving Dish</h3>
+        <p class="mat">Cast Metal · White Enamel · Gold</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-311">
+      <div class="ph"><img src="assets/products/sg-311.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·311</div>
+        <h3>Lotus Tealight Holder</h3>
+        <p class="mat">Metal · Silver</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-321">
+      <div class="ph"><img src="assets/products/sg-321.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·321</div>
+        <h3>Mosaic Photo Frame</h3>
+        <p class="mat">Shell Inlay</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-322">
+      <div class="ph"><img src="assets/products/sg-322.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·322</div>
+        <h3>Botanical Photo Frame</h3>
+        <p class="mat">Metal · Enamel</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-401">
+      <div class="ph"><img src="assets/products/sg-401.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·401</div>
+        <h3>Sunburst Canister Set</h3>
+        <p class="mat">Metal · Agate</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-402">
+      <div class="ph"><img src="assets/products/sg-402.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·402</div>
+        <h3>Rose-Quartz Jar Set</h3>
+        <p class="mat">Metal · Quartz</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-403">
+      <div class="ph"><img src="assets/products/sg-403.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·403</div>
+        <h3>Plumed Canister Set</h3>
+        <p class="mat">Metal · Gold</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-404">
+      <div class="ph"><img src="assets/products/sg-404.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·404</div>
+        <h3>Agate-Lid Storage Set</h3>
+        <p class="mat">Metal · Wood</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-405">
+      <div class="ph"><img src="assets/products/sg-405.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·405</div>
+        <h3>Hammered Gold Jar Pair</h3>
+        <p class="mat">Metal · Gold</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-406">
+      <div class="ph"><img src="assets/products/sg-406.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·406</div>
+        <h3>Coral-Finial Jar Set</h3>
+        <p class="mat">Metal · Wood</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sg-407">
+      <div class="ph"><img src="assets/products/sg-407.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SG·407</div>
+        <h3>Filigree Lantern Jar</h3>
+        <p class="mat">Metal · Quartz</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-1"><header><span class="eyebrow">6 pieces</span><h2>Copper</h2></header><div class="grid"><a class="card" href="product.html?id=cu-102">
+      <div class="ph"><img src="assets/products/cu-102.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CU·102</div>
+        <h3>Copper Bottle Range</h3>
+        <p class="mat">Pure Copper</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cu-103">
+      <div class="ph"><img src="assets/products/cu-103.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CU·103</div>
+        <h3>Enamel Copper Vase</h3>
+        <p class="mat">Copper · Enamel</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cu-104">
+      <div class="ph"><img src="assets/products/cu-104.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CU·104</div>
+        <h3>Copper Jug Trio</h3>
+        <p class="mat">Copper</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cu-105">
+      <div class="ph"><img src="assets/products/cu-105.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CU·105</div>
+        <h3>Rose-Gold Pitcher</h3>
+        <p class="mat">Pure Copper</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cu-106">
+      <div class="ph"><img src="assets/products/cu-106.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CU·106</div>
+        <h3>Copper Bar Tool Set</h3>
+        <p class="mat">Copper · Gift</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sw-116">
+      <div class="ph"><img src="https://xanvor.com/img/sw-116-listing-mrntec5u.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SW·116</div>
+        <h3>Pure Copper Water Bottle</h3>
+        <p class="mat">Pure Copper Water Bottle| Hand Hammered Copper Bottle | Leak Proof Copper Water Bottle |</p>
+        <div class="pr"><span class="price">₹2,124</span> <span class="mrp">₹2,200</span> <span class="tag">3% off</span> <span class="tag trade">trade ₹1,416</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-2"><header><span class="eyebrow">9 pieces</span><h2>Brass</h2></header><div class="grid"><a class="card" href="product.html?id=br-101">
+      <div class="ph"><img src="assets/products/br-101.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·BR·101</div>
+        <h3>Antique Bottle & Tumbler Set</h3>
+        <p class="mat">Brass · Antique</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=br-102">
+      <div class="ph"><img src="assets/products/br-102.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·BR·102</div>
+        <h3>Gilt Bowl & Spoon Set</h3>
+        <p class="mat">Brass · Gilt</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=br-103">
+      <div class="ph"><img src="assets/products/br-103.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·BR·103</div>
+        <h3>Polished Singing Bowl</h3>
+        <p class="mat">Brass</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=br-104">
+      <div class="ph"><img src="assets/products/br-104.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·BR·104</div>
+        <h3>Flower-of-Life Singing Bowl</h3>
+        <p class="mat">Brass · Engraved</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sw-113">
+      <div class="ph"><img src="https://xanvor.com/img/product-mrnqyes0.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SW·113</div>
+        <h3>Golden Swan Candle Holder Set of 2 with Glass Tealight Cups</h3>
+        <p class="mat">Solid Brass · Glass Tealight Cups · Hand-Made</p>
+        <div class="pr"><span class="price">₹3,539</span> <span class="mrp">₹4,990</span> <span class="tag">29% off</span> <span class="tag trade">trade ₹1,533</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sw-114">
+      <div class="ph"><img src="https://xanvor.com/img/sw-114-main-mrntdq1s.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SW·114</div>
+        <h3>Golden Tree of Life Showpiece with Birds</h3>
+        <p class="mat">Cast Aluminium · Golden Finish · Hand-Made</p>
+        <div class="pr"><span class="price">₹999</span> <span class="mrp">₹3,304</span> <span class="tag">70% off</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=ut-102">
+      <div class="ph"><img src="https://xanvor.com/img/ut-102-1-mrob7j9s.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·UT·102</div>
+        <h3>Elephant Bookends — Set of 2, Antique Gold</h3>
+        <p class="mat">Cast Metal · Antique Gold Finish · Felt Base</p>
+        <div class="pr"><span class="price">₹1,579</span> <span class="mrp">₹2,500</span> <span class="tag">37% off</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=ut-103">
+      <div class="ph"><img src="https://xanvor.com/img/ut-103-1-mrob7ndj.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·UT·103</div>
+        <h3>Lotus 2-in-1 Incense Stick & Diya Holder</h3>
+        <p class="mat">Hammered Brass · Antique Finish</p>
+        <div class="pr"><span class="price">₹525</span> <span class="mrp">₹999</span> <span class="tag">47% off</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=ut-104">
+      <div class="ph"><img src="https://xanvor.com/img/ut-104-1-mrob7rhw.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·UT·104</div>
+        <h3>Vine Branch Candelabra — 3 Arm Taper Candle Stand</h3>
+        <p class="mat">Cast Metal · Antique Gold Finish</p>
+        <div class="pr"><span class="price">₹1,369</span> <span class="mrp">₹1,999</span> <span class="tag">32% off</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-3"><header><span class="eyebrow">4 pieces</span><h2>Sheesham & Wood</h2></header><div class="grid"><a class="card" href="product.html?id=wd-101">
+      <div class="ph"><img src="assets/products/wd-101.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WD·101</div>
+        <h3>Masala Spice Box</h3>
+        <p class="mat">Sheesham · Brass</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wd-102">
+      <div class="ph"><img src="assets/products/wd-102.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WD·102</div>
+        <h3>Wood & Brass Casserole</h3>
+        <p class="mat">Sheesham · Brass</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wd-103">
+      <div class="ph"><img src="assets/products/wd-103.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WD·103</div>
+        <h3>Sheesham Serving Tray</h3>
+        <p class="mat">Sheesham · Metal</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wd-104">
+      <div class="ph"><img src="assets/products/wd-104.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WD·104</div>
+        <h3>The Craft, In Parts</h3>
+        <p class="mat">Mixed Materials</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-4"><header><span class="eyebrow">5 pieces</span><h2>Wireform Furniture</h2></header><div class="grid"><a class="card" href="product.html?id=mf-101">
+      <div class="ph"><img src="assets/products/mf-101.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·MF·101</div>
+        <h3>Geometric Wire Basket</h3>
+        <p class="mat">Powder-Coat Steel</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=mf-102">
+      <div class="ph"><img src="assets/products/mf-102.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·MF·102</div>
+        <h3>Mirror-Top Nesting Tables</h3>
+        <p class="mat">Metal · Glass</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=mf-103">
+      <div class="ph"><img src="assets/products/mf-103.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·MF·103</div>
+        <h3>Wireform Accent Chair</h3>
+        <p class="mat">Powder-Coat Steel</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=mf-104">
+      <div class="ph"><img src="assets/products/mf-104.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·MF·104</div>
+        <h3>Folding Tray Table</h3>
+        <p class="mat">Metal · Gilt</p>
+        <div class="pr"><span class="enq">Trade enquiry</span></div>
+        <span class="cta ghost">View · Enquire →</span>
+      </div>
+    </a><a class="card" href="product.html?id=mf-105">
+      <div class="ph"><img src="https://xanvor.com/img/mf-105-mr4r8j33.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·MF·105</div>
+        <h3>Multi-Utility Wire Wall Storage Rack</h3>
+        <p class="mat">Powder-Coat Steel · Mango Wood</p>
+        <div class="pr"><span class="price">₹4,000</span> <span class="mrp">₹5,999</span> <span class="tag">33% off</span> <span class="tag trade">trade ₹1,298</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-5"><header><span class="eyebrow">12 pieces</span><h2>Hot-Serve</h2></header><div class="grid"><a class="card" href="product.html?id=fw-101">
+      <div class="ph"><img src="assets/products/xv-fw-101.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·101</div>
+        <h3>Maharaja Grand Serving Dome</h3>
+        <p class="mat">Solid Brass · Hand-Hammered · Lacquered</p>
+        <div class="pr"><span class="price">₹20,059</span> <span class="mrp">₹22,599</span> <span class="tag">11% off</span> <span class="tag trade">trade ₹12,508</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-102">
+      <div class="ph"><img src="assets/products/xv-fw-102.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·102</div>
+        <h3>Imperial Two-Tone Conical Hot-Pot</h3>
+        <p class="mat">Gold PVD body · Steel-mirror hammered lid</p>
+        <div class="pr"><span class="price">₹4,011</span> <span class="mrp">₹4,499</span> <span class="tag">11% off</span> <span class="tag trade">trade ₹2,478</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-103">
+      <div class="ph"><img src="assets/products/xv-fw-103.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·103</div>
+        <h3>Aurum Gold Satin Hot-Pot</h3>
+        <p class="mat">Mirror Gold PVD (smooth)</p>
+        <div class="pr"><span class="price">₹3,421</span> <span class="mrp">₹3,899</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹2,124</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-104">
+      <div class="ph"><img src="assets/products/xv-fw-104.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·104</div>
+        <h3>Sultana Royal Dome Hot-Pot</h3>
+        <p class="mat">Mirror Gold PVD · Hammered dome</p>
+        <div class="pr"><span class="price">₹4,011</span> <span class="mrp">₹4,499</span> <span class="tag">11% off</span> <span class="tag trade">trade ₹2,537</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-105">
+      <div class="ph"><img src="assets/products/xv-fw-105.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·105</div>
+        <h3>Sterling Steel-Mirror Hot-Pot</h3>
+        <p class="mat">Steel Mirror · Hammered · Gold handles</p>
+        <div class="pr"><span class="price">₹3,539</span> <span class="mrp">₹3,999</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹2,242</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-106">
+      <div class="ph"><img src="assets/products/xv-fw-106.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·106</div>
+        <h3>Sheesham Wood-Finish Hot-Pot</h3>
+        <p class="mat">Rosewood heat-transfer · Gold lid</p>
+        <div class="pr"><span class="price">₹3,421</span> <span class="mrp">₹3,899</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹2,124</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-107">
+      <div class="ph"><img src="assets/products/xv-fw-107.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·107</div>
+        <h3>Thermalock 28 Lock-System Food Warmer</h3>
+        <p class="mat">Mango-wood body · Gold hammered lid · Lock System</p>
+        <div class="pr"><span class="price">₹5,899</span> <span class="mrp">₹6,599</span> <span class="tag">11% off</span> <span class="tag trade">trade ₹3,658</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-108">
+      <div class="ph"><img src="assets/products/xv-fw-108.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·108</div>
+        <h3>Carrara Marble-Finish Hot-Pot</h3>
+        <p class="mat">Marble heat-transfer · Gold lid</p>
+        <div class="pr"><span class="price">₹3,421</span> <span class="mrp">₹3,899</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹2,124</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-109">
+      <div class="ph"><img src="assets/products/xv-fw-109.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·109</div>
+        <h3>Botanica Leaf & Vine Hot-Pot</h3>
+        <p class="mat">Mirror Gold PVD · Cast vine applique</p>
+        <div class="pr"><span class="price">₹4,129</span> <span class="mrp">₹4,699</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹2,596</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-110">
+      <div class="ph"><img src="assets/products/xv-fw-110.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·110</div>
+        <h3>Florentine Floral-Luxe Hot-Pot</h3>
+        <p class="mat">Mirror Gold PVD · Floral cast handles & knob</p>
+        <div class="pr"><span class="price">₹4,247</span> <span class="mrp">₹4,799</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹2,655</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-111">
+      <div class="ph"><img src="assets/products/xv-fw-111.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·111</div>
+        <h3>Darbar Low-Profile Serving Dish</h3>
+        <p class="mat">Mirror Gold PVD · Bar-handle lid</p>
+        <div class="pr"><span class="price">₹2,595</span> <span class="mrp">₹2,899</span> <span class="tag">10% off</span> <span class="tag trade">trade ₹1,652</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=fw-112">
+      <div class="ph"><img src="assets/products/xv-fw-112.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·FW·112</div>
+        <h3>Trinity Hammered Casserole — Set of 3</h3>
+        <p class="mat">Gold / Copper PVD · Hammered (graded set)</p>
+        <div class="pr"><span class="price">₹10,973</span> <span class="mrp">₹12,399</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹6,844</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-6"><header><span class="eyebrow">6 pieces</span><h2>Artisanal Serving Trays</h2></header><div class="grid"><a class="card" href="product.html?id=tr-101">
+      <div class="ph"><img src="https://xanvor.com/img/tr-101-mqbnv9z3.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TR·101</div>
+        <h3>Nile Croc-Embossed Brass Tray</h3>
+        <p class="mat">Polished Brass</p>
+        <div class="pr"><span class="price">₹2,831</span> <span class="mrp">₹3,299</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹1,534</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=tr-102">
+      <div class="ph"><img src="https://xanvor.com/img/tr-102-mqbnvccq.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TR·102</div>
+        <h3>Noor Hammered Brass Tray - Black Marble Handles (Small)</h3>
+        <p class="mat">Hammered Brass · Black Marble</p>
+        <div class="pr"><span class="price">₹2,949</span> <span class="mrp">₹3,399</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹1,652</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=tr-103">
+      <div class="ph"><img src="https://xanvor.com/img/tr-103-mqbnvdvr.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TR·103</div>
+        <h3>Noor Hammered Brass Tray - White Quartz Handles (Large)</h3>
+        <p class="mat">Hammered Brass · White Quartz</p>
+        <div class="pr"><span class="price">₹4,601</span> <span class="mrp">₹5,299</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹2,714</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=tr-104">
+      <div class="ph"><img src="https://xanvor.com/img/tr-104-mqbnvf6n.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TR·104</div>
+        <h3>Aria Hammered Tray - Agate Gemstone Handles</h3>
+        <p class="mat">Hammered Brass · Agate</p>
+        <div class="pr"><span class="price">₹4,247</span> <span class="mrp">₹4,899</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹2,478</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=tr-105">
+      <div class="ph"><img src="https://xanvor.com/img/tr-105-mqbnvgki.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TR·105</div>
+        <h3>Sylva Brass Tray - Floral Branch Handles</h3>
+        <p class="mat">Polished Brass · Crystal Accents</p>
+        <div class="pr"><span class="price">₹4,247</span> <span class="mrp">₹4,899</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹2,419</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=tr-106">
+      <div class="ph"><img src="https://xanvor.com/img/tr-106-mqbnvilg.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TR·106</div>
+        <h3>Nile Grande Croc Tray - Sculpted Feet</h3>
+        <p class="mat">Polished Brass</p>
+        <div class="pr"><span class="price">₹6,253</span> <span class="mrp">₹7,199</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹3,599</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-7"><header><span class="eyebrow">4 pieces</span><h2>Copper Home Collection</h2></header><div class="grid"><a class="card" href="product.html?id=ch-101">
+      <div class="ph"><img src="https://xanvor.com/img/ch-101-mqbnvk0u.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CH·101</div>
+        <h3>Hex Nest Copper Trays - Set of 3</h3>
+        <p class="mat">Pure Copper</p>
+        <div class="pr"><span class="price">₹6,253</span> <span class="mrp">₹7,199</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹3,776</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=ch-102">
+      <div class="ph"><img src="https://xanvor.com/img/ch-102-mqbnvld2.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CH·102</div>
+        <h3>Hex Grand High-Sided Copper Tray</h3>
+        <p class="mat">Pure Copper</p>
+        <div class="pr"><span class="price">₹5,309</span> <span class="mrp">₹6,099</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹3,127</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=ch-103">
+      <div class="ph"><img src="https://xanvor.com/img/ch-103-mqbnvmxl.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CH·103</div>
+        <h3>Facet Copper Bowls - Set of 2</h3>
+        <p class="mat">Pure Copper</p>
+        <div class="pr"><span class="price">₹4,719</span> <span class="mrp">₹5,499</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹2,832</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=ch-104">
+      <div class="ph"><img src="https://xanvor.com/img/ch-104-mqbnvo92.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CH·104</div>
+        <h3>Sol Hammered Copper Charger Tray</h3>
+        <p class="mat">Pure Copper</p>
+        <div class="pr"><span class="price">₹5,427</span> <span class="mrp">₹6,299</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹3,304</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-8"><header><span class="eyebrow">6 pieces</span><h2>The Jewel Collection</h2></header><div class="grid"><a class="card" href="product.html?id=jw-101">
+      <div class="ph"><img src="https://xanvor.com/img/jw-101-mqbnvpn1.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·JW·101</div>
+        <h3>Zamarrud Gemstone Brass Tray</h3>
+        <p class="mat">Polished Brass · Green Stone Cabochons</p>
+        <div class="pr"><span class="price">₹4,601</span> <span class="mrp">₹5,299</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹2,596</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=jw-102">
+      <div class="ph"><img src="https://xanvor.com/img/jw-102-mqbnvrpl.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·JW·102</div>
+        <h3>Zamarrud Gemstone Brass Box</h3>
+        <p class="mat">Brushed Brass · Green Stone Cabochons</p>
+        <div class="pr"><span class="price">₹3,421</span> <span class="mrp">₹3,999</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹1,947</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=jw-103">
+      <div class="ph"><img src="https://xanvor.com/img/jw-103-mqbnvt7z.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·JW·103</div>
+        <h3>Ashen Gemstone Box Set - Set of 2</h3>
+        <p class="mat">Polished Brass · Grey Stone</p>
+        <div class="pr"><span class="price">₹4,719</span> <span class="mrp">₹5,499</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹2,773</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=jw-104">
+      <div class="ph"><img src="https://xanvor.com/img/jw-104-mqbnvw7y.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·JW·104</div>
+        <h3>Relic Antique Brass Tray - Aged Glass & Stones</h3>
+        <p class="mat">Antique Brass · Aged Glass · Mixed Stones</p>
+        <div class="pr"><span class="price">₹3,421</span> <span class="mrp">₹3,999</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹1,947</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=jw-105">
+      <div class="ph"><img src="https://xanvor.com/img/jw-105-mqbnvxsf.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·JW·105</div>
+        <h3>Brut Gemstone Brass Box</h3>
+        <p class="mat">Brushed Brass · Textured Stone</p>
+        <div class="pr"><span class="price">₹3,303</span> <span class="mrp">₹3,799</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹1,888</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=jw-106">
+      <div class="ph"><img src="https://xanvor.com/img/jw-106-mqbnvzde.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·JW·106</div>
+        <h3>Garnet Lacquer Box - Gilt Studs</h3>
+        <p class="mat">Lacquered Ceramic · Gilt Accents</p>
+        <div class="pr"><span class="price">₹1,769</span> <span class="mrp">₹1,999</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹885</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-9"><header><span class="eyebrow">13 pieces</span><h2>Canister & Vanity Series</h2></header><div class="grid"><a class="card" href="product.html?id=cv-101">
+      <div class="ph"><img src="https://xanvor.com/img/cv-101-mqbnw0rf.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·101</div>
+        <h3>Teak & Agate Box Trio - Set of 3</h3>
+        <p class="mat">Natural Wood · Blue Agate</p>
+        <div class="pr"><span class="price">₹2,359</span> <span class="mrp">₹2,699</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹1,239</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-102">
+      <div class="ph"><img src="https://xanvor.com/img/cv-102-mqbnw22q.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·102</div>
+        <h3>Mehfil Black & Gold Canister Duo - Set of 2</h3>
+        <p class="mat">Metal · Enamel</p>
+        <div class="pr"><span class="price">₹1,769</span> <span class="mrp">₹1,999</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹885</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-103">
+      <div class="ph"><img src="https://xanvor.com/img/cv-103-mqbnw3el.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·103</div>
+        <h3>Gilt Gourd Jar Set - Set of 2</h3>
+        <p class="mat">Metal</p>
+        <div class="pr"><span class="price">₹1,887</span> <span class="mrp">₹2,199</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹944</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-104">
+      <div class="ph"><img src="https://xanvor.com/img/cv-104-mqbnw4ox.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·104</div>
+        <h3>Obsidian Fluted Canister Trio - Set of 3</h3>
+        <p class="mat">Metal</p>
+        <div class="pr"><span class="price">₹2,359</span> <span class="mrp">₹2,699</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹1,121</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-105">
+      <div class="ph"><img src="https://xanvor.com/img/cv-105-mqbnw660.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·105</div>
+        <h3>Shatranj Checkerboard Box</h3>
+        <p class="mat">Metal · Two-Tone Plating</p>
+        <div class="pr"><span class="price">₹1,415</span> <span class="mrp">₹1,599</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹649</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-106">
+      <div class="ph"><img src="https://xanvor.com/img/cv-106-mqbnw8cg.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·106</div>
+        <h3>Citrine Crest Gold Canister</h3>
+        <p class="mat">Metal · Citrine Crystal</p>
+        <div class="pr"><span class="price">₹1,533</span> <span class="mrp">₹1,799</span> <span class="tag">15% off</span> <span class="tag trade">trade ₹708</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-107">
+      <div class="ph"><img src="https://xanvor.com/img/cv-107-mqbnw9rr.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·107</div>
+        <h3>Atlas Chiseled Brass Canister</h3>
+        <p class="mat">Brass</p>
+        <div class="pr"><span class="price">₹3,657</span> <span class="mrp">₹4,199</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹2,006</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-108">
+      <div class="ph"><img src="https://xanvor.com/img/cv-108-mqbnwb9h.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·108</div>
+        <h3>Hive Hexagonal Fluted Brass Box</h3>
+        <p class="mat">Cast Brass</p>
+        <div class="pr"><span class="price">₹7,551</span> <span class="mrp">₹8,699</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹4,484</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-109">
+      <div class="ph"><img src="https://xanvor.com/img/cv-109-mqbnwcq5.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·109</div>
+        <h3>Carrara-Lid Brass Canister Pair - Set of 2</h3>
+        <p class="mat">Brushed Brass · White Marble</p>
+        <div class="pr"><span class="price">₹4,601</span> <span class="mrp">₹5,299</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹2,596</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-110">
+      <div class="ph"><img src="https://xanvor.com/img/cv-110-mqbnwpkk.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·110</div>
+        <h3>Triad Fluted Brass Canister Set - Set of 3</h3>
+        <p class="mat">Brass · Composite Lids</p>
+        <div class="pr"><span class="price">₹4,837</span> <span class="mrp">₹5,599</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹2,773</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-111">
+      <div class="ph"><img src="https://xanvor.com/img/cv-111-mqbnwrwc.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·111</div>
+        <h3>Bunai Basketweave Brass Box</h3>
+        <p class="mat">Metal · Two-Tone Plating</p>
+        <div class="pr"><span class="price">₹1,887</span> <span class="mrp">₹2,199</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹826</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=cv-112">
+      <div class="ph"><img src="https://xanvor.com/img/cv-112-mqbnwtjl.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·CV·112</div>
+        <h3>Chevron Polished Gold Canister</h3>
+        <p class="mat">Metal</p>
+        <div class="pr"><span class="price">₹1,533</span> <span class="mrp">₹1,799</span> <span class="tag">15% off</span> <span class="tag trade">trade ₹649</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sw-118">
+      <div class="ph"><img src="https://xanvor.com/img/product-mrth80ze.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SW·118</div>
+        <h3>8-Piece Spice Jar Set</h3>
+        <p class="mat">Mild Steel</p>
+        <div class="pr"><span class="price">₹1,652</span> <span class="mrp">₹1,800</span> <span class="tag">8% off</span> <span class="tag trade">trade ₹1,416</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-10"><header><span class="eyebrow">6 pieces</span><h2>Ribbed Storage Collection</h2></header><div class="grid"><a class="card" href="product.html?id=rb-101">
+      <div class="ph"><img src="https://xanvor.com/img/rb-101-mqbnwv0j.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·RB·101</div>
+        <h3>Cord Ribbed Bronze Case Set - Set of 2</h3>
+        <p class="mat">Metal</p>
+        <div class="pr"><span class="price">₹1,887</span> <span class="mrp">₹2,199</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹944</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=rb-102">
+      <div class="ph"><img src="https://xanvor.com/img/rb-102-mqbnwxl8.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·RB·102</div>
+        <h3>Cord Stacked Bronze Storage - 2-Tier</h3>
+        <p class="mat">Metal</p>
+        <div class="pr"><span class="price">₹1,769</span> <span class="mrp">₹1,999</span> <span class="tag">12% off</span> <span class="tag trade">trade ₹885</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=rb-103">
+      <div class="ph"><img src="https://xanvor.com/img/rb-103-mqbnwzav.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·RB·103</div>
+        <h3>Cord Stacked Gold Storage Case</h3>
+        <p class="mat">Metal</p>
+        <div class="pr"><span class="price">₹1,887</span> <span class="mrp">₹2,199</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹885</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=rb-104">
+      <div class="ph"><img src="https://xanvor.com/img/rb-104-mqbnx0uq.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·RB·104</div>
+        <h3>Cord Stacked Silver Storage Case</h3>
+        <p class="mat">Metal</p>
+        <div class="pr"><span class="price">₹1,887</span> <span class="mrp">₹2,199</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹885</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sw-117">
+      <div class="ph"><img src="https://xanvor.com/img/listing-listing-mrtgw39c.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SW·117</div>
+        <h3>Bottle Water Bottle Storage Rack</h3>
+        <p class="mat">Metal, Powder-coated Steel</p>
+        <div class="pr"><span class="price">₹1,416</span> <span class="mrp">₹1,500</span> <span class="tag">6% off</span> <span class="tag trade">trade ₹1,003</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sw-120">
+      <div class="ph"><img src="https://xanvor.com/img/product-mrti6fov.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SW·120</div>
+        <h3>Arboreal Antique Gold-Finished Multi-Tier Jewelry Organizer</h3>
+        <p class="mat">Sand-cast aluminum with a brass/gold electroplated coating or metallic powder-coated finish.</p>
+        <div class="pr"><span class="price">₹1,888</span> <span class="mrp">₹2,000</span> <span class="tag">6% off</span> <span class="tag trade">trade ₹1,711</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-11"><header><span class="eyebrow">21 pieces</span><h2>Metal Wall Art & Décor</h2></header><div class="grid"><a class="card" href="product.html?id=wa-101">
+      <div class="ph"><img src="https://xanvor.com/img/wa-101-mr81u01x.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·101</div>
+        <h3>Golden Bloom Floral Panel</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black · Gold-Finish Florals</p>
+        <div class="pr"><span class="price">₹2,316</span> <span class="mrp">₹3,099</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹1,392</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-102">
+      <div class="ph"><img src="https://xanvor.com/img/wa-102-mr81u11j.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·102</div>
+        <h3>Wildflower 6-Hook Wall Rack</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹948</span> <span class="mrp">₹1,299</span> <span class="tag">27% off</span> <span class="tag trade">trade ₹566</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-103">
+      <div class="ph"><img src="https://xanvor.com/img/wa-103-mr81u2dg.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·103</div>
+        <h3>Rubber-Leaf Botanical Branch</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹1,474</span> <span class="mrp">₹1,999</span> <span class="tag">26% off</span> <span class="tag trade">trade ₹897</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-104">
+      <div class="ph"><img src="https://xanvor.com/img/wa-104-mr81u3dc.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·104</div>
+        <h3>Monstera Framed Wall Art</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹1,579</span> <span class="mrp">₹2,099</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹979</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-105">
+      <div class="ph"><img src="https://xanvor.com/img/wa-105-mr81u45r.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·105</div>
+        <h3>Majestic Stag Head</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹1,158</span> <span class="mrp">₹1,599</span> <span class="tag">28% off</span> <span class="tag trade">trade ₹720</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-106">
+      <div class="ph"><img src="https://xanvor.com/img/wa-106-mr81u53d.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·106</div>
+        <h3>Orbit Rings Candle Sconce</h3>
+        <p class="mat">Iron Rod & Sheet · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹1,053</span> <span class="mrp">₹1,399</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹637</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-107">
+      <div class="ph"><img src="https://xanvor.com/img/wa-107-mr81u60m.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·107</div>
+        <h3>Aurora Wave Abstract Panel</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black · Gold-Finish Waves</p>
+        <div class="pr"><span class="price">₹1,579</span> <span class="mrp">₹2,099</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹968</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-108">
+      <div class="ph"><img src="https://xanvor.com/img/wa-108-mr81u6yq.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·108</div>
+        <h3>Songbird Window Wall Art</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹1,369</span> <span class="mrp">₹1,899</span> <span class="tag">28% off</span> <span class="tag trade">trade ₹850</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-109">
+      <div class="ph"><img src="https://xanvor.com/img/wa-109-mr81u7r6.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·109</div>
+        <h3>Hanging Garden Planter Wall Art</h3>
+        <p class="mat">Laser-cut Iron & Rod · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹2,106</span> <span class="mrp">₹2,799</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹1,310</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-110">
+      <div class="ph"><img src="https://xanvor.com/img/wa-110-mr81u8jy.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·110</div>
+        <h3>Midas Leaf Cascade — Statement Piece</h3>
+        <p class="mat">Iron Leaves & Rod · Powder-Coat Black · Gold-Finish Leaves</p>
+        <div class="pr"><span class="price">₹4,319</span> <span class="mrp">₹5,699</span> <span class="tag">24% off</span> <span class="tag trade">trade ₹2,690</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-111">
+      <div class="ph"><img src="https://xanvor.com/img/wa-111-mr81u9de.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·111</div>
+        <h3>Leaf Mirror Duo — Set of 2</h3>
+        <p class="mat">Iron Frame · Mirror Glass · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹1,699</span> <span class="mrp">₹2,399</span> <span class="tag">29% off</span> <span class="tag trade">trade ₹1,097</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-112">
+      <div class="ph"><img src="https://xanvor.com/img/wa-112-mr81ua8d.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·112</div>
+        <h3>Hexa Geometric Wall Mirror</h3>
+        <p class="mat">Iron Frame · Mirror Glass · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹1,899</span> <span class="mrp">₹2,699</span> <span class="tag">30% off</span> <span class="tag trade">trade ₹1,239</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=wa-113">
+      <div class="ph"><img src="https://xanvor.com/img/wa-113-mr81ub5v.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·WA·113</div>
+        <h3>Hibiscus Horizon Panel</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹2,106</span> <span class="mrp">₹2,799</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹1,263</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=td-101">
+      <div class="ph"><img src="https://xanvor.com/img/td-101-mr81uc4x.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TD·101</div>
+        <h3>Bloom & Roots Table Silhouette</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat (Black / Steel)</p>
+        <div class="pr"><span class="price">₹420</span> <span class="mrp">₹599</span> <span class="tag">30% off</span> <span class="tag trade">trade ₹260</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=td-102">
+      <div class="ph"><img src="https://xanvor.com/img/td-102-mr81ud10.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TD·102</div>
+        <h3>Arched Botanical Bookends — Set of 2</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹841</span> <span class="mrp">₹1,199</span> <span class="tag">30% off</span> <span class="tag trade">trade ₹484</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=td-103">
+      <div class="ph"><img src="https://xanvor.com/img/td-103-mr81udwj.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TD·103</div>
+        <h3>Tulip Meadow on Wood Base</h3>
+        <p class="mat">Laser-cut Iron · Sheesham Wood Base · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹1,053</span> <span class="mrp">₹1,399</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹637</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=td-104">
+      <div class="ph"><img src="https://xanvor.com/img/td-104-mr81uep9.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TD·104</div>
+        <h3>Minimal Bloom Vase Trio — Set of 3</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹1,053</span> <span class="mrp">₹1,399</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹590</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=td-105">
+      <div class="ph"><img src="https://xanvor.com/img/td-105-mr81ufhn.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·TD·105</div>
+        <h3>Single-Stem Bottle Vase</h3>
+        <p class="mat">Laser-cut Iron · Powder-Coat Black</p>
+        <div class="pr"><span class="price">₹420</span> <span class="mrp">₹599</span> <span class="tag">30% off</span> <span class="tag trade">trade ₹248</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sw-115">
+      <div class="ph"><img src="https://xanvor.com/img/listing-listing-mrnrznbg.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SW·115</div>
+        <h3>Kitchen Wall Rack with Wooden 2 Shelves & Hooks</h3>
+        <p class="mat">Powder-coated Metal, Rope, Wood</p>
+        <div class="pr"><span class="price">₹1,416</span> <span class="mrp">₹1,500</span> <span class="tag">6% off</span> <span class="tag trade">trade ₹1,180</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=ut-101">
+      <div class="ph"><img src="https://xanvor.com/img/ut-101-1-mrob7e88.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·UT·101</div>
+        <h3>Birds on Branch Key Holder — Wall Mounted, 3 Hooks</h3>
+        <p class="mat">Cast Metal · Antique Brass Birds · Matte Black Branch</p>
+        <div class="pr"><span class="price">₹948</span> <span class="mrp">₹1,599</span> <span class="tag">41% off</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=ut-105">
+      <div class="ph"><img src="https://xanvor.com/img/ut-105-1-mrob7vom.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·UT·105</div>
+        <h3>Face Art Spectacle Holder with Trinket Tray</h3>
+        <p class="mat">Wrought Iron Wire · Matte Black</p>
+        <div class="pr"><span class="price">₹841</span> <span class="mrp">₹1,499</span> <span class="tag">44% off</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-12"><header><span class="eyebrow">2 pieces</span><h2>Kansa Dinnerware</h2></header><div class="grid"><a class="card" href="product.html?id=kn-101">
+      <div class="ph"><img src="https://xanvor.com/img/kn-101-1-mrnucka1.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·KN·101</div>
+        <h3>Kansa Thali Dinner Set — 6 Pieces</h3>
+        <p class="mat">Pure Kansa Bronze · Hand-Crafted · Food-Safe</p>
+        <div class="pr"><span class="price">₹3,160</span> <span class="mrp">₹4,999</span> <span class="tag">37% off</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sw-119">
+      <div class="ph"><img src="https://xanvor.com/img/sw-119-mrthqfn8.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SW·119</div>
+        <h3>Kansa Thali Dinner Set</h3>
+        <p class="mat">Kansa</p>
+        <div class="pr"><span class="price">₹5,900</span> <span class="mrp">₹6,500</span> <span class="tag">9% off</span> <span class="tag trade">trade ₹5,664</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<section class="col" id="col-13"><header><span class="eyebrow">50 pieces</span><h2>Kitchen Utility Crafts</h2></header><div class="grid"><a class="card" href="product.html?id=sku-01">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_01_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·01</div>
+        <h3>Smooth Satin Brass Karchi / Spoon Rest</h3>
+        <p class="mat">Aluminium · Satin brass dip · food lacquer</p>
+        <div class="pr"><span class="price">₹129</span> <span class="mrp">₹149</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹119</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-02">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_02_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·02</div>
+        <h3>Concentric Wire Ring Hot Vessel Trivet</h3>
+        <p class="mat">MS wire · Matte black powder coat</p>
+        <div class="pr"><span class="price">₹189</span> <span class="mrp">₹229</span> <span class="tag">17% off</span> <span class="tag trade">trade ₹169</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-03">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_03_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·03</div>
+        <h3>Dual Oil & Ghee Bottle Wire Caddy</h3>
+        <p class="mat">MS wire · Brass / matte options</p>
+        <div class="pr"><span class="price">₹240</span> <span class="mrp">₹279</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹219</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-04">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_04_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·04</div>
+        <h3>Smooth Sheet Metal Spice Scoop Pair</h3>
+        <p class="mat">Shim sheet · Pressed bowl</p>
+        <div class="pr"><span class="price">₹109</span> <span class="mrp">₹129</span> <span class="tag">16% off</span> <span class="tag trade">trade ₹99</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-05">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_05_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·05</div>
+        <h3>Folding Wire Cookbook & Tablet Stand</h3>
+        <p class="mat">MS wire · Rubber tips</p>
+        <div class="pr"><span class="price">₹249</span> <span class="mrp">₹299</span> <span class="tag">17% off</span> <span class="tag trade">trade ₹229</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-06">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_06_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·06</div>
+        <h3>Stovetop Lighter & Chimta Wall Bracket</h3>
+        <p class="mat">MS wire · Wall mount</p>
+        <div class="pr"><span class="price">₹139</span> <span class="mrp">₹169</span> <span class="tag">18% off</span> <span class="tag trade">trade ₹129</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-07">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_07_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·07</div>
+        <h3>Chai Strainer Drip Cup Tray</h3>
+        <p class="mat">Pressed metal · Shallow dish</p>
+        <div class="pr"><span class="price">₹119</span> <span class="mrp">₹129</span> <span class="tag">8% off</span> <span class="tag trade">trade ₹99</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-08">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_08_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·08</div>
+        <h3>Roti Chimta Cradle Rest</h3>
+        <p class="mat">MS wire · Cradle loop</p>
+        <div class="pr"><span class="price">₹119</span> <span class="mrp">₹139</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹99</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-09">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_09_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·09</div>
+        <h3>Lemon Squeezer & Seed Rest Dish</h3>
+        <p class="mat">Pressed metal · Drain ridge</p>
+        <div class="pr"><span class="price">₹119</span> <span class="mrp">₹129</span> <span class="tag">8% off</span> <span class="tag trade">trade ₹99</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-10">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_10_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·10</div>
+        <h3>Ginger & Garlic Mini Grater Dish</h3>
+        <p class="mat">SS punched · Dish border</p>
+        <div class="pr"><span class="price">₹129</span> <span class="mrp">₹149</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹119</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-11">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_11_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·11</div>
+        <h3>All-Metal Over-Faucet Sponge Hook</h3>
+        <p class="mat">SS wire · Over-faucet</p>
+        <div class="pr"><span class="price">₹169</span> <span class="mrp">₹199</span> <span class="tag">15% off</span> <span class="tag trade">trade ₹149</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-12">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_12_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·12</div>
+        <h3>Dual-Layer Smooth Metal Soap Dish</h3>
+        <p class="mat">MS sheet · Wire mesh insert</p>
+        <div class="pr"><span class="price">₹199</span> <span class="mrp">₹249</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹179</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-13">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_13_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·13</div>
+        <h3>Over-Sink Dish Cloth Drying Rail</h3>
+        <p class="mat">MS wire · Faucet clip</p>
+        <div class="pr"><span class="price">₹149</span> <span class="mrp">₹179</span> <span class="tag">17% off</span> <span class="tag trade">trade ₹139</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-14">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_14_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·14</div>
+        <h3>Cutlery Draining Jali Bucket</h3>
+        <p class="mat">MS jali sheet · Cylinder</p>
+        <div class="pr"><span class="price">₹278</span> <span class="mrp">₹349</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹249</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-15">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_15_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·15</div>
+        <h3>Sink Corner Vegetable Strainer</h3>
+        <p class="mat">Jali metal · Suction feet</p>
+        <div class="pr"><span class="price">₹199</span> <span class="mrp">₹249</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹179</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-16">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_16_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·16</div>
+        <h3>Wire Cup & Mug Drying Tree</h3>
+        <p class="mat">MS wire · 4 arms</p>
+        <div class="pr"><span class="price">₹278</span> <span class="mrp">₹349</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹249</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-17">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_17_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·17</div>
+        <h3>Scrubber & Steel Wool Wire Basket</h3>
+        <p class="mat">MS wire · S-hooks</p>
+        <div class="pr"><span class="price">₹139</span> <span class="mrp">₹169</span> <span class="tag">18% off</span> <span class="tag trade">trade ₹119</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-18">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_18_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·18</div>
+        <h3>Faucet Soap Bottle & Sponge Caddy</h3>
+        <p class="mat">MS wire · Dual bay</p>
+        <div class="pr"><span class="price">₹219</span> <span class="mrp">₹279</span> <span class="tag">22% off</span> <span class="tag trade">trade ₹199</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-19">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_19_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·19</div>
+        <h3>Glass & Bottle Washing Drying Rack</h3>
+        <p class="mat">MS wire · Inverted hold</p>
+        <div class="pr"><span class="price">₹240</span> <span class="mrp">₹299</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹219</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-20">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_20_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·20</div>
+        <h3>Dish Towel S-Hook Bar Rail</h3>
+        <p class="mat">MS wire · 4 S-hooks</p>
+        <div class="pr"><span class="price">₹179</span> <span class="mrp">₹229</span> <span class="tag">22% off</span> <span class="tag trade">trade ₹159</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-21">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_21_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·21</div>
+        <h3>Smooth U-Channel Metal Napkin Stand</h3>
+        <p class="mat">MS sheet · U-fold</p>
+        <div class="pr"><span class="price">₹169</span> <span class="mrp">₹199</span> <span class="tag">15% off</span> <span class="tag trade">trade ₹149</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-22">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_22_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·22</div>
+        <h3>Square Sheet Coasters (Set of 4)</h3>
+        <p class="mat">MS sheet · Felt base · Wire caddy</p>
+        <div class="pr"><span class="price">₹240</span> <span class="mrp">₹299</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹219</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-23">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_23_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·23</div>
+        <h3>Toothpick & Mouth Freshener Jar</h3>
+        <p class="mat">Seamed metal · Push-fit cap</p>
+        <div class="pr"><span class="price">₹119</span> <span class="mrp">₹139</span> <span class="tag">14% off</span> <span class="tag trade">trade ₹99</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-24">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_24_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·24</div>
+        <h3>3-Compartment Buffet Cutlery Caddy</h3>
+        <p class="mat">Wire frame · 3 sections</p>
+        <div class="pr"><span class="price">₹299</span> <span class="mrp">₹399</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹278</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-25">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_25_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·25</div>
+        <h3>Salt & Pepper Shaker Wire Holder</h3>
+        <p class="mat">MS wire · Twin loop</p>
+        <div class="pr"><span class="price">₹129</span> <span class="mrp">₹149</span> <span class="tag">13% off</span> <span class="tag trade">trade ₹109</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-26">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_26_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·26</div>
+        <h3>Large Table Hot Serving Trivet</h3>
+        <p class="mat">MS sheet · Geometric cut</p>
+        <div class="pr"><span class="price">₹240</span> <span class="mrp">₹299</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹219</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-27">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_27_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·27</div>
+        <h3>Wire Fruit & Bread Basket</h3>
+        <p class="mat">MS wire · Grid basket</p>
+        <div class="pr"><span class="price">₹299</span> <span class="mrp">₹399</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹278</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-28">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_28_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·28</div>
+        <h3>Chutney & Sauce Cup Stand (3 Cups)</h3>
+        <p class="mat">Wire rings · 3 cups</p>
+        <div class="pr"><span class="price">₹269</span> <span class="mrp">₹349</span> <span class="tag">23% off</span> <span class="tag trade">trade ₹249</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-29">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_29_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·29</div>
+        <h3>Dining Water Bottle Wire Holder</h3>
+        <p class="mat">MS wire · Single ring</p>
+        <div class="pr"><span class="price">₹159</span> <span class="mrp">₹199</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹139</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-30">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_30_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·30</div>
+        <h3>Toothpick & Tissue Combined Stand</h3>
+        <p class="mat">MS sheet + wire ring</p>
+        <div class="pr"><span class="price">₹179</span> <span class="mrp">₹229</span> <span class="tag">22% off</span> <span class="tag trade">trade ₹159</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-31">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_31_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·31</div>
+        <h3>Paper Towel Wall Holder S-Arm</h3>
+        <p class="mat">MS wire · S-arm</p>
+        <div class="pr"><span class="price">₹159</span> <span class="mrp">₹199</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹139</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-32">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_32_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·32</div>
+        <h3>Under-Cabinet Mug Sliding Rail</h3>
+        <p class="mat">MS wire · Sliding rail</p>
+        <div class="pr"><span class="price">₹219</span> <span class="mrp">₹279</span> <span class="tag">22% off</span> <span class="tag trade">trade ₹199</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-33">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_33_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·33</div>
+        <h3>Perforated Jali Tea Bag Caddy</h3>
+        <p class="mat">Jali MS · Divider box</p>
+        <div class="pr"><span class="price">₹199</span> <span class="mrp">₹249</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹179</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-34">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_34_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·34</div>
+        <h3>Utensil S-Hooks (Set of 6)</h3>
+        <p class="mat">Heavy MS wire · Set of 6</p>
+        <div class="pr"><span class="price">₹159</span> <span class="mrp">₹199</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹139</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-35">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_35_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·35</div>
+        <h3>Chakla Belan Wire Vertical Rack</h3>
+        <p class="mat">MS wire · Dual slot</p>
+        <div class="pr"><span class="price">₹299</span> <span class="mrp">₹399</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹278</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-36">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_36_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·36</div>
+        <h3>Belan (Rolling Pin) Wall Hook</h3>
+        <p class="mat">MS wire · Twin loop</p>
+        <div class="pr"><span class="price">₹139</span> <span class="mrp">₹179</span> <span class="tag">22% off</span> <span class="tag trade">trade ₹129</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-37">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_37_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·37</div>
+        <h3>Over-Cabinet Door Towel Bar</h3>
+        <p class="mat">MS wire · Over-door</p>
+        <div class="pr"><span class="price">₹159</span> <span class="mrp">₹199</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹139</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-38">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_38_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·38</div>
+        <h3>Wire Spice Jar 2-Tier Wall Rack</h3>
+        <p class="mat">MS wire · 2-tier</p>
+        <div class="pr"><span class="price">₹349</span> <span class="mrp">₹449</span> <span class="tag">22% off</span> <span class="tag trade">trade ₹329</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-39">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_39_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·39</div>
+        <h3>Key & Grocery List Wall Hook</h3>
+        <p class="mat">Sheet + 4 hooks + clip</p>
+        <div class="pr"><span class="price">₹159</span> <span class="mrp">₹199</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹139</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-40">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_40_shot_1_hero.jpg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·40</div>
+        <h3>Under-Shelf Wire Storage Basket</h3>
+        <p class="mat">MS wire · Under-shelf</p>
+        <div class="pr"><span class="price">₹299</span> <span class="mrp">₹399</span> <span class="tag">25% off</span> <span class="tag trade">trade ₹278</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-41">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_41_shot_1_hero.svg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·41</div>
+        <h3>Heavy Plant Pot Hanging Hooks (Set 4)</h3>
+        <p class="mat">Heavy MS · Leaf plate · Set 4</p>
+        <div class="pr"><span class="price">₹199</span> <span class="mrp">₹249</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹179</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-42">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_42_shot_1_hero.svg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·42</div>
+        <h3>Smooth Cabinet Pull Knobs (Set of 4)</h3>
+        <p class="mat">Pressed metal · Antique polish</p>
+        <div class="pr"><span class="price">₹269</span> <span class="mrp">₹349</span> <span class="tag">23% off</span> <span class="tag trade">trade ₹249</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-43">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_43_shot_1_hero.svg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·43</div>
+        <h3>Toilet Paper Holder with Top Shelf</h3>
+        <p class="mat">MS wire + sheet shelf</p>
+        <div class="pr"><span class="price">₹199</span> <span class="mrp">₹249</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹179</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-44">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_44_shot_1_hero.svg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·44</div>
+        <h3>Pressed Metal Shoe Horn</h3>
+        <p class="mat">Pressed metal · Antique polish</p>
+        <div class="pr"><span class="price">₹129</span> <span class="mrp">₹159</span> <span class="tag">19% off</span> <span class="tag trade">trade ₹109</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-45">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_45_shot_1_hero.svg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·45</div>
+        <h3>Curved Agarbatti Ash Strip</h3>
+        <p class="mat">Metal channel · Lotus punch</p>
+        <div class="pr"><span class="price">₹139</span> <span class="mrp">₹179</span> <span class="tag">22% off</span> <span class="tag trade">trade ₹119</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-46">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_46_shot_1_hero.svg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·46</div>
+        <h3>Door & Wall Key Rack (4 Hooks)</h3>
+        <p class="mat">MS strip · 4 hooks</p>
+        <div class="pr"><span class="price">₹189</span> <span class="mrp">₹249</span> <span class="tag">24% off</span> <span class="tag trade">trade ₹169</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-47">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_47_shot_1_hero.svg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·47</div>
+        <h3>Desktop Wire Cable Organizer</h3>
+        <p class="mat">Wire coil · Multi-groove</p>
+        <div class="pr"><span class="price">₹119</span> <span class="mrp">₹149</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹99</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-48">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_48_shot_1_hero.svg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·48</div>
+        <h3>Engravable Dual Metal Name Plate</h3>
+        <p class="mat">Brass on iron · Engravable</p>
+        <div class="pr"><span class="price">₹240</span> <span class="mrp">₹299</span> <span class="tag">20% off</span> <span class="tag trade">trade ₹219</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-49">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_49_shot_1_hero.svg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·49</div>
+        <h3>Sunburst Mini Accent Mirror (10 Inch)</h3>
+        <p class="mat">Glass + MS rays · Ø10"</p>
+        <div class="pr"><span class="price">₹379</span> <span class="mrp">₹499</span> <span class="tag">24% off</span> <span class="tag trade">trade ₹349</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a><a class="card" href="product.html?id=sku-50">
+      <div class="ph"><img src="xanvor_generated_renders/SKU_50_shot_1_hero.svg" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=noimg>Photo</div>'"></div>
+      <div class="bd">
+        <div class="code">XV·SKU·50</div>
+        <h3>Wire Specs & Eyeglass Desk Stand</h3>
+        <p class="mat">Bent wire · Nose form</p>
+        <div class="pr"><span class="price">₹129</span> <span class="mrp">₹169</span> <span class="tag">24% off</span> <span class="tag trade">trade ₹119</span></div>
+        <span class="cta">View · Buy →</span>
+      </div>
+    </a></div></section>
+<footer>
+  XANVOR · house brand of Zenko Inc · Moradabad<br>
+  Local full-catalogue view · click any card for product page with gallery &amp; buy/enquire<br>
+  <a href="index.html" style="color:#B68B5C">← Back to brand homepage</a>
+</footer>
+</body></html>
