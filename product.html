@@ -132,12 +132,73 @@
     border-radius:12px; overflow:hidden; aspect-ratio:1/1;
     display:flex;align-items:center;justify-content:center;padding:28px;
     box-shadow:0 16px 40px -28px rgba(36,21,16,.35);
+    cursor:zoom-in;
   }
   .main-shot img{
     max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain;
     transition:transform .8s cubic-bezier(.2,.7,.2,1);
+    pointer-events:none;
   }
-  .main-shot:hover img{transform:scale(1.03);}
+  .main-shot:hover img{transform:scale(1.04);}
+  .main-shot .zoom-hint{
+    position:absolute; bottom:12px; right:12px; z-index:2;
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(36,21,16,.78); color:#FBF6E8;
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.12em;
+    text-transform:uppercase; padding:7px 11px; border-radius:50px;
+    pointer-events:none; opacity:.85; transition:opacity .2s;
+  }
+  .main-shot:hover .zoom-hint{opacity:1;}
+  .main-shot .zoom-hint svg{width:13px;height:13px;}
+
+  /* Full-image lightbox */
+  .pd-lb{
+    position:fixed; inset:0; z-index:9500;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(15,12,10,.88); backdrop-filter:blur(8px);
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+    padding:24px; touch-action:none;
+  }
+  .pd-lb.open{opacity:1; pointer-events:auto;}
+  .pd-lb-inner{
+    position:relative; width:min(960px,100%); height:min(90vh,960px);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .pd-lb-img{
+    max-width:100%; max-height:90vh; width:auto; height:auto;
+    object-fit:contain; border-radius:8px;
+    box-shadow:0 24px 80px -20px rgba(0,0,0,.55);
+    background:#fff; user-select:none;
+  }
+  .pd-lb-close,.pd-lb-prev,.pd-lb-next{
+    position:absolute; border:1px solid rgba(251,246,232,.25);
+    background:rgba(36,21,16,.65); color:#FBF6E8; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .2s, border-color .2s;
+  }
+  .pd-lb-close:hover,.pd-lb-prev:hover,.pd-lb-next:hover{
+    background:rgba(168,93,42,.9); border-color:rgba(201,165,126,.5);
+  }
+  .pd-lb-close{
+    top:18px; right:18px; width:44px; height:44px; border-radius:50%;
+    z-index:2;
+  }
+  .pd-lb-prev,.pd-lb-next{
+    top:50%; transform:translateY(-50%); width:46px; height:46px; border-radius:50%;
+  }
+  .pd-lb-prev{left:14px;}
+  .pd-lb-next{right:14px;}
+  .pd-lb-prev[hidden],.pd-lb-next[hidden]{display:none !important;}
+  .pd-lb-count{
+    position:absolute; bottom:18px; left:50%; transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em;
+    color:rgba(251,246,232,.75); text-transform:uppercase;
+  }
+  @media(max-width:640px){
+    .pd-lb{padding:10px;}
+    .pd-lb-prev{left:6px;} .pd-lb-next{right:6px;}
+    .pd-lb-close{top:10px;right:10px;width:40px;height:40px;}
+  }
   .badge-pin{
     position:absolute;top:14px;left:14px;background:var(--band);color:#F6ECDB;
     font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:500;
@@ -540,7 +601,7 @@
 <script src="shop-cart.js?v=hs3"></script>
 <script src="assets/account.js?v=1"></script>
 <script src="enquiry-basket.js?v=hs1"></script>
-<script src="product.js?v=hs7"></script>
+<script src="product.js?v=hs8"></script>
 <script>
 (function(){
   var nc=document.getElementById('navCat'); if(!nc) return;

@@ -82,12 +82,131 @@
 
   /* ---- photo gallery (images[] if present, else single image) ---- */
   const GALLERY = (Array.isArray(product.images) && product.images.length ? product.images : [product.image]).filter(Boolean);
-  root.addEventListener('click', (e) => {
-    const b = e.target.closest('.pd-th'); if(!b) return;
-    const i = +b.dataset.i, src = GALLERY[i];
+  let lbIndex = 0;
+
+  const fullSrc = (src) => window.xvImg ? xvImg(src, 2000) : src;
+  const thumbSrc = (src) => window.xvImg ? xvImg(src, 200) : src;
+  const mainSrc = (src) => window.xvImg ? xvImg(src, 1200) : src;
+
+  function setMainImage(i){
+    if(i < 0 || i >= GALLERY.length) return;
+    lbIndex = i;
+    const src = GALLERY[i];
     const main = root.querySelector('.main-shot img');
-    if(main) main.src = window.xvImg ? xvImg(src, 1200) : src;
-    root.querySelectorAll('.pd-th').forEach(t => t.classList.toggle('on', t === b));
+    if(main){
+      main.src = mainSrc(src);
+      main.dataset.full = fullSrc(src);
+      main.dataset.i = String(i);
+    }
+    root.querySelectorAll('.pd-th').forEach(t => t.classList.toggle('on', +t.dataset.i === i));
+  }
+
+  function ensureLightbox(){
+    let lb = document.getElementById('pdLightbox');
+    if(lb) return lb;
+    lb = document.createElement('div');
+    lb.id = 'pdLightbox';
+    lb.className = 'pd-lb';
+    lb.setAttribute('role', 'dialog');
+    lb.setAttribute('aria-modal', 'true');
+    lb.setAttribute('aria-label', 'Product image');
+    lb.innerHTML = `
+      <button type="button" class="pd-lb-close" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>
+      </button>
+      <button type="button" class="pd-lb-prev" aria-label="Previous image">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4 6 9l5 5"/></svg>
+      </button>
+      <div class="pd-lb-inner">
+        <img class="pd-lb-img" alt="">
+      </div>
+      <button type="button" class="pd-lb-next" aria-label="Next image">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l5 5-5 5"/></svg>
+      </button>
+      <div class="pd-lb-count"></div>`;
+    document.body.appendChild(lb);
+
+    const img = lb.querySelector('.pd-lb-img');
+    const count = lb.querySelector('.pd-lb-count');
+    const prev = lb.querySelector('.pd-lb-prev');
+    const next = lb.querySelector('.pd-lb-next');
+
+    const render = () => {
+      const src = GALLERY[lbIndex];
+      img.src = fullSrc(src);
+      img.alt = (product.name || '') + ' — photo ' + (lbIndex + 1);
+      count.textContent = GALLERY.length > 1 ? (lbIndex + 1) + ' / ' + GALLERY.length : '';
+      prev.hidden = GALLERY.length < 2;
+      next.hidden = GALLERY.length < 2;
+    };
+    lb._render = render;
+
+    const close = () => {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+    const openAt = (i) => {
+      lbIndex = Math.max(0, Math.min(GALLERY.length - 1, i));
+      setMainImage(lbIndex);
+      render();
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+    lb._openAt = openAt;
+    lb._close = close;
+
+    lb.querySelector('.pd-lb-close').addEventListener('click', close);
+    prev.addEventListener('click', (e) => { e.stopPropagation(); openAt((lbIndex - 1 + GALLERY.length) % GALLERY.length); });
+    next.addEventListener('click', (e) => { e.stopPropagation(); openAt((lbIndex + 1) % GALLERY.length); });
+    lb.addEventListener('click', (e) => {
+      if(e.target === lb || e.target.classList.contains('pd-lb-inner')) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if(!lb.classList.contains('open')) return;
+      if(e.key === 'Escape') close();
+      if(e.key === 'ArrowLeft') openAt((lbIndex - 1 + GALLERY.length) % GALLERY.length);
+      if(e.key === 'ArrowRight') openAt((lbIndex + 1) % GALLERY.length);
+    });
+
+    // Swipe on mobile
+    let touchX = null;
+    lb.addEventListener('touchstart', (e) => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', (e) => {
+      if(touchX == null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      touchX = null;
+      if(Math.abs(dx) < 50 || GALLERY.length < 2) return;
+      if(dx > 0) openAt((lbIndex - 1 + GALLERY.length) % GALLERY.length);
+      else openAt((lbIndex + 1) % GALLERY.length);
+    }, { passive: true });
+
+    return lb;
+  }
+
+  function openLightbox(i){
+    const lb = ensureLightbox();
+    lb._openAt(typeof i === 'number' ? i : lbIndex);
+  }
+
+  root.addEventListener('click', (e) => {
+    const th = e.target.closest('.pd-th');
+    if(th){
+      setMainImage(+th.dataset.i);
+      return;
+    }
+    const main = e.target.closest('.main-shot');
+    if(main){
+      const img = main.querySelector('img');
+      const i = img && img.dataset.i != null ? +img.dataset.i : lbIndex;
+      openLightbox(i);
+    }
+  });
+  root.addEventListener('keydown', (e) => {
+    if(e.key !== 'Enter' && e.key !== ' ') return;
+    const main = e.target.closest('.main-shot');
+    if(!main) return;
+    e.preventDefault();
+    openLightbox(lbIndex);
   });
 
   /* ---- meta + SEO (canonical, OG, Product structured data) ---- */
@@ -281,15 +400,19 @@
 
       <!-- GALLERY -->
       <div class="gallery">
-        <div class="main-shot">
+        <div class="main-shot" role="button" tabindex="0" aria-label="View full size image" title="Click to enlarge">
           ${product.tag ? `<span class="badge-pin">${esc(product.tag)}</span>` : ''}
-          <img src="${esc(window.xvImg ? xvImg(GALLERY[0], 1200) : GALLERY[0])}" alt="${esc(product.name)}">
+          <img src="${esc(mainSrc(GALLERY[0]))}" data-full="${esc(fullSrc(GALLERY[0]))}" data-i="0" alt="${esc(product.name)}">
+          <span class="zoom-hint" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14M7 5v4M5 7h4"/></svg>
+            Enlarge
+          </span>
         </div>
         ${GALLERY.length > 1 ? `
         <div class="pd-thumbs">
-          ${GALLERY.map((g,i)=>`<button type="button" class="pd-th${i===0?' on':''}" data-i="${i}" aria-label="Photo ${i+1}"><img src="${esc(window.xvImg ? xvImg(g, 200) : g)}" alt=""></button>`).join('')}
+          ${GALLERY.map((g,i)=>`<button type="button" class="pd-th${i===0?' on':''}" data-i="${i}" aria-label="Photo ${i+1}"><img src="${esc(thumbSrc(g))}" alt=""></button>`).join('')}
         </div>` : ''}
-        <div class="shot-meta">Photographed at the workshop · Moradabad</div>
+        <div class="shot-meta">Click image to enlarge · Photographed in Moradabad</div>
         <div class="finish-row">
           <div class="lbl">Available finishes</div>
           <div class="finishes" id="finishes">
