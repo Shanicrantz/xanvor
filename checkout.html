@@ -122,6 +122,8 @@
   footer .f-legal a{color:#E7D7B4;}
 </style>
 <link rel="stylesheet" href="assets/site-chrome.css?v=1">
+<script src="assets/google-ads.js?v=1"></script>
+
 </head>
 <body>
 
@@ -398,6 +400,8 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
           <a class="btn btn-ghost" href="Hot-Serve Collection.html">Continue shopping</a>
         </div>
       </div>`;
+    /* Google Ads Purchase conversion */
+    if(window.XanvorAds && t) window.XanvorAds.purchase(t.total, oid);
   }
 
   async function payWithRazorpay(d, items, t, oid){
@@ -455,6 +459,8 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
           <a class="btn btn-ghost" href="Hot-Serve Collection.html">Continue shopping</a>
         </div>
       </div>`;
+    /* Google Ads Purchase conversion — paid online */
+    if(window.XanvorAds && t) window.XanvorAds.purchase(t.total, oid);
   }
 
   function renderEmpty(){
