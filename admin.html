@@ -456,6 +456,14 @@
         <span class="ico">▤</span> Orders
         <span class="badge zero" id="navBadgeOrders"></span>
       </button>
+      <button type="button" class="nav-item" data-nav="visitors">
+        <span class="ico">◉</span> Visitors
+        <span class="badge zero" id="navBadgeLive"></span>
+      </button>
+      <button type="button" class="nav-item" data-nav="leads">
+        <span class="ico">✉</span> Leads
+        <span class="badge zero" id="navBadgeLeads"></span>
+      </button>
       <button type="button" class="nav-item" data-nav="categories">
         <span class="ico">☰</span> Categories
       </button>
@@ -592,6 +600,54 @@
             <div style="margin-left:auto;"></div>
           </div>
           <div id="ordersList"></div>
+        </div>
+      </section>
+
+      <!-- VISITORS -->
+      <section class="panel" id="visitorsPanel">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">On site now</div>
+            <div class="stat-value" id="statLive">—</div>
+            <div class="stat-meta">Active in last 5 min</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Visitors today</div>
+            <div class="stat-value" id="statToday">—</div>
+            <div class="stat-meta" id="statTodayViews">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Leads captured</div>
+            <div class="stat-value" id="statLeads">—</div>
+            <div class="stat-meta">From the welcome offer</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="toolbar">
+            <span class="hint mono" id="visitorsCount"></span>
+            <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+              <label class="hint mono" style="display:flex;gap:6px;align-items:center;cursor:pointer;">
+                <input type="checkbox" id="visLiveOnly" style="width:auto;"> Live only
+              </label>
+              <button type="button" class="btn btn-ghost btn-sm" id="visRefresh">↻ Refresh</button>
+            </div>
+          </div>
+          <p class="hint" id="visTopPages" style="margin:0 0 10px;"></p>
+          <div id="visitorsList"></div>
+        </div>
+      </section>
+
+      <!-- LEADS -->
+      <section class="panel" id="leadsPanel">
+        <div class="card">
+          <div class="toolbar">
+            <span class="hint mono" id="leadsCount"></span>
+            <div style="margin-left:auto;display:flex;gap:8px;">
+              <button type="button" class="btn btn-ghost btn-sm" id="leadsCsv">⬇ Export CSV</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="leadsRefresh">↻ Refresh</button>
+            </div>
+          </div>
+          <div id="leadsList"></div>
         </div>
       </section>
 
@@ -819,6 +875,8 @@
     list:      { title:'Products', sub:'Live catalogue' },
     form:      { title:'Product editor', sub:'Add or edit SKU' },
     orders:    { title:'Orders', sub:'Fulfillment & tracking' },
+    visitors:  { title:'Visitors', sub:'Who is on the site, and what they viewed' },
+    leads:     { title:'Leads', sub:'Emails & numbers from the welcome offer' },
     categories:{ title:'Categories', sub:'Homepage section order' },
     listing:   { title:'Listing studio', sub:'Amazon-style images' },
   };
@@ -878,6 +936,8 @@
       list: 'listPanel',
       form: 'formPanel',
       orders: 'ordersPanel',
+      visitors: 'visitorsPanel',
+      leads: 'leadsPanel',
       categories: 'categoriesPanel',
       listing: 'listingPanel',
     };
@@ -898,6 +958,8 @@
     el.addEventListener('click', async ()=>{
       const v = el.dataset.nav;
       if(v==='orders'){ await loadOrders(); show('orders'); return; }
+      if(v==='visitors'){ show('visitors'); await loadAnalytics(); return; }
+      if(v==='leads'){ show('leads'); await loadLeads(); return; }
       if(v==='categories'){ renderCatOrder(); show('categories'); return; }
       if(v==='listing'){ LS.fromForm=false; LS.formCtx=null; renderCalloutChips(); show('listing'); return; }
       if(v==='list'){ show('list'); return; }
@@ -1200,6 +1262,174 @@
     saveBtn.disabled = false;
   });
 
+  /* ══════════ Visitors (live sessions + journeys) ══════════ */
+  let SESSIONS = [], ANALYTICS = null;
+
+  const agoText = (iso) => {
+    const secs = Math.max(0, Math.round((Date.now() - new Date(iso).getTime())/1000));
+    if(secs < 60) return secs+'s ago';
+    if(secs < 3600) return Math.round(secs/60)+'m ago';
+    if(secs < 86400) return Math.round(secs/3600)+'h ago';
+    return Math.round(secs/86400)+'d ago';
+  };
+  const prettyPath = (p) => {
+    const clean = String(p||'').split('?')[0];
+    if(clean === '/' || /index\.html$/.test(clean)) return 'Home';
+    return clean.replace(/^\//,'').replace(/\.html$/,'');
+  };
+
+  function renderAnalytics(){
+    if(!ANALYTICS) return;
+    const liveMs = ANALYTICS.liveWindowMs || 300000;
+    const isLive = (s) => (Date.now() - new Date(s.lastSeen).getTime()) < liveMs;
+    const live = SESSIONS.filter(isLive);
+
+    $('statLive').textContent = live.length;
+    $('statToday').textContent = ANALYTICS.todaySessions ?? '—';
+    $('statTodayViews').textContent = (ANALYTICS.todayViews||0)+' page views today';
+    $('navBadgeLive').textContent = live.length || '';
+    $('navBadgeLive').classList.toggle('zero', !live.length);
+
+    $('visTopPages').innerHTML = (ANALYTICS.topPages||[]).length
+      ? 'Top pages today: ' + ANALYTICS.topPages.map(p=>`<b>${esc(prettyPath(p.path))}</b> ${p.hits}`).join(' · ')
+      : '';
+
+    const liveOnly = $('visLiveOnly').checked;
+    const rows = liveOnly ? live : SESSIONS;
+    $('visitorsCount').textContent = rows.length+' session'+(rows.length===1?'':'s')+(liveOnly?' live':' recent');
+
+    $('visitorsList').innerHTML = rows.length ? rows.map(s=>{
+      const on = isLive(s);
+      const views = s.views||[];
+      const journey = views.map(v=>esc(prettyPath(v.p))).join(' → ') || '—';
+      const who = s.name || s.email || s.phone;
+      const geo = s.geo ? [s.geo.city, s.geo.region, s.geo.country].filter(Boolean).join(', ') : '';
+      const evs = (s.events||[]).map(e=>e.e);
+      const chips = [];
+      if(evs.includes('order')) chips.push('<span class="chip chip-delivered">ordered</span>');
+      else if(evs.includes('checkout_view')) chips.push('<span class="chip chip-shipped">reached checkout</span>');
+      else if(evs.includes('add_to_cart')) chips.push('<span class="chip chip-paid">added to cart</span>');
+      if(evs.includes('lead')) chips.push('<span class="chip chip-placed">gave email</span>');
+      const mins = Math.max(0, Math.round((new Date(s.lastSeen) - new Date(s.firstSeen))/60000));
+      return `
+      <div class="ord-card">
+        <div class="ord-top">
+          <div>
+            <div class="ord-oid">${on?'<span style="color:#1F8A5B">● live</span> ':''}${esc(who || 'Visitor')} ${chips.join(' ')}</div>
+            <div class="ord-meta">${agoText(s.lastSeen)} · ${views.length} page${views.length===1?'':'s'}${mins?' · '+mins+'m on site':''}${s.device?' · '+esc(s.device)+' '+esc(s.browser||''):''}${geo?' · '+esc(geo):''}${(s.visits>1)?' · repeat visitor ('+s.visits+')':''}</div>
+          </div>
+          <div class="ord-meta" style="text-align:right;">from ${esc(s.ref||'direct')}${s.utm&&s.utm.source?'<br>utm: '+esc(s.utm.source):''}</div>
+        </div>
+        <div class="ord-items">${journey}</div>
+        ${(s.email||s.phone)?`<div class="ord-ship">${esc(s.email||'')}${s.phone?' · '+esc(s.phone):''}</div>`:''}
+      </div>`;
+    }).join('') : '<div class="empty"><div class="empty-ico">◉</div><p>No visits recorded yet.</p></div>';
+  }
+
+  async function loadAnalytics(){
+    if(!SESSIONS.length) $('visitorsList').innerHTML = '<p class="hint">Loading visitors…</p>';
+    try{
+      const d = await api({action:'analytics'});
+      ANALYTICS = d; SESSIONS = d.sessions||[];
+      renderAnalytics();
+    }catch(err){ toast(err.message, true); $('visitorsList').innerHTML=''; }
+  }
+  $('visRefresh').addEventListener('click', ()=>loadAnalytics());
+  $('visLiveOnly').addEventListener('change', renderAnalytics);
+
+  /* ══════════ Leads (welcome-offer captures) ══════════ */
+  let LEADS = [];
+
+  function renderLeads(){
+    $('leadsCount').textContent = LEADS.length+' lead'+(LEADS.length===1?'':'s');
+    $('statLeads').textContent = LEADS.length;
+    $('navBadgeLeads').textContent = LEADS.length || '';
+    $('navBadgeLeads').classList.toggle('zero', !LEADS.length);
+
+    $('leadsList').innerHTML = LEADS.length ? LEADS.map(l=>{
+      const date = l.createdAt ? new Date(l.createdAt).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
+      const geo = l.geo ? [l.geo.city, l.geo.country].filter(Boolean).join(', ') : '';
+      const wa = String(l.phone||'').replace(/\D/g,'');
+      return `
+      <div class="ord-card" data-key="${esc(l.key)}">
+        <div class="ord-top">
+          <div>
+            <div class="ord-oid">${esc(l.email || l.phone)}</div>
+            <div class="ord-meta">${date}${geo?' · '+esc(geo):''} · code ${esc(l.coupon||'—')} · ${esc(l.source||'')}</div>
+          </div>
+          <div class="ord-controls" style="margin:0;">
+            ${l.email?`<a class="btn btn-ghost btn-sm" href="mailto:${esc(l.email)}">Email</a>`:''}
+            ${wa?`<a class="btn btn-ghost btn-sm" href="https://wa.me/${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a>`:''}
+            <button class="btn btn-danger btn-sm" data-del-lead>Delete</button>
+          </div>
+        </div>
+        ${(l.email&&l.phone)?`<div class="ord-items">${esc(l.phone)}</div>`:''}
+        ${(l.pages&&l.pages.length)?`<div class="ord-ship">Browsed: ${l.pages.map(p=>esc(prettyPath(p))).join(' → ')}</div>`:''}
+      </div>`;
+    }).join('') : '<div class="empty"><div class="empty-ico">✉</div><p>No leads yet — the welcome offer appears after 30s on site.</p></div>';
+  }
+
+  async function loadLeads(){
+    if(!LEADS.length) $('leadsList').innerHTML = '<p class="hint">Loading leads…</p>';
+    try{ const d = await api({action:'leads-list'}); LEADS = d.leads||[]; renderLeads(); }
+    catch(err){ toast(err.message, true); $('leadsList').innerHTML=''; }
+  }
+  $('leadsRefresh').addEventListener('click', ()=>loadLeads());
+  $('leadsList').addEventListener('click', async e=>{
+    const btn = e.target.closest('[data-del-lead]'); if(!btn) return;
+    const key = btn.closest('.ord-card').dataset.key;
+    if(!confirm('Delete this lead?')) return;
+    btn.disabled = true;
+    try{ await api({action:'leads-delete', key}); LEADS = LEADS.filter(l=>l.key!==key); renderLeads(); toast('Lead deleted'); }
+    catch(err){ toast(err.message, true); btn.disabled = false; }
+  });
+  $('leadsCsv').addEventListener('click', ()=>{
+    if(!LEADS.length) return toast('No leads to export', true);
+    const q = (v) => '"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+    const csv = ['Email,Phone,Name,Code,Source,City,Country,Captured']
+      .concat(LEADS.map(l=>[l.email,l.phone,l.name,l.coupon,l.source,l.geo&&l.geo.city,l.geo&&l.geo.country,l.createdAt].map(q).join(',')))
+      .join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+    a.download = 'xanvor-leads.csv'; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  });
+
+  /* ══════════ New-order watch — badge, toast and a desktop notification
+     while the admin tab is open. Polls orders every 45s; the email alert to
+     NOTIFY_EMAIL is the reliable path when nobody has admin open. ══════════ */
+  let lastSeenOids = null;
+  async function watchNewOrders(){
+    if(!KEY) return;
+    try{
+      const d = await api({action:'orders-list'});
+      const orders = d.orders || [];
+      const oids = orders.map(o=>o.oid);
+      if(lastSeenOids){
+        const fresh = orders.filter(o=>!lastSeenOids.includes(o.oid));
+        if(fresh.length){
+          ORDERS = orders; renderOrders(); renderDashboard();
+          const first = fresh[0];
+          toast(`🛒 New order ${first.oid} · ${fmt(first.totals&&first.totals.total||0)}`);
+          try{
+            document.title = `(${fresh.length}) New order — XANVOR Admin`;
+            if(window.Notification && Notification.permission === 'granted'){
+              new Notification('XANVOR — new order', { body: `${first.oid} · ${fmt(first.totals&&first.totals.total||0)} · ${first.name||''}` });
+            }
+          }catch(_){}
+        }
+      }
+      lastSeenOids = oids;
+      /* live-visitor badge stays fresh even when not on the Visitors tab */
+      if(currentViewName === 'visitors') await loadAnalytics();
+      else {
+        try{ const a = await api({action:'analytics', limit:60}); ANALYTICS = a; SESSIONS = a.sessions||[]; renderAnalytics(); }catch(_){}
+      }
+    }catch(_){ /* transient — try again next tick */ }
+  }
+  setInterval(watchNewOrders, 45000);
+  window.addEventListener('focus', ()=>{ document.title = 'XANVOR — Atelier Admin'; });
+
   async function unlock(){
     KEY = $('keyInput').value.trim();
     if(!KEY) return toast('Key daalo', true);
@@ -1207,6 +1437,12 @@
       await refresh();
       sessionStorage.setItem('xv_admin_key', KEY);
       try{ await loadOrders(); }catch(_){}
+      /* prime the live badges + new-order watch, and ask once for desktop
+         notifications so a new order can pop up while this tab is open */
+      try{ await loadAnalytics(); }catch(_){}
+      try{ await loadLeads(); }catch(_){}
+      lastSeenOids = ORDERS.map(o=>o.oid);
+      try{ if(window.Notification && Notification.permission === 'default') Notification.requestPermission(); }catch(_){}
       show('dashboard');
     }catch(e){ toast(e.message, true); }
   }
@@ -1683,7 +1919,13 @@
 
   if(KEY){
     refresh()
-      .then(async ()=>{ try{ await loadOrders(); }catch(_){ } show('dashboard'); })
+      .then(async ()=>{
+        try{ await loadOrders(); }catch(_){ }
+        try{ await loadAnalytics(); }catch(_){ }
+        try{ await loadLeads(); }catch(_){ }
+        lastSeenOids = ORDERS.map(o=>o.oid);
+        show('dashboard');
+      })
       .catch(()=>{ KEY=''; sessionStorage.removeItem('xv_admin_key'); show('gate'); });
   } else show('gate');
 })();

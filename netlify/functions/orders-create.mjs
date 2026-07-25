@@ -5,7 +5,9 @@
    the checkout email — guest checkout stays allowed, and logging into
    that same email later shows the order (no separate merge step). */
 import { createOrder } from './lib/orders.mjs';
-import { sendOrderConfirmationEmail } from './lib/notify.mjs';
+import { sendOrderConfirmationEmail, sendOwnerOrderAlert } from './lib/notify.mjs';
+import { validateCoupon } from './lib/coupon.mjs';
+import { recordHit } from './lib/analytics.mjs';
 
 const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
   status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
@@ -33,6 +35,15 @@ function cleanOrder(raw) {
   const status = paymentMethod === 'razorpay' ? 'paid' : 'placed';
   if (paymentMethod === 'razorpay' && !str(raw.paymentId, 80)) throw new Error('paymentId required for razorpay orders');
 
+  /* coupon is re-validated here against the cart subtotal so a stored order
+     can never claim a discount the code doesn't actually give */
+  const sub = num(t.sub);
+  let coupon, discount;
+  if (str(raw.coupon, 30)) {
+    const v = validateCoupon(raw.coupon, sub);
+    if (v.ok) { coupon = v.code; discount = v.discount; }
+  }
+
   return {
     oid, email, paymentMethod, status,
     paymentId: str(raw.paymentId, 80) || undefined,
@@ -40,7 +51,8 @@ function cleanOrder(raw) {
     address: str(raw.address, 240), city: str(raw.city, 80), state: str(raw.state, 80),
     pincode: str(raw.pincode, 12), landmark: str(raw.landmark, 160),
     items,
-    totals: { sub: num(t.sub), gst: num(t.gst), ship: num(t.ship), total: num(t.total) },
+    coupon, discount,
+    totals: { sub, gst: num(t.gst), ship: num(t.ship), discount: discount || 0, total: Math.max(1, sub - (discount || 0)) },
   };
 }
 
@@ -57,6 +69,19 @@ export default async (req) => {
        never complete. sendOrderConfirmationEmail never throws — the order
        stays saved either way, this only adds the Resend round-trip latency. */
     await sendOrderConfirmationEmail(saved);
+    /* the shop's own new-order alert — reaches a phone lock screen */
+    await sendOwnerOrderAlert(saved);
+    /* mark the order on the visitor session so the admin can see the journey
+       that led to it (best-effort; sid is absent for non-tracked visits) */
+    if (body.sid) {
+      try {
+        await recordHit({
+          sid: body.sid, kind: 'event', event: 'order',
+          meta: { oid: saved.oid, total: saved.totals && saved.totals.total },
+          identity: { email: saved.email, phone: saved.phone, name: saved.name },
+        });
+      } catch { /* ignore */ }
+    }
     return json({ ok: true, oid: saved.oid });
   } catch (e) {
     return json({ error: e.message || 'order save failed' }, 400);

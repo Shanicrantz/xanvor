@@ -165,3 +165,110 @@ export async function sendOrderStatusEmail(order) {
     console.error('notify.mjs: status email send failed', e.message);
   }
 }
+
+/* ---- Owner alerts (to NOTIFY_EMAIL) ------------------------------------
+   These go to the shop, not the customer: a new-order alert that is
+   readable on a phone lock screen, and a heads-up when the offer popup
+   captures a new lead. Both swallow their own errors. */
+
+const ownerTo = () => process.env.NOTIFY_EMAIL || 'hello@xanvor.com';
+
+async function sendOwner(subject, html, text, replyTo) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM || 'XANVOR <onboarding@resend.dev>';
+  if (!apiKey) { console.error('notify.mjs: RESEND_API_KEY missing, owner alert skipped'); return; }
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from, to: [ownerTo()], reply_to: replyTo || undefined, subject, html, text }),
+    });
+    if (!res.ok) console.error('notify.mjs: Resend rejected owner alert', res.status, await res.text().catch(() => ''));
+  } catch (e) {
+    console.error('notify.mjs: owner alert send failed', e.message);
+  }
+}
+
+export async function sendOwnerOrderAlert(order) {
+  if (!order) return;
+  const siteUrl = (process.env.SITE_URL || process.env.URL || 'https://xanvor.com').replace(/\/+$/, '');
+  const items = (order.items || []);
+  const qty = items.reduce((n, it) => n + (Number(it.qty) || 0), 0);
+  const paidLabel = order.paymentMethod === 'razorpay' ? 'PAID ONLINE'
+    : order.paymentMethod === 'cod' ? 'COD — collect on delivery'
+    : String(order.paymentMethod || '').toUpperCase();
+
+  const rows = items.map((it) => `
+    <tr>
+      <td style="padding:8px 10px;border-bottom:1px solid #E6DCC8;font-family:Georgia,serif;font-size:14px;color:#241510;">${esc(it.name)}<div style="font-family:monospace;font-size:11px;color:#8A7359;">${esc(it.code || '')}</div></td>
+      <td style="padding:8px 10px;border-bottom:1px solid #E6DCC8;text-align:center;font-family:monospace;font-size:13px;color:#A85D2A;">${esc(it.qty)}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #E6DCC8;text-align:right;font-family:Georgia,serif;font-size:14px;color:#241510;">${fmt((Number(it.price) || 0) * (Number(it.qty) || 0))}</td>
+    </tr>`).join('');
+
+  const discountRow = order.discount
+    ? `<div style="color:#1F8A5B;font-size:14px;">Coupon ${esc(order.coupon || '')} · −${fmt(order.discount)}</div>` : '';
+
+  const html = `
+<!doctype html><html><body style="margin:0;background:#F4EEE2;font-family:Georgia,serif;">
+<div style="max-width:600px;margin:0 auto;padding:28px 24px;background:#FCFAF4;">
+  <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#A85D2A;">XANVOR · New order</div>
+  <h2 style="font-family:Georgia,serif;font-weight:400;color:#241510;margin:6px 0 2px;font-size:26px;">${fmt(order.totals && order.totals.total)} · ${qty} pc${qty === 1 ? '' : 's'}</h2>
+  <div style="font-family:monospace;font-size:12px;color:#A85D2A;margin-bottom:4px;">${esc(order.oid)} · ${esc(paidLabel)}</div>
+  ${discountRow}
+  <table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;border:1px solid #E6DCC8;background:#fff;margin:16px 0;">${rows}</table>
+  <div style="background:#F8F2E6;border:1px solid #E6DCC8;border-radius:8px;padding:14px 16px;font-size:14.5px;color:#43352B;line-height:1.6;">
+    <b style="color:#241510;">${esc(order.name || '')}</b><br>
+    ${esc(order.phone || '')}${order.email ? ' · ' + esc(order.email) : ''}<br>
+    ${esc(order.address || '')}${order.landmark ? ', ' + esc(order.landmark) : ''}<br>
+    ${esc(order.city || '')}, ${esc(order.state || '')} — ${esc(order.pincode || '')}
+  </div>
+  <div style="margin-top:20px;">
+    <a href="${esc(siteUrl)}/admin.html" style="display:inline-block;background:#A85D2A;color:#FBF6E8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border-radius:50px;">Open admin</a>
+    <a href="https://wa.me/${esc(String(order.phone || '').replace(/\D/g, ''))}" style="display:inline-block;margin-left:8px;background:#1FA855;color:#fff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border-radius:50px;">WhatsApp buyer</a>
+  </div>
+</div></body></html>`.trim();
+
+  const text = [
+    `NEW ORDER ${order.oid} — ${fmt(order.totals && order.totals.total)} (${paidLabel})`,
+    ``,
+    ...items.map((it) => `  ${it.qty} x ${it.name} (${it.code || ''})`),
+    order.discount ? `  Coupon ${order.coupon}: -${fmt(order.discount)}` : '',
+    ``,
+    `${order.name} · ${order.phone}${order.email ? ' · ' + order.email : ''}`,
+    `${order.address}${order.landmark ? ', ' + order.landmark : ''}`,
+    `${order.city}, ${order.state} - ${order.pincode}`,
+    ``,
+    `Admin: ${siteUrl}/admin.html`,
+  ].filter((l) => l !== '').join('\n');
+
+  await sendOwner(`🛒 New order ${fmt(order.totals && order.totals.total)} · ${order.oid} · ${paidLabel}`, html, text, order.email || undefined);
+}
+
+export async function sendLeadAlert(lead, isNew) {
+  if (!lead || !isNew) return; // only ping the shop the first time a lead appears
+  const where = lead.geo ? [lead.geo.city, lead.geo.country].filter(Boolean).join(', ') : '';
+  const html = `
+<!doctype html><html><body style="margin:0;background:#F4EEE2;font-family:Georgia,serif;">
+<div style="max-width:520px;margin:0 auto;padding:26px 24px;background:#FCFAF4;">
+  <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#A85D2A;">XANVOR · New lead</div>
+  <h2 style="font-family:Georgia,serif;font-weight:400;color:#241510;margin:6px 0 12px;font-size:22px;">Someone claimed the offer</h2>
+  <div style="background:#F8F2E6;border:1px solid #E6DCC8;border-radius:8px;padding:14px 16px;font-size:15px;color:#43352B;line-height:1.7;">
+    ${lead.email ? `<b>Email:</b> <a href="mailto:${esc(lead.email)}" style="color:#A85D2A;">${esc(lead.email)}</a><br>` : ''}
+    ${lead.phone ? `<b>Phone:</b> <a href="https://wa.me/${esc(String(lead.phone).replace(/\D/g, ''))}" style="color:#1FA855;">${esc(lead.phone)}</a><br>` : ''}
+    ${lead.name ? `<b>Name:</b> ${esc(lead.name)}<br>` : ''}
+    <b>Code given:</b> ${esc(lead.coupon || '—')}${where ? `<br><b>From:</b> ${esc(where)}` : ''}
+  </div>
+  ${(lead.pages && lead.pages.length) ? `<div style="margin-top:12px;font-size:13px;color:#6E6151;">Browsed: ${lead.pages.map((p) => esc(p)).join(' → ')}</div>` : ''}
+</div></body></html>`.trim();
+
+  const text = [
+    'XANVOR — new lead from the offer popup',
+    lead.email ? `Email: ${lead.email}` : '',
+    lead.phone ? `Phone: ${lead.phone}` : '',
+    lead.name ? `Name: ${lead.name}` : '',
+    `Code: ${lead.coupon || '—'}`,
+    where ? `From: ${where}` : '',
+  ].filter(Boolean).join('\n');
+
+  await sendOwner(`✉️ New lead · ${lead.email || lead.phone}`, html, text, lead.email || undefined);
+}

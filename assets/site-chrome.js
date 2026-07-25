@@ -261,9 +261,24 @@
     window.dispatchEvent(new CustomEvent('xanvor:chrome-ready'));
   }
 
+  /* First-party visit tracker + welcome-offer popup. Loaded from here so it
+     lands on every page that has the shared chrome, without 12 more script
+     tags. Deferred to idle time — it must never compete with page render. */
+  function loadVisitTracker() {
+    if (document.getElementById('xv-visit-js')) return;
+    var s = document.createElement('script');
+    s.id = 'xv-visit-js';
+    s.src = '/assets/visit.js?v=1';   /* absolute — /checkout has no dir base */
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', mount);
   } else {
     mount();
   }
+
+  if (window.requestIdleCallback) requestIdleCallback(loadVisitTracker, { timeout: 3000 });
+  else setTimeout(loadVisitTracker, 1200);
 })();

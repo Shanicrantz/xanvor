@@ -12,6 +12,7 @@ import { createHash, timingSafeEqual } from 'node:crypto';
 import { getCatalog, saveCatalog } from './lib/catalog.mjs';
 import { getAllOrders, updateOrderStatus, deleteOrder } from './lib/orders.mjs';
 import { sendOrderStatusEmail } from './lib/notify.mjs';
+import { getRecentSessions, summarise, getLeads, deleteLead, LIVE_WINDOW_MS } from './lib/analytics.mjs';
 
 const COLLECTIONS = ['Silver & Gold', 'Copper', 'Brass', 'Sheesham & Wood', 'Wireform Furniture', 'Hot-Serve', 'Artisanal Serving Trays', 'Copper Home Collection', 'The Jewel Collection', 'Canister & Vanity Series', 'Ribbed Storage Collection', 'Metal Wall Art & Décor', 'Kansa Dinnerware', 'Kitchen Utility Crafts'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -195,6 +196,22 @@ export default async (req) => {
          never throws — awaited for serverless reliability. */
       if (result.shouldNotify) await sendOrderStatusEmail(result.order);
       return json({ ok: true, order: result.order });
+    }
+
+    if (body.action === 'analytics') {
+      const sessions = await getRecentSessions(Number(body.limit) || 120);
+      return json({ ...summarise(sessions), liveWindowMs: LIVE_WINDOW_MS, sessions });
+    }
+
+    if (body.action === 'leads-list') {
+      const leads = await getLeads(Number(body.limit) || 300);
+      return json({ leads });
+    }
+
+    if (body.action === 'leads-delete') {
+      const ok = await deleteLead(str(body.key, 220));
+      if (!ok) return json({ error: 'lead not found' }, 404);
+      return json({ ok: true });
     }
 
     if (body.action === 'orders-delete') {

@@ -92,6 +92,22 @@
   .place:hover{background:#C0712F;transform:translateY(-1px);}
   .place svg{width:15px;height:15px;}
   .secure{margin-top:12px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);line-height:1.7;}
+  /* discount code */
+  .coupon-box{padding:4px 0 2px;}
+  .coupon-row{display:flex;gap:8px;}
+  .coupon-row input{flex:1;min-width:0;background:#fff;border:1px solid var(--line-strong);border-radius:6px;padding:10px 12px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--claret-deep);}
+  .coupon-row input:focus{outline:none;border-color:var(--rust);}
+  .coupon-row button{background:none;border:1px solid var(--rust);color:var(--rust);border-radius:6px;padding:0 16px;
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;transition:all .2s;}
+  .coupon-row button:hover{background:rgba(168,93,42,.08);}
+  .coupon-msg{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.06em;color:var(--ink-faint);margin-top:6px;min-height:12px;}
+  .coupon-msg.bad{color:#A32D2D;}
+  .coupon-on{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#E9F5EE;border:1px solid #BFE3CF;
+    border-radius:7px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#1F8A5B;}
+  .coupon-on b{letter-spacing:.16em;}
+  .coupon-on button{background:none;border:none;color:#5A4636;text-decoration:underline;font-family:inherit;font-size:9px;letter-spacing:.14em;text-transform:uppercase;}
+  .sum-row.disc .v{color:#1F8A5B;}
   .acc-line{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#8A7359;margin-top:12px;}
   .acc-line a{color:var(--rust);text-decoration:underline;}
   .right-rail{position:sticky;top:92px;}
@@ -145,7 +161,7 @@
 <script src="assets/products.js"></script>
 <script src="/api/products.js"></script>
 <script src="assets/mass-products.js?v=2"></script>
-<script src="assets/site-chrome.js?v=1"></script>
+<script src="assets/site-chrome.js?v=2"></script>
 <script src="shop-cart.js?v=hs3"></script>
 <script>
 /* Google Shopping checkout link — /checkout?item_id={id}
@@ -232,7 +248,11 @@
           oid, email:d.email, name:d.name, phone:d.phone, address:d.address, city:d.city, state:d.state,
           pincode:d.pincode, landmark:d.landmark,
           items: items.map(it=>({ id:it.id, code:it.code, name:it.name, image:it.image, qty:it.qty, price:it.price })),
-          totals: t, paymentMethod, ...(extra||{}),
+          totals: t, paymentMethod,
+          coupon: coupon ? coupon.code : undefined,
+          /* visit-tracker session id — lets admin see the journey behind the order */
+          sid: (function(){ try{ return sessionStorage.getItem('xv_sid') || undefined; }catch(e){ return undefined; } })(),
+          ...(extra||{}),
         }),
       });
     }catch(e){ /* non-fatal — the WhatsApp/COD/paid flow must complete even if this hiccups */ }
@@ -242,13 +262,41 @@
   const waIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.2 1.2-1.7 1.2-.4 0-1 .1-3.2-.9-2.7-1.2-4.4-4-4.5-4.2-.1-.2-1-1.4-1-2.6 0-1.3.7-1.9.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.5c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.6-.1l1.9.9c.3.1.4.2.5.3.1.3.1.6-.1 1.1Z"/></svg>`;
   const bagIcon = `<svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h12l-1 12H6L5 7Z"/><path d="M8 7V5a3 3 0 0 1 6 0v2"/></svg>`;
 
+  /* welcome-offer coupon — validated by /api/coupon (same rules the server
+     re-applies when the order is stored, so the two can't disagree) */
+  let coupon = null;   // { code, discount, label }
+
   function totals(){
     /* Cart unit prices are GST-inclusive (set on the product page).
        GST here is the included portion, shown for the invoice — not added on top. */
     const sub = S.subtotal();
     const gst = sub - sub / (1 + CFG.GST);
-    return { sub, gst, ship:0, total: sub };
+    const discount = coupon ? Math.min(coupon.discount, Math.max(0, sub - 1)) : 0;
+    return { sub, gst, ship:0, discount, total: sub - discount };
   }
+
+  async function applyCoupon(){
+    const input = document.getElementById('couponInput');
+    const msg = document.getElementById('couponMsg');
+    const code = (input.value || '').trim();
+    if(!code){ msg.textContent = 'Code daalein'; msg.className = 'coupon-msg bad'; return; }
+    msg.textContent = 'Checking…'; msg.className = 'coupon-msg';
+    try{
+      const r = await fetch('/api/coupon', {
+        method:'POST', headers:{'content-type':'application/json'},
+        body: JSON.stringify({ code, subtotal: S.subtotal() })
+      });
+      const d = await r.json();
+      if(!d.ok){ coupon = null; msg.textContent = d.error || 'Code valid nahi hai'; msg.className = 'coupon-msg bad'; renderCheckout(); return; }
+      coupon = { code: d.code, discount: d.discount, label: d.label };
+      renderCheckout();
+      if(window.xvTrack) window.xvTrack('coupon_applied', { code: d.code, discount: d.discount });
+    }catch(e){
+      msg.textContent = 'Check nahi kar paye — dubara try karein'; msg.className = 'coupon-msg bad';
+    }
+  }
+
+  function removeCoupon(){ coupon = null; renderCheckout(); }
 
   function renderCheckout(){
     const items = S.items();
@@ -304,8 +352,22 @@
             </div>
             <button class="edit-cart" id="edit-cart" type="button">Edit cart</button>
             <div class="sum-div"></div>
+            <div class="coupon-box">
+              ${coupon ? `
+                <div class="coupon-on">
+                  <span><b>${esc(coupon.code)}</b> applied · −${fmt(t.discount)}</span>
+                  <button type="button" id="couponRemove">Remove</button>
+                </div>` : `
+                <div class="coupon-row">
+                  <input id="couponInput" type="text" placeholder="Discount code" autocapitalize="characters" spellcheck="false">
+                  <button type="button" id="couponApply">Apply</button>
+                </div>
+                <div class="coupon-msg" id="couponMsg"></div>`}
+            </div>
+            <div class="sum-div"></div>
             <div class="sum-row"><span class="k">Subtotal (incl. GST)</span><span class="v">${fmt(t.sub)}</span></div>
             <div class="sum-row"><span class="k">Includes GST (18%)</span><span class="v">${fmt(t.gst)}</span></div>
+            ${t.discount ? `<div class="sum-row disc"><span class="k">Discount · ${esc(coupon.code)}</span><span class="v">−${fmt(t.discount)}</span></div>` : ''}
             <div class="sum-row free"><span class="k">Shipping</span><span class="v">Free</span></div>
             <div class="sum-div"></div>
             <div class="sum-total"><span class="k">Total</span><span class="v">${fmt(t.total)}</span></div>
@@ -322,6 +384,13 @@
     });
     document.getElementById('edit-cart').addEventListener('click', ()=>S.open());
     document.getElementById('place').addEventListener('click', placeOrder);
+    const cApply = document.getElementById('couponApply');
+    if(cApply){
+      cApply.addEventListener('click', applyCoupon);
+      document.getElementById('couponInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); applyCoupon(); } });
+    }
+    const cRemove = document.getElementById('couponRemove');
+    if(cRemove) cRemove.addEventListener('click', removeCoupon);
     applyProfileToForm();
   }
 
@@ -344,7 +413,7 @@
 ${lines}
 
 Subtotal (incl. GST): ${fmt(t.sub)}
-Includes GST 18%: ${fmt(t.gst)}
+Includes GST 18%: ${fmt(t.gst)}${t.discount?`\nDiscount (${coupon.code}): -${fmt(t.discount)}`:''}
 Shipping: Free
 *Total: ${fmt(t.total)}*
 
