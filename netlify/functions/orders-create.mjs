@@ -15,7 +15,9 @@ const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
 
 const str = (v, max) => String(v ?? '').trim().slice(0, max);
 const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
-const PAYMENT_METHODS = ['razorpay', 'whatsapp', 'cod', 'upi', 'bank'];
+/* 'cod' removed 2026-07-29 — owner discontinued Cash on Delivery. Old COD
+   orders keep rendering fine in admin/emails; only NEW cod orders are blocked. */
+const PAYMENT_METHODS = ['razorpay', 'whatsapp', 'upi', 'bank'];
 
 function cleanOrder(raw) {
   const oid = str(raw.oid, 24);

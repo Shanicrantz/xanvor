@@ -297,18 +297,21 @@
   }
 
   /* Scroll-float: card grids drift up into place (staggered) as they enter
-     the viewport. Homepage .cat-pages is EXCLUDED — its reveals are force-
-     shown because transitions stall on that 30k px page; same reason we
-     keep a belt-and-braces timer that force-shows anything still hidden. */
+     the viewport — INCLUDING the homepage catalogue cards. This page has a
+     history of stalled CSS transitions, so instead of trusting them we keep
+     perpetual safety sweeps (interval + scroll) that instantly force-show
+     any card that should be visible but isn't: never-revealed cards already
+     inside the viewport, and the classic frozen-mid-transition case. Cards
+     still below the fold keep their animation for whenever the user gets
+     there — no global "give up" timer that strips the effect. */
   function initFloatIn() {
     try {
       if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       if (!('IntersectionObserver' in window)) return;
       var SEL = ['.featured-grid > *', '.trust-wrap > .t-cell', '.ndband-grid > *',
                  '.tb-grid > *', '.nd-grid > *', '.ws-cols > *', '.cap-grid > *',
-                 '.faq-list details', 'a.card'].join(',');
-      var els = Array.prototype.slice.call(document.querySelectorAll(SEL))
-        .filter(function (el) { return !el.closest('.cat-pages'); });
+                 '.faq-list details', 'a.card', '.cat-grid > .cat-item'].join(',');
+      var els = Array.prototype.slice.call(document.querySelectorAll(SEL));
       if (!els.length) return;
       els.forEach(function (el) {
         var i = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
@@ -317,30 +320,41 @@
       });
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
-          if (en.isIntersecting) { en.target.classList.add('xv-in'); io.unobserve(en.target); }
+          if (en.isIntersecting) {
+            en.target.dataset.xvInAt = String(Date.now());
+            en.target.classList.add('xv-in');
+            io.unobserve(en.target);
+          }
         });
       }, { threshold: 0, rootMargin: '0px 0px -30px 0px' });
       els.forEach(function (el) { io.observe(el); });
-      /* stall sweeps: (a) anything already past the viewport that never got
-         .xv-in, and (b) the site's classic failure — .xv-in applied but the
-         transition froze mid-flight leaving the card near-invisible. Both
-         get forced visible with transition:none. Far-below-fold elements are
-         left to the observer so the effect survives for late scrollers. */
-      function sweep(last) {
+
+      /* stagger (≤350ms) + duration (700ms) — anything older than this that
+         is still faded is genuinely frozen, not animating */
+      var SETTLE_MS = 1600;
+      function sweep() {
         document.querySelectorAll('.xv-float').forEach(function (el) {
           var isIn = el.classList.contains('xv-in');
-          var above = el.getBoundingClientRect().top < window.innerHeight + 200;
-          var stuck = isIn && parseFloat(getComputedStyle(el).opacity) < 0.9;
-          if ((!isIn && (above || last)) || stuck) {
+          var r = el.getBoundingClientRect();
+          var inView = r.top < window.innerHeight + 100 && r.bottom > -100;
+          var age = Date.now() - (parseInt(el.dataset.xvInAt, 10) || 0);
+          var stuck = isIn && inView && age > SETTLE_MS
+            && parseFloat(getComputedStyle(el).opacity) < 0.9;
+          if ((!isIn && inView) || stuck) {
             el.style.setProperty('transition', 'none', 'important');
             el.style.transitionDelay = '';
+            el.dataset.xvInAt = String(Date.now());
             el.classList.add('xv-in');
           }
         });
       }
-      setTimeout(function () { sweep(false); }, 4000);
-      setTimeout(function () { sweep(false); }, 8000);
-      setTimeout(function () { sweep(true); }, 15000);
+      setInterval(sweep, 4000);
+      var sweepQueued = false;
+      window.addEventListener('scroll', function () {
+        if (sweepQueued) return;
+        sweepQueued = true;
+        setTimeout(function () { sweepQueued = false; sweep(); }, 450);
+      }, { passive: true });
     } catch (e) { /* animation is optional — never break the page for it */ }
   }
 
