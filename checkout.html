@@ -452,8 +452,6 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
         IFSC: <span class="mono">${esc(CFG.BANK.ifsc)}</span><br>
         Bank: ${esc(CFG.BANK.bank)}<br><br>
         Transfer ${fmt(t.total)} and send the reference on WhatsApp with your order number.`;
-    } else if(method==='cod'){
-      instr = `<b>Cash on Delivery</b><br>Pay ${fmt(t.total)} to the courier when your order arrives. We'll confirm dispatch on WhatsApp.`;
     } else {
       instr = `<b>Order sent on WhatsApp</b><br>We've opened a pre-filled message for you. Hit send and our team will confirm your order and share payment options. If the chat didn't open, use the button below.`;
     }
@@ -475,7 +473,7 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
 
   async function payWithRazorpay(d, items, t, oid){
     const placeBtn = document.getElementById('place');
-    if(typeof Razorpay === 'undefined'){ alert('Payment is loading. Please retry in a moment, or use WhatsApp / Cash on Delivery.'); return; }
+    if(typeof Razorpay === 'undefined'){ alert('Payment is loading. Please retry in a moment, or order on WhatsApp.'); return; }
     placeBtn.disabled = true; placeBtn.textContent = 'Starting secure payment…';
     let order;
     try{
@@ -487,7 +485,7 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
       if(!res.ok || !order.orderId) throw new Error(order.error||'order_failed');
     }catch(err){
       placeBtn.disabled=false; placeBtn.innerHTML = bagIcon + ' Place order · ' + fmt(t.total);
-      alert("Online payment isn't available right now. Please choose WhatsApp or Cash on Delivery.");
+      alert("Online payment isn't available right now. Please order on WhatsApp and we'll confirm and share payment options.");
       return;
     }
     const rzp = new Razorpay({
