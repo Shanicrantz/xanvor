@@ -47,6 +47,11 @@ export function renderProductsJs(products, collectionOrder) {
 export function renderSitemap(products, lastmod) {
   const staticPages = [
     { loc: `${SITE}/`, priority: '1.0' },
+    { loc: `${SITE}/new-designs.html`, priority: '0.9' },
+    { loc: `${SITE}/wholesale.html`, priority: '0.9' },
+    { loc: `${SITE}/oem-odm.html`, priority: '0.8' },
+    { loc: `${SITE}/faq.html`, priority: '0.7' },
+    { loc: `${SITE}/all-products.html`, priority: '0.8' },
     { loc: `${SITE}/Hot-Serve%20Collection.html`, priority: '0.8' },
     { loc: `${SITE}/about.html`, priority: '0.6' },
     { loc: `${SITE}/contact.html`, priority: '0.6' },

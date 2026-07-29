@@ -1,9 +1,14 @@
 /* ============================================================
-   XANVOR — Enquiry Basket (B2B "Add to Cart" for trade enquiries)
-   - localStorage backed line items
+   XANVOR — RFQ Basket (B2B order list → request for quotation)
+   - localStorage backed line items (same key as the old enquiry
+     basket, so in-flight baskets survive the upgrade)
    - Floating pill (bottom-right) shows count, opens drawer
-   - Drawer contains line items + inline enquiry form (Netlify)
-   - Works across index.html and product.html
+   - Drawer contains line items + RFQ checkout form
+   - Submits JSON to /api/rfq (server records the RFQ, emails the
+     trade desk and sends the buyer an acknowledgment with a
+     reference number). Basket clears only after the server
+     confirms — a failed send never loses the buyer's list.
+   - Works across index.html, product.html and new-designs.html
    ============================================================ */
 (function(){
   const KEY = 'xanvor_enquiry_basket_v1';
@@ -11,6 +16,7 @@
     antique:'Antique gold', polished:'Polished', matte:'Matte gold',
     oxidised:'Oxidised', silver:'Silver'
   };
+  const INCOTERMS = ['Need advice', 'EXW Moradabad', 'FOB Nhava Sheva / Mundra', 'CIF (destination port)', 'DDP (door delivery)'];
 
   /* ---- storage ---- */
   const read = () => {
@@ -138,7 +144,7 @@
     margin:0 auto 22px;
   }
   .xb-empty a{
-    display:inline-block;
+    display:inline-block; margin:0 4px 8px;
     font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:500;
     letter-spacing:.2em; text-transform:uppercase;
     border:1px solid #A85D2A; color:#A85D2A;
@@ -223,16 +229,18 @@
     margin-bottom:4px;
   }
   .xb-form .f{display:flex; flex-direction:column;}
-  .xb-form input, .xb-form textarea{
+  .xb-form .f2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .xb-form input, .xb-form textarea, .xb-form select{
     width:100%; background:#fff; color:#241510;
     border:1px solid #D8CBB0; padding:11px 13px;
     font-family:'Cormorant Garamond',serif; font-size:15px; line-height:1.5;
     border-radius:5px; transition:border-color .2s;
   }
-  .xb-form input:focus, .xb-form textarea:focus{
+  .xb-form input:focus, .xb-form textarea:focus, .xb-form select:focus{
     outline:none; border-color:#A85D2A;
   }
   .xb-form textarea{resize:vertical; min-height:64px;}
+  .xb-form select{appearance:auto; cursor:pointer;}
 
   /* footer of drawer */
   .xb-foot{
@@ -256,6 +264,13 @@
     font-family:'JetBrains Mono',monospace; font-size:9px;
     letter-spacing:.18em; text-transform:uppercase; color:#9A8E7C;
   }
+  .xb-error{
+    display:none; margin-bottom:12px; padding:12px 16px;
+    background:rgba(178,58,44,.08); border:1px solid #B23A2C; border-radius:6px;
+    font-family:'Cormorant Garamond',serif; font-size:15px; line-height:1.5;
+    color:#7C2418;
+  }
+  .xb-error.show{display:block;}
   .xb-success{
     display:none; padding:20px 22px; margin-top:14px;
     background:rgba(168,93,42,.08); border:1px solid #A85D2A; border-radius:6px;
@@ -264,6 +279,11 @@
   }
   .xb-success.show{display:block;}
   .xb-success strong{color:#A85D2A;}
+  .xb-success .xb-rid{
+    display:inline-block; margin:6px 0;
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.1em;
+    background:#241510; color:#FBF6E8; padding:6px 12px; border-radius:4px;
+  }
 
   @media(max-width:520px){
     .xb-pill{right:12px; bottom:12px; padding:12px 16px; font-size:10.5px;}
@@ -272,6 +292,7 @@
     .xb-body{padding:0 20px;}
     .xb-form-wrap{margin-left:-20px; margin-right:-20px; padding:18px 20px 22px;}
     .xb-foot{padding:16px 20px 20px;}
+    .xb-form .f2{grid-template-columns:1fr;}
   }
   `;
 
@@ -288,8 +309,8 @@
 
   const pill = document.createElement('button');
   pill.className = 'xb-pill';
-  pill.setAttribute('aria-label','Open enquiry basket');
-  pill.innerHTML = `${bagIcon}<span>Enquiry</span><span class="xb-count">0</span>`;
+  pill.setAttribute('aria-label','Open RFQ basket');
+  pill.innerHTML = `${bagIcon}<span>RFQ</span><span class="xb-count">0</span>`;
   pill.addEventListener('click', openDrawer);
   document.body.appendChild(pill);
 
@@ -300,29 +321,45 @@
 
   const drawer = document.createElement('aside');
   drawer.className = 'xb-drawer';
-  drawer.setAttribute('aria-label','Trade enquiry basket');
+  drawer.setAttribute('aria-label','RFQ basket');
   drawer.innerHTML = `
     <header class="xb-head">
       <div>
-        <div class="xb-sub">Trade Desk</div>
-        <div class="xb-title">Your <em>Enquiry</em></div>
+        <div class="xb-sub">Trade Desk · No payment on this site</div>
+        <div class="xb-title">Your <em>Order List</em></div>
       </div>
       <button class="xb-close" aria-label="Close">${closeIcon}</button>
     </header>
     <div class="xb-body" id="xb-body"></div>
     <footer class="xb-foot" id="xb-foot" style="display:none;">
-      <button class="xb-send" id="xb-send" type="button">${sendIcon} Send Enquiry</button>
-      <div class="xb-note">Reply within 1 working day · Confidential pricing</div>
-      <div class="xb-success" id="xb-success">
-        <strong>Thank you.</strong> Your enquiry is with our trade desk — we'll reply within one working day at the email you provided.
-      </div>
+      <div class="xb-error" id="xb-error" role="alert"></div>
+      <button class="xb-send" id="xb-send" type="button">${sendIcon} Submit Order Request</button>
+      <div class="xb-note">Reply in 1 working day · Confirmed by Proforma Invoice</div>
+      <div class="xb-success" id="xb-success" aria-live="polite"></div>
     </footer>
   `;
   document.body.appendChild(drawer);
   drawer.querySelector('.xb-close').addEventListener('click', closeDrawer);
 
   /* ---- render ---- */
+  const FORM_IDS = ['xb-name','xb-company','xb-email','xb-phone','xb-country','xb-port','xb-incoterm','xb-shipdate','xb-message'];
+  function captureForm(){
+    const vals = {};
+    FORM_IDS.forEach(id => {
+      const el = drawer.querySelector('#' + id);
+      if(el && el.value) vals[id] = el.value;
+    });
+    return vals;
+  }
+  function applyForm(vals){
+    Object.keys(vals || {}).forEach(id => {
+      const el = drawer.querySelector('#' + id);
+      if(el) el.value = vals[id];
+    });
+  }
+
   function render(){
+    const inProgress = captureForm(); // qty edits re-render — don't lose typed contact details
     const items = read();
     const body = drawer.querySelector('#xb-body');
     const foot = drawer.querySelector('#xb-foot');
@@ -331,9 +368,10 @@
       body.innerHTML = `
         <div class="xb-empty">
           <div class="xb-emoji">✺</div>
-          <h4>Your enquiry is empty</h4>
-          <p>Add pieces from the catalogue. When you're ready, send them all as one trade enquiry.</p>
-          <a href="index.html#catalogue">Browse the catalogue</a>
+          <h4>Your order list is empty</h4>
+          <p>Add pieces you'd like quoted. We reply with pricing, MOQ, lead time and finish options — one RFQ, one working day.</p>
+          <a href="new-designs.html">New designs</a>
+          <a href="index.html#catalogue">Browse catalogue</a>
         </div>
       `;
       return;
@@ -360,34 +398,55 @@
         `).join('')}
       </div>
       <div class="xb-form-wrap">
-        <div class="xb-form-head">Your details</div>
-        <form class="xb-form" id="xb-form" name="trade-enquiry" method="POST"
-              data-netlify="true" netlify-honeypot="bot-field"
-              action="/?enquiry=sent">
-          <input type="hidden" name="form-name" value="trade-enquiry">
-          <p hidden><label>Leave blank: <input name="bot-field"></label></p>
-          <input type="hidden" name="basket" id="xb-basket-payload">
-          <div class="f">
-            <label for="xb-name">Your Name *</label>
-            <input id="xb-name" type="text" name="name" required autocomplete="name">
+        <div class="xb-form-head">Shipping & contact — quoted in USD or ₹, your choice of terms</div>
+        <form class="xb-form" id="xb-form" novalidate>
+          <p hidden><label>Leave blank: <input name="bot-field" id="xb-bot" tabindex="-1" autocomplete="off"></label></p>
+          <div class="f2">
+            <div class="f">
+              <label for="xb-name">Your Name *</label>
+              <input id="xb-name" type="text" name="name" required autocomplete="name">
+            </div>
+            <div class="f">
+              <label for="xb-company">Company / Brand</label>
+              <input id="xb-company" type="text" name="company" autocomplete="organization">
+            </div>
+          </div>
+          <div class="f2">
+            <div class="f">
+              <label for="xb-email">Business Email *</label>
+              <input id="xb-email" type="email" name="email" required autocomplete="email" placeholder="you@company.com">
+            </div>
+            <div class="f">
+              <label for="xb-phone">Phone / WhatsApp</label>
+              <input id="xb-phone" type="tel" name="phone" autocomplete="tel">
+            </div>
+          </div>
+          <div class="f2">
+            <div class="f">
+              <label for="xb-country">Destination Country *</label>
+              <input id="xb-country" type="text" name="country" required placeholder="e.g. UAE, Germany, USA">
+            </div>
+            <div class="f">
+              <label for="xb-port">Port / City</label>
+              <input id="xb-port" type="text" name="port" placeholder="e.g. Jebel Ali, Hamburg">
+            </div>
+          </div>
+          <div class="f2">
+            <div class="f">
+              <label for="xb-incoterm">Shipping Terms</label>
+              <select id="xb-incoterm" name="incoterm">
+                ${INCOTERMS.map(t=>`<option value="${esc(t)}">${esc(t === 'Need advice' ? 'Not sure — advise me' : t)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="f">
+              <label for="xb-shipdate">Target Timeline</label>
+              <input id="xb-shipdate" type="text" name="shipdate" placeholder="e.g. within 60 days">
+            </div>
           </div>
           <div class="f">
-            <label for="xb-email">Email *</label>
-            <input id="xb-email" type="email" name="email" required autocomplete="email">
+            <label for="xb-message">Notes (packaging, finishes, private label…)</label>
+            <textarea id="xb-message" name="message" rows="3" placeholder="e.g. retail-ready packaging, antique finish refs"></textarea>
           </div>
-          <div class="f">
-            <label for="xb-company">Company</label>
-            <input id="xb-company" type="text" name="company" autocomplete="organization">
-          </div>
-          <div class="f">
-            <label for="xb-country">Country / City</label>
-            <input id="xb-country" type="text" name="country">
-          </div>
-          <div class="f">
-            <label for="xb-message">Notes (timeline, packaging, finish refs)</label>
-            <textarea id="xb-message" name="message" rows="3" placeholder="e.g. ship to Dubai by August, retail-ready packaging"></textarea>
-          </div>
-          <input type="hidden" name="line_items" id="xb-line-items">
         </form>
       </div>
     `;
@@ -404,68 +463,130 @@
       input.addEventListener('change', () => api.setQty(idx, input.value));
       row.querySelector('[data-act="rm"]').addEventListener('click', () => api.remove(idx));
     });
+    restoreContact();
+    applyForm(inProgress);
+  }
+
+  /* remember buyer contact fields so a returning buyer only confirms terms */
+  const CONTACT_KEY = 'xanvor_rfq_contact_v1';
+  function saveContact(fields){
+    try { localStorage.setItem(CONTACT_KEY, JSON.stringify(fields)); } catch(e){}
+  }
+  function restoreContact(){
+    try {
+      const saved = JSON.parse(localStorage.getItem(CONTACT_KEY) || 'null');
+      if(!saved) return;
+      ['name','company','email','phone','country','port','incoterm'].forEach(k => {
+        const el = drawer.querySelector('#xb-' + (k === 'incoterm' ? 'incoterm' : k));
+        if(el && saved[k] && !el.value) el.value = saved[k];
+      });
+    } catch(e){}
   }
 
   /* ---- submit handler ---- */
-  drawer.querySelector('#xb-send').addEventListener('click', submitEnquiry);
+  drawer.querySelector('#xb-send').addEventListener('click', submitRfq);
 
-  function submitEnquiry(){
+  function fieldVal(id){
+    const el = drawer.querySelector('#' + id);
+    return el ? el.value.trim() : '';
+  }
+
+  function showError(msg){
+    const err = drawer.querySelector('#xb-error');
+    err.textContent = msg;
+    err.classList.add('show');
+  }
+
+  function submitRfq(){
     const form = drawer.querySelector('#xb-form');
     if(!form) return;
-    if(!form.reportValidity()) return;
+    drawer.querySelector('#xb-error').classList.remove('show');
 
     const items = read();
     if(items.length === 0) return;
 
-    // build line_items text payload
-    const lines = items.map((it,i) =>
-      `${i+1}. ${it.name} (${it.code}) — Qty: ${it.qty} pcs${it.finish ? ' · Finish: ' + (FINISH_LABELS[it.finish] || it.finish) : ''}`
-    ).join('\n');
-    drawer.querySelector('#xb-line-items').value = lines;
-    drawer.querySelector('#xb-basket-payload').value = JSON.stringify(items);
+    const payload = {
+      source: 'basket',
+      name: fieldVal('xb-name'),
+      company: fieldVal('xb-company'),
+      email: fieldVal('xb-email'),
+      phone: fieldVal('xb-phone'),
+      country: fieldVal('xb-country'),
+      port: fieldVal('xb-port'),
+      incoterm: fieldVal('xb-incoterm'),
+      shipdate: fieldVal('xb-shipdate'),
+      message: fieldVal('xb-message'),
+      'bot-field': fieldVal('xb-bot'),
+      items: items.map(it => ({
+        code: it.code, name: it.name, qty: it.qty,
+        finish: it.finish ? (FINISH_LABELS[it.finish] || it.finish) : '',
+        image: it.image || ''
+      })),
+    };
+    try { payload.sid = sessionStorage.getItem('xv_sid') || undefined; } catch(e){}
 
-    // append items into message
-    const msgEl = drawer.querySelector('#xb-message');
-    const userNote = (msgEl.value || '').trim();
-    msgEl.value =
-      `Trade enquiry · ${items.length} ${items.length===1?'piece':'pieces'}\n\n` +
-      lines + '\n\n' +
-      (userNote ? `Notes:\n${userNote}\n` : '');
+    // client-side validation with focus on first miss
+    const misses = [
+      [!payload.name, 'xb-name'],
+      [!/^\S+@\S+\.\S+$/.test(payload.email), 'xb-email'],
+      [!payload.country, 'xb-country'],
+    ].filter(m => m[0]);
+    if(misses.length){
+      showError('Please add your name, business email and destination country so we can quote correctly.');
+      const el = drawer.querySelector('#' + misses[0][1]);
+      if(el) el.focus();
+      return;
+    }
 
     const btn = drawer.querySelector('#xb-send');
     btn.disabled = true;
     btn.innerHTML = `${sendIcon} Sending…`;
 
-    // Use fetch to submit to Netlify so we stay on page
-    const data = new FormData(form);
-    const body = new URLSearchParams();
-    for(const [k,v] of data.entries()) body.append(k, v);
-
-    fetch('/', { method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body: body.toString()
-    }).then(res => {
-      if(!res.ok && res.status !== 200) throw new Error('Submit failed');
-      onSuccess();
-    }).catch(() => {
-      // Fallback: still show success, also try native submit as last resort
-      onSuccess();
-    });
+    fetch('/api/rfq', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    }).then(res => res.json().then(data => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if(!ok || !data.ok) throw new Error(data.error || 'Submit failed');
+        saveContact({ name: payload.name, company: payload.company, email: payload.email,
+                      phone: payload.phone, country: payload.country, port: payload.port,
+                      incoterm: payload.incoterm });
+        onSuccess(data.rid);
+      })
+      .catch(() => {
+        btn.disabled = false;
+        btn.innerHTML = `${sendIcon} Submit Order Request`;
+        showError('Could not send just now — your list is safe. Please try again, or WhatsApp us at +91 98377 60615.');
+      });
   }
 
-  function onSuccess(){
+  function onSuccess(rid){
     const ok = drawer.querySelector('#xb-success');
-    const form = drawer.querySelector('#xb-form');
     const btn  = drawer.querySelector('#xb-send');
-    if(form) form.style.display = 'none';
-    if(ok) ok.classList.add('show');
+    const formWrap = drawer.querySelector('.xb-form-wrap');
+    if(formWrap) formWrap.style.display = 'none';
     btn.style.display = 'none';
-    // Empty the basket; will re-render to empty state if user reopens later
-    setTimeout(()=> api.clear(), 4500);
+    drawer.querySelector('.xb-note').style.display = 'none';
+    ok.innerHTML = `
+      <strong>Order request sent.</strong><br>
+      Your reference: <span class="xb-rid">${esc(rid || '')}</span><br>
+      We reply within one working day with pricing, MOQ, lead time and finish options —
+      confirmed by Proforma Invoice. A copy is on its way to your email.
+    `;
+    ok.classList.add('show');
+    // server has the RFQ — safe to clear now (the success card stays visible)
+    api.clear();
   }
 
   /* ---- open/close ---- */
   function openDrawer(){
+    // reset any previous success state
+    const okEl = drawer.querySelector('#xb-success');
+    if(okEl){ okEl.classList.remove('show'); okEl.innerHTML=''; }
+    const btn = drawer.querySelector('#xb-send');
+    if(btn){ btn.style.display = ''; btn.disabled = false; btn.innerHTML = `${sendIcon} Submit Order Request`; }
+    drawer.querySelector('.xb-note').style.display = '';
     render();
     scrim.dataset.open = 'true';
     drawer.dataset.open = 'true';
@@ -491,7 +612,8 @@
     const n = api.count();
     pill.querySelector('.xb-count').textContent = n;
     pill.dataset.empty = (n === 0) ? 'true' : 'false';
-    if(drawer.dataset.open === 'true') render();
+    if(drawer.dataset.open === 'true' && n > 0) render();
+    else if(drawer.dataset.open === 'true' && n === 0 && !drawer.querySelector('#xb-success.show')) render();
   }
   window.addEventListener('storage', (e) => { if(e.key === KEY) sync(); });
   window.addEventListener('xanvor:basket-change', sync);

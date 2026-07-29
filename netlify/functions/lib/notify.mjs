@@ -272,3 +272,120 @@ export async function sendLeadAlert(lead, isNew) {
 
   await sendOwner(`✉️ New lead · ${lead.email || lead.phone}`, html, text, lead.email || undefined);
 }
+
+/* ---- RFQ emails ---------------------------------------------------------
+   Buyer gets an acknowledgment carrying the reference number ("we reply
+   with a formal quotation / Proforma Invoice"); the shop gets an alert.
+   Same rules as everything above: awaited by callers, never throws. */
+
+const rfqItemsHtml = (rfq) => {
+  const items = rfq.items || [];
+  if (!items.length) return '';
+  const rows = items.map((it) => `
+    <tr>
+      <td style="padding:8px 10px;border-bottom:1px solid #E6DCC8;font-family:Georgia,serif;font-size:14px;color:#241510;">${esc(it.name)}<div style="font-family:monospace;font-size:11px;color:#8A7359;">${esc(it.code || '')}${it.finish ? ' · ' + esc(it.finish) : ''}</div></td>
+      <td style="padding:8px 10px;border-bottom:1px solid #E6DCC8;text-align:right;font-family:monospace;font-size:13px;color:#A85D2A;">× ${esc(it.qty)}</td>
+    </tr>`).join('');
+  return `<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;border:1px solid #E6DCC8;background:#fff;margin:16px 0;">${rows}</table>`;
+};
+
+const rfqItemsText = (rfq) => (rfq.items || []).map((it) => `  ${it.qty} x ${it.name} (${it.code || ''})${it.finish ? ' · ' + it.finish : ''}`);
+
+const rfqMetaText = (rfq) => [
+  rfq.company ? `Company: ${rfq.company}` : '',
+  `Country: ${rfq.country || '—'}`,
+  rfq.port ? `Destination port/city: ${rfq.port}` : '',
+  `Incoterm: ${rfq.incoterm || '—'}`,
+  rfq.shipdate ? `Target ship date: ${rfq.shipdate}` : '',
+  rfq.message ? `Notes: ${rfq.message}` : '',
+].filter(Boolean);
+
+export async function sendRfqAckEmail(rfq) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM || 'XANVOR <onboarding@resend.dev>';
+  if (!apiKey) { console.error('notify.mjs: RESEND_API_KEY missing, skipping RFQ ack'); return; }
+  if (!rfq || !rfq.email) return;
+
+  const html = `
+<!doctype html><html><body style="margin:0;background:#F4EEE2;font-family:Georgia,serif;">
+<div style="max-width:600px;margin:0 auto;padding:28px 24px;background:#FCFAF4;">
+  <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#A85D2A;">XANVOR · Trade desk</div>
+  <h2 style="font-family:Georgia,serif;font-weight:400;color:#241510;margin:6px 0 2px;font-size:26px;">Quote request received</h2>
+  <div style="font-family:monospace;font-size:13px;color:#A85D2A;margin-bottom:14px;">Your reference: ${esc(rfq.rid)}</div>
+  <p style="font-size:15px;color:#43352B;line-height:1.7;margin:0 0 6px;">
+    Thank you${rfq.name ? ', ' + esc(rfq.name) : ''} — your request is with our trade desk.
+    We reply within one working day with pricing, MOQ, lead time and finish options,
+    and confirm orders by Proforma Invoice. No payment has been taken.
+  </p>
+  ${rfqItemsHtml(rfq)}
+  <div style="background:#F8F2E6;border:1px solid #E6DCC8;border-radius:8px;padding:14px 16px;font-size:14px;color:#43352B;line-height:1.7;">
+    ${rfqMetaText(rfq).map((l) => esc(l)).join('<br>')}
+  </div>
+  <p style="font-size:13.5px;color:#6E6151;line-height:1.7;margin:16px 0 0;">
+    In a hurry? WhatsApp us at +91 98377 60615 quoting ${esc(rfq.rid)}.<br>
+    XANVOR · Zenko Inc. · Moradabad, India · hello@xanvor.com
+  </p>
+</div></body></html>`.trim();
+
+  const text = [
+    `XANVOR — quote request received`,
+    `Reference: ${rfq.rid}`,
+    '',
+    'We reply within one working day with pricing, MOQ, lead time and finish options.',
+    'Orders are confirmed by Proforma Invoice. No payment has been taken.',
+    '',
+    ...rfqItemsText(rfq),
+    '',
+    ...rfqMetaText(rfq),
+    '',
+    'WhatsApp: +91 98377 60615 · hello@xanvor.com',
+  ].join('\n');
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from, to: [rfq.email], reply_to: ownerTo(), subject: `Quote request received · ${rfq.rid} · XANVOR`, html, text }),
+    });
+    if (!res.ok) console.error('notify.mjs: Resend rejected RFQ ack', res.status, await res.text().catch(() => ''));
+  } catch (e) {
+    console.error('notify.mjs: RFQ ack send failed', e.message);
+  }
+}
+
+export async function sendOwnerRfqAlert(rfq) {
+  if (!rfq) return;
+  const siteUrl = (process.env.SITE_URL || process.env.URL || 'https://xanvor.com').replace(/\/+$/, '');
+  const lines = rfqMetaText(rfq);
+  const qty = (rfq.items || []).reduce((n, it) => n + (Number(it.qty) || 0), 0);
+
+  const html = `
+<!doctype html><html><body style="margin:0;background:#F4EEE2;font-family:Georgia,serif;">
+<div style="max-width:600px;margin:0 auto;padding:28px 24px;background:#FCFAF4;">
+  <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#A85D2A;">XANVOR · New RFQ</div>
+  <h2 style="font-family:Georgia,serif;font-weight:400;color:#241510;margin:6px 0 2px;font-size:24px;">${esc(rfq.company || rfq.name || rfq.email)} · ${esc(rfq.country || '—')}</h2>
+  <div style="font-family:monospace;font-size:12px;color:#A85D2A;margin-bottom:4px;">${esc(rfq.rid)}${qty ? ` · ${qty} pcs across ${(rfq.items || []).length} line${(rfq.items || []).length === 1 ? '' : 's'}` : ' · general enquiry'}</div>
+  ${rfqItemsHtml(rfq)}
+  <div style="background:#F8F2E6;border:1px solid #E6DCC8;border-radius:8px;padding:14px 16px;font-size:14.5px;color:#43352B;line-height:1.7;">
+    <b style="color:#241510;">${esc(rfq.name || '')}</b>${rfq.email ? ' · ' + esc(rfq.email) : ''}${rfq.phone ? ' · ' + esc(rfq.phone) : ''}<br>
+    ${lines.map((l) => esc(l)).join('<br>')}
+  </div>
+  <div style="margin-top:20px;">
+    <a href="${esc(siteUrl)}/admin.html" style="display:inline-block;background:#A85D2A;color:#FBF6E8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border-radius:50px;">Open admin</a>
+    ${rfq.email ? `<a href="mailto:${esc(rfq.email)}?subject=${encodeURIComponent('Your XANVOR quotation · ' + rfq.rid)}" style="display:inline-block;margin-left:8px;background:#241510;color:#FBF6E8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border-radius:50px;">Reply with quote</a>` : ''}
+  </div>
+</div></body></html>`.trim();
+
+  const text = [
+    `NEW RFQ ${rfq.rid} — ${rfq.company || rfq.name || rfq.email} (${rfq.country || '—'})`,
+    '',
+    ...rfqItemsText(rfq),
+    '',
+    `${rfq.name || ''}${rfq.email ? ' · ' + rfq.email : ''}${rfq.phone ? ' · ' + rfq.phone : ''}`,
+    ...lines,
+    '',
+    `Admin: ${siteUrl}/admin.html`,
+  ].filter((l) => l !== '').join('\n');
+
+  await sendOwner(`📋 New RFQ · ${rfq.company || rfq.name || rfq.email} · ${rfq.rid}`, html, text, rfq.email || undefined);
+}

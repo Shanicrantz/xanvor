@@ -1,11 +1,19 @@
 # XANVOR — xanvor.com
 # Search engines are welcome. Checkout is excluded (no indexable content).
+# /api/ stays blocked EXCEPT /api/products.js — the live catalogue that
+# product pages render their titles/JSON-LD from. Blocking it made Google
+# render every PDP from the stale seed file.
 
 User-agent: *
+Allow: /api/products.js
 Allow: /
 Disallow: /checkout.html
 Disallow: /admin.html
 Disallow: /api/
 Disallow: /mcp/
+Disallow: /old_index.html
+Disallow: /preview.html
+Disallow: /preview-mass-pdp.html
+Disallow: /missing_footer_and_scripts.html
 
 Sitemap: https://xanvor.com/sitemap.xml

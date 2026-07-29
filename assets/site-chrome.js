@@ -90,6 +90,8 @@
             </a>
           </div>
         </div>
+        <a class="xv-desktop-only${active(['new-designs.html'])}" href="new-designs.html">New designs</a>
+        <a class="xv-desktop-only${active(['wholesale.html', 'oem-odm.html', 'faq.html'])}" href="wholesale.html">Wholesale</a>
         <a class="xv-desktop-only${active(['about.html'])}" href="${aboutHref}">About</a>
         <a class="xv-desktop-only${active(['contact.html'])}" href="${contactHref}">Contact</a>
       </div>
@@ -118,6 +120,9 @@
       </div>
       <div class="xv-drawer-body">
         <a href="all-products.html">Shop all</a>
+        <a href="new-designs.html">New designs</a>
+        <a href="wholesale.html">Wholesale &amp; export</a>
+        <a href="oem-odm.html">OEM / private label</a>
         <a href="${isHome() ? '#catalogue' : 'index.html#catalogue'}">Catalogue</a>
         <a href="Hot-Serve Collection.html">Hot-Serve</a>
         <a href="about.html">About</a>

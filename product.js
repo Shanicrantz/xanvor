@@ -234,6 +234,7 @@
       image: GALLERY.map(absImg),
       description: `${product.desc} ${product.materials ? product.materials.replace(/·/g,', ') + '.' : ''} Handcrafted in Moradabad, India.`.trim(),
       brand: { '@type': 'Brand', name: 'XANVOR' },
+      manufacturer: { '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: 'Zenko Inc.' },
       material: (product.materials||'').split('·').map(s=>s.trim()).filter(Boolean).join(', ') || undefined,
     };
     /* offers only on retail-priced pieces; price is the GST-inclusive amount the buyer pays */
@@ -246,7 +247,8 @@
         url: pageURL,
         price: String(Math.round(base * (1 + rate))),
         priceCurrency: 'INR',
-        availability: 'https://schema.org/InStock',
+        availability: product.availability === 'out_of_stock'
+          ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
         itemCondition: 'https://schema.org/NewCondition',
         seller: { '@type': 'Organization', name: 'Zenko Inc.' },
       };
@@ -380,7 +382,7 @@
             <div class="row"><span class="k">Lead time</span><span class="v" id="qLead">—</span></div>
             <div class="row price"><span class="k">Est. order value</span><span class="v" id="qTotal">—</span></div>
           </div>
-          <button class="btn btn-primary" id="ctaAdd">${icon('tag')} Add to Enquiry</button>
+          <button class="btn btn-primary" id="ctaAdd">${icon('tag')} Add to RFQ</button>
           <button class="btn btn-ghost" id="ctaQuote" type="button">${icon('clock')} Request bulk quote</button>
           <div class="secure">Confidential trade pricing · Reply within 1 working day</div>
         </div>
@@ -478,7 +480,7 @@
         </div>
 
         <button class="btn btn-primary" id="ctaAdd">
-          ${icon('tag')} Add to Enquiry
+          ${icon('tag')} Add to RFQ
         </button>
         <button class="btn btn-ink" id="ctaSample">
           ${icon('box')} Add as Sample · 5 pcs
@@ -644,7 +646,7 @@
     syncQuote();
     const currentFinish=()=>(document.querySelector('#finishes .finish.on')||{}).dataset?.id||'antique';
     const addToBasket=(qty)=>{
-      if(!window.XanvorBasket){ const qp=new URLSearchParams({product:product.code,name:product.name,qty,finish:currentFinish()}); location.href=`index.html?${qp.toString()}#enquiry-form`; return; }
+      if(!window.XanvorBasket){ const qp=new URLSearchParams({product:product.code,name:product.name,qty,finish:currentFinish()}); location.href=`wholesale.html?${qp.toString()}#rfq`; return; }
       window.XanvorBasket.add({code:product.code,name:product.name,image:product.image,qty:qty,finish:currentFinish()});
       setTimeout(()=>window.XanvorBasket.open(),280);
     };

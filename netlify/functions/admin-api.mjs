@@ -11,6 +11,7 @@ import { getStore } from '@netlify/blobs';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { getCatalog, saveCatalog } from './lib/catalog.mjs';
 import { getAllOrders, updateOrderStatus, deleteOrder } from './lib/orders.mjs';
+import { getAllRfqs, updateRfqStatus, deleteRfq, RFQ_STATUSES } from './lib/rfqs.mjs';
 import { sendOrderStatusEmail } from './lib/notify.mjs';
 import { getRecentSessions, summarise, getLeads, deleteLead, LIVE_WINDOW_MS } from './lib/analytics.mjs';
 
@@ -218,6 +219,28 @@ export default async (req) => {
       const oid = str(body.oid, 24);
       const ok = await deleteOrder(oid);
       if (!ok) return json({ error: 'order not found' }, 404);
+      return json({ ok: true });
+    }
+
+    if (body.action === 'rfq-list') {
+      const rfqs = await getAllRfqs();
+      return json({ rfqs });
+    }
+
+    if (body.action === 'rfq-update') {
+      const rid = str(body.rid, 32);
+      const status = str(body.status, 20);
+      if (!rid) return json({ error: 'rid chahiye' }, 400);
+      if (status && !RFQ_STATUSES.includes(status)) return json({ error: 'unknown status' }, 400);
+      const result = await updateRfqStatus(rid, { status: status || undefined, adminNotes: body.adminNotes });
+      if (!result) return json({ error: 'rfq not found' }, 404);
+      return json({ ok: true, rfq: result.rfq });
+    }
+
+    if (body.action === 'rfq-delete') {
+      const rid = str(body.rid, 32);
+      const ok = await deleteRfq(rid);
+      if (!ok) return json({ error: 'rfq not found' }, 404);
       return json({ ok: true });
     }
 

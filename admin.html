@@ -91,6 +91,11 @@
   .chip-shipped{background:var(--purple-bg); color:var(--purple);}
   .chip-delivered{background:var(--ok-bg); color:var(--ok);}
   .chip-cancelled{background:var(--bad-bg); color:var(--bad);}
+  .chip-new{background:var(--warn-bg); color:var(--warn);}
+  .chip-reviewing{background:var(--info-bg); color:var(--info);}
+  .chip-quoted{background:var(--purple-bg); color:var(--purple);}
+  .chip-won{background:var(--ok-bg); color:var(--ok);}
+  .chip-lost{background:var(--bad-bg); color:var(--bad);}
 
   /* ── Login gate ── */
   #gate{
@@ -456,6 +461,10 @@
         <span class="ico">▤</span> Orders
         <span class="badge zero" id="navBadgeOrders"></span>
       </button>
+      <button type="button" class="nav-item" data-nav="rfqs">
+        <span class="ico">▥</span> RFQs
+        <span class="badge zero" id="navBadgeRfqs"></span>
+      </button>
       <button type="button" class="nav-item" data-nav="visitors">
         <span class="ico">◉</span> Visitors
         <span class="badge zero" id="navBadgeLive"></span>
@@ -469,6 +478,9 @@
       </button>
       <button type="button" class="nav-item" data-nav="listing">
         <span class="ico">✎</span> Listing studio
+      </button>
+      <button type="button" class="nav-item" data-nav="pinterest">
+        <span class="ico">◐</span> Pinterest
       </button>
     </nav>
     <div class="side-foot">
@@ -600,6 +612,31 @@
             <div style="margin-left:auto;"></div>
           </div>
           <div id="ordersList"></div>
+        </div>
+      </section>
+
+      <!-- RFQs -->
+      <section class="panel" id="rfqsPanel">
+        <div class="card">
+          <div class="toolbar">
+            <span class="hint mono" id="rfqsCount"></span>
+            <div style="margin-left:auto;"></div>
+          </div>
+          <div id="rfqsList"></div>
+        </div>
+      </section>
+
+      <!-- PINTEREST -->
+      <section class="panel" id="pinterestPanel">
+        <div class="card">
+          <div class="card-head">
+            <h2>Pinterest auto-posting</h2>
+            <button type="button" class="btn btn-primary btn-sm" id="pinPostNow">Post next 3 pins</button>
+          </div>
+          <p class="hint" style="margin:-8px 0 16px;">
+            Naye designs ke pins roz apne aap post hote hain (daily cron). Setup guide: <code>docs/pinterest-setup.md</code> repo me.
+          </p>
+          <div id="pinStatus"><p class="hint">Loading…</p></div>
         </div>
       </section>
 
@@ -875,6 +912,8 @@
     list:      { title:'Products', sub:'Live catalogue' },
     form:      { title:'Product editor', sub:'Add or edit SKU' },
     orders:    { title:'Orders', sub:'Fulfillment & tracking' },
+    rfqs:      { title:'RFQs', sub:'Trade & export quote requests' },
+    pinterest: { title:'Pinterest', sub:'New-design pin auto-posting' },
     visitors:  { title:'Visitors', sub:'Who is on the site, and what they viewed' },
     leads:     { title:'Leads', sub:'Emails & numbers from the welcome offer' },
     categories:{ title:'Categories', sub:'Homepage section order' },
@@ -936,6 +975,8 @@
       list: 'listPanel',
       form: 'formPanel',
       orders: 'ordersPanel',
+      rfqs: 'rfqsPanel',
+      pinterest: 'pinterestPanel',
       visitors: 'visitorsPanel',
       leads: 'leadsPanel',
       categories: 'categoriesPanel',
@@ -958,6 +999,8 @@
     el.addEventListener('click', async ()=>{
       const v = el.dataset.nav;
       if(v==='orders'){ await loadOrders(); show('orders'); return; }
+      if(v==='rfqs'){ show('rfqs'); await loadRfqs(); return; }
+      if(v==='pinterest'){ show('pinterest'); await loadPinterest(); return; }
       if(v==='visitors'){ show('visitors'); await loadAnalytics(); return; }
       if(v==='leads'){ show('leads'); await loadLeads(); return; }
       if(v==='categories'){ renderCatOrder(); show('categories'); return; }
@@ -1262,6 +1305,137 @@
     saveBtn.disabled = false;
   });
 
+  /* ---- RFQs (trade & export quote requests) ---- */
+  let RFQS = [];
+  const RFQ_STATUSES_UI = ['new','reviewing','quoted','won','lost'];
+
+  function renderRfqs(){
+    $('rfqsCount').textContent = RFQS.length+' total';
+    const open = RFQS.filter(r=>['new','reviewing'].includes(r.status||'new')).length;
+    $('navBadgeRfqs').textContent = open || '';
+    $('navBadgeRfqs').classList.toggle('zero', !open);
+
+    $('rfqsList').innerHTML = RFQS.length ? RFQS.map(r=>{
+      const date = r.createdAt ? new Date(r.createdAt).toLocaleString('en-IN', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+      const itemsTxt = (r.items||[]).length
+        ? (r.items||[]).map(it=>`${it.qty}× ${esc(it.name)}${it.finish?' ('+esc(it.finish)+')':''}`).join(', ')
+        : '<i>General enquiry — no line items</i>';
+      const status = r.status || 'new';
+      const where = r.geo ? [r.geo.city, r.geo.country].filter(Boolean).join(', ') : '';
+      const meta = [r.incoterm, r.port, r.shipdate].filter(Boolean).join(' · ');
+      const waNum = String(r.phone||'').replace(/\D/g,'');
+      return `
+      <div class="ord-card" data-rid="${esc(r.rid)}">
+        <div class="ord-top">
+          <div>
+            <div class="ord-oid">${esc(r.rid)} <span class="chip chip-${status}">${status}</span></div>
+            <div class="ord-meta">${date} · ${esc(r.source||'')}${where?' · from '+esc(where):''}</div>
+          </div>
+          <div class="ord-total" style="font-size:15px;">${esc(r.country||'—')}</div>
+        </div>
+        <div class="ord-items">${itemsTxt}</div>
+        <div class="ord-ship">
+          <b>${esc(r.company||r.name||'')}</b>${r.company&&r.name?' · '+esc(r.name):''}
+          · <a href="mailto:${esc(r.email||'')}?subject=${encodeURIComponent('Your XANVOR quotation · '+r.rid)}">${esc(r.email||'')}</a>
+          ${waNum?` · <a href="https://wa.me/${esc(waNum)}" target="_blank" rel="noopener">WhatsApp</a>`:''}
+          ${meta?'<br>'+esc(meta):''}
+          ${r.message?'<br><i>'+esc(r.message)+'</i>':''}
+        </div>
+        <div class="ord-controls">
+          <select data-rfq-status>${RFQ_STATUSES_UI.map(s=>`<option value="${s}" ${s===status?'selected':''}>${s}</option>`).join('')}</select>
+          <input type="text" data-rfq-notes placeholder="Internal notes (quote sent, rates…)" value="${esc(r.adminNotes||'')}" style="flex:1;min-width:160px;">
+          <button class="btn btn-primary btn-sm" data-save-rfq>Save</button>
+          <button class="btn btn-danger btn-sm" data-del-rfq>Delete</button>
+        </div>
+      </div>`;
+    }).join('') : '<div class="empty"><div class="empty-ico">▥</div><p>No RFQs yet. Trade buyers submit these from the RFQ basket and wholesale page.</p></div>';
+  }
+
+  async function loadRfqs(){
+    $('rfqsList').innerHTML = '<p class="hint">Loading RFQs…</p>';
+    try{ const data = await api({action:'rfq-list'}); RFQS = data.rfqs||[]; renderRfqs(); }
+    catch(err){ toast(err.message, true); $('rfqsList').innerHTML=''; }
+  }
+
+  $('rfqsList').addEventListener('click', async e=>{
+    const saveBtn = e.target.closest('[data-save-rfq]');
+    const delBtn = e.target.closest('[data-del-rfq]');
+    if(!saveBtn && !delBtn) return;
+    const card = (saveBtn||delBtn).closest('.ord-card'); const rid = card.dataset.rid;
+    if(delBtn){
+      if(!confirm(`Delete RFQ ${rid} permanently?`)) return;
+      delBtn.disabled = true;
+      try{ await api({action:'rfq-delete', rid}); toast('RFQ deleted'); RFQS = RFQS.filter(r=>r.rid!==rid); renderRfqs(); }
+      catch(err){ toast(err.message, true); delBtn.disabled = false; }
+      return;
+    }
+    const status = card.querySelector('[data-rfq-status]').value;
+    const adminNotes = card.querySelector('[data-rfq-notes]').value;
+    saveBtn.disabled = true;
+    try{
+      await api({action:'rfq-update', rid, status, adminNotes});
+      toast('RFQ updated ✓');
+      const idx = RFQS.findIndex(r=>r.rid===rid);
+      if(idx>=0) RFQS[idx] = {...RFQS[idx], status, adminNotes};
+      renderRfqs();
+    }catch(err){ toast(err.message, true); }
+    saveBtn.disabled = false;
+  });
+
+  /* ---- Pinterest auto-posting panel ---- */
+  async function pinApi(method, body){
+    const r = await fetch('/api/pinterest/post', {
+      method,
+      headers:{'content-type':'application/json','x-admin-key':KEY},
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const data = await r.json().catch(()=>({error:'bad response'}));
+    if(!r.ok) throw new Error(data.error || ('HTTP '+r.status));
+    return data;
+  }
+
+  function renderPinStatus(s){
+    if(!s.configured){
+      $('pinStatus').innerHTML = `
+        <div class="hint-box" style="display:block;">
+          <b>Not configured yet.</b> ${esc(s.reason||'')}<br>
+          Setup: Pinterest business account + developer app banao (owner login chahiye),
+          phir Netlify env vars set karo — poora runbook <code>docs/pinterest-setup.md</code> me hai.
+          Env var change ke baad ek fresh deploy zaroori hai.
+        </div>`;
+      return;
+    }
+    const recent = (s.lastPosted||[]).map(p=>`
+      <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line,#E6DCC8);font-size:13px;">
+        <span>${esc(p.title||p.id)}</span>
+        <span class="hint mono">${p.at ? new Date(p.at).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : ''}</span>
+      </div>`).join('');
+    $('pinStatus').innerHTML = `
+      <div class="stats-grid" style="margin-bottom:14px;">
+        <div class="stat-card"><div class="stat-label">Mode</div><div class="stat-value" style="font-size:16px;">${esc(s.mode||'—')}</div><div class="stat-meta">${s.boardConfigured?'Board set':'BOARD ID MISSING'}</div></div>
+        <div class="stat-card"><div class="stat-label">Pinned</div><div class="stat-value">${s.pinnedCount??'—'}</div><div class="stat-meta">designs posted</div></div>
+        <div class="stat-card"><div class="stat-label">Remaining</div><div class="stat-value">${s.catalogRemaining??'—'}</div><div class="stat-meta">designs in queue</div></div>
+      </div>
+      ${recent ? '<div class="card-head"><h2>Recently pinned</h2></div>'+recent : '<p class="hint">No pins posted yet.</p>'}`;
+  }
+
+  async function loadPinterest(){
+    $('pinStatus').innerHTML = '<p class="hint">Loading…</p>';
+    try{ renderPinStatus(await pinApi('GET')); }
+    catch(err){ $('pinStatus').innerHTML = '<p class="hint">'+esc(err.message)+'</p>'; }
+  }
+
+  $('pinPostNow').addEventListener('click', async ()=>{
+    const btn = $('pinPostNow'); btn.disabled = true; btn.textContent = 'Posting…';
+    try{
+      const res = await pinApi('POST', {count:3});
+      const posted = (res.posted||[]).length, failed = (res.failed||[]).length;
+      toast(`Pinterest: ${posted} posted${failed?`, ${failed} failed`:''}${res.rateLimited?' · rate-limited':''}`, !!failed);
+      await loadPinterest();
+    }catch(err){ toast(err.message, true); }
+    btn.disabled = false; btn.textContent = 'Post next 3 pins';
+  });
+
   /* ══════════ Visitors (live sessions + journeys) ══════════ */
   let SESSIONS = [], ANALYTICS = null;
 
@@ -1441,6 +1615,7 @@
          notifications so a new order can pop up while this tab is open */
       try{ await loadAnalytics(); }catch(_){}
       try{ await loadLeads(); }catch(_){}
+      try{ await loadRfqs(); }catch(_){}
       lastSeenOids = ORDERS.map(o=>o.oid);
       try{ if(window.Notification && Notification.permission === 'default') Notification.requestPermission(); }catch(_){}
       show('dashboard');
