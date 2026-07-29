@@ -2465,7 +2465,7 @@
      forever. transition:none makes opacity JUMP to 1 instantly, so it can never
      hang. Inline !important wins the cascade on every device. Empty (display:none)
      sections stay hidden; hero/process/featured above keep their scroll-fade. */
-  document.querySelectorAll('.cat-pages .reveal').forEach(function(el){
+  document.querySelectorAll('.cat-pages .reveal, .ndband, .tradeband').forEach(function(el){
     el.classList.add('in');
     el.style.setProperty('transition','none','important');
     el.style.setProperty('opacity','1','important');
@@ -2483,7 +2483,7 @@
   var NEWCOLL = ['Kansa Dinnerware','Metal Wall Art & Décor','The Jewel Collection','Canister & Vanity Series','Ribbed Storage Collection','Artisanal Serving Trays'];
   var esc = function(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
   var picks = all
-    .filter(function(p){ return p && p.image && p.id; })
+    .filter(function(p){ return p && p.image && p.id && p.homepage !== 'hide'; })
     .map(function(p, i){
       var t = p.modified_at ? Date.parse(p.modified_at) || 0 : 0;
       var cIdx = NEWCOLL.indexOf(p.collection);

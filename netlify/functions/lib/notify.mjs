@@ -182,6 +182,9 @@ async function sendOwner(subject, html, text, replyTo) {
       method: 'POST',
       headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ from, to: [ownerTo()], reply_to: replyTo || undefined, subject, html, text }),
+      /* callers await these sends before responding — a hung Resend must not
+         hold the whole request past the function timeout */
+      signal: AbortSignal.timeout(6000),
     });
     if (!res.ok) console.error('notify.mjs: Resend rejected owner alert', res.status, await res.text().catch(() => ''));
   } catch (e) {
@@ -346,6 +349,7 @@ export async function sendRfqAckEmail(rfq) {
       method: 'POST',
       headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ from, to: [rfq.email], reply_to: ownerTo(), subject: `Quote request received · ${rfq.rid} · XANVOR`, html, text }),
+      signal: AbortSignal.timeout(6000),
     });
     if (!res.ok) console.error('notify.mjs: Resend rejected RFQ ack', res.status, await res.text().catch(() => ''));
   } catch (e) {

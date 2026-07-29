@@ -39,6 +39,11 @@
       const key = item.code + '|' + (item.finish||'');
       const ex = items.find(x => (x.code+'|'+(x.finish||'')) === key);
       if(ex){ ex.qty = Math.max(1, (parseInt(ex.qty)||0) + (parseInt(item.qty)||1)); }
+      else if(items.length >= 60){
+        // server rejects >60 lines — better to say so at add time than at submit
+        alert('An RFQ can carry up to 60 lines. Please submit this list first, then start a second RFQ for the rest.');
+        return;
+      }
       else  { items.push({ ...item, qty: Math.max(1, parseInt(item.qty)||1) }); }
       write(items);
       flashOpen();
@@ -525,10 +530,10 @@
     };
     try { payload.sid = sessionStorage.getItem('xv_sid') || undefined; } catch(e){}
 
-    // client-side validation with focus on first miss
+    // client-side validation with focus on first miss (email regex matches the server's)
     const misses = [
       [!payload.name, 'xb-name'],
-      [!/^\S+@\S+\.\S+$/.test(payload.email), 'xb-email'],
+      [!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email), 'xb-email'],
       [!payload.country, 'xb-country'],
     ].filter(m => m[0]);
     if(misses.length){
@@ -548,16 +553,22 @@
       body: JSON.stringify(payload)
     }).then(res => res.json().then(data => ({ ok: res.ok, data })))
       .then(({ ok, data }) => {
-        if(!ok || !data.ok) throw new Error(data.error || 'Submit failed');
+        if(!ok || !data.ok) throw new Error(data.error || '');
+        // 'XV-RFQ-OK' is the server's honeypot decoy — if autofill tripped the
+        // hidden field, nothing was saved; never clear a real buyer's basket on it
+        if(data.rid === 'XV-RFQ-OK') throw new Error('');
         saveContact({ name: payload.name, company: payload.company, email: payload.email,
                       phone: payload.phone, country: payload.country, port: payload.port,
                       incoterm: payload.incoterm });
         onSuccess(data.rid);
       })
-      .catch(() => {
+      .catch((err) => {
         btn.disabled = false;
         btn.innerHTML = `${sendIcon} Submit Order Request`;
-        showError('Could not send just now — your list is safe. Please try again, or WhatsApp us at +91 98377 60615.');
+        const serverMsg = err && err.message ? String(err.message) : '';
+        showError(serverMsg && !/fetch|network|json/i.test(serverMsg)
+          ? serverMsg + ' — your list is safe.'
+          : 'Could not send just now — your list is safe. Please try again, or WhatsApp us at +91 98377 60615.');
       });
   }
 

@@ -334,7 +334,7 @@
 <nav id="nav">
   <a href="index.html" class="brand">XANVOR</a>
   <div class="links">
-    <a href="index.html#collections">Collections</a>
+    <a href="index.html#catalogue">Collections</a>
     <a href="index.html#catalogue">Catalogue</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
@@ -399,7 +399,7 @@
   <div class="ws-cols">
     <div class="ws-card">
       <h3>Wholesale pricing</h3>
-      <p>Wholesale is quoted in <strong>USD</strong> — <strong>FOB Nhava Sheva / Mundra</strong> as standard, with <strong>EXW Moradabad</strong>, <strong>CIF</strong> or <strong>DDP</strong> on request.</p>
+      <p>Wholesale is quoted in <strong>USD</strong> — <strong>EXW Moradabad</strong> by default, with <strong>FOB Nhava Sheva / Mundra</strong>, <strong>CIF</strong> or <strong>DDP</strong> on request.</p>
       <p>Retail prices shown elsewhere on this site are <strong>₹ INR incl. GST, for India delivery only</strong> — they are not export prices.</p>
     </div>
     <div class="ws-card">
@@ -542,6 +542,9 @@
 </footer>
 
 <script src="assets/site-chrome.js?v=3"></script>
+<script src="shop-cart.js?v=hs3"></script>
+<script src="assets/account.js?v=1"></script>
+<script src="enquiry-basket.js?v=hs2"></script>
 <script>
 (function(){
   var form = document.getElementById('rfq-form');
@@ -563,6 +566,40 @@
     hint.classList.add('err');
     hint.textContent = msg;
   }
+
+  /* A buyer may arrive with an RFQ basket built on other pages (new-designs,
+     product pages) — those lines must ride along with this form, not vanish. */
+  function readBasketItems(){
+    try{
+      var items = JSON.parse(localStorage.getItem('xanvor_enquiry_basket_v1') || '[]');
+      return (Array.isArray(items) ? items : []).slice(0, 60).map(function(it){
+        return { code: it.code || '', name: it.name || '', qty: it.qty || 1,
+                 finish: it.finish || '', image: it.image || '' };
+      });
+    }catch(_){ return []; }
+  }
+  (function basketNotice(){
+    var n = readBasketItems().length;
+    if(!n) return;
+    var note = document.createElement('p');
+    note.className = 'ws-hint';
+    note.style.cssText = 'font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.08em;color:#A85D2A;margin:0 0 14px;';
+    note.textContent = '✓ ' + n + ' line' + (n===1?'':'s') + ' from your RFQ order list will be included with this request.';
+    form.insertBefore(note, form.firstChild);
+  })();
+  /* arriving from a product page's "Add to RFQ" without the basket script
+     (?product=…&name=…&qty=…) — carry those details into the message */
+  (function prefillFromQuery(){
+    try{
+      var q = new URLSearchParams(location.search);
+      if(!q.get('product') && !q.get('name')) return;
+      var line = 'Interested in: ' + (q.get('name') || '') + ' (' + (q.get('product') || '') + ')'
+               + (q.get('qty') ? ' × ' + q.get('qty') + ' pcs' : '')
+               + (q.get('finish') ? ' · finish: ' + q.get('finish') : '');
+      var msg = document.getElementById('f-message');
+      if(msg && !msg.value) msg.value = line;
+    }catch(_){}
+  })();
 
   function showSuccess(rid){
     ridEl.textContent = 'Your reference: ' + rid;
@@ -593,7 +630,7 @@
       shipdate: val('f-qty'),
       message: val('f-message'),
       source: 'form',
-      items: [],
+      items: readBasketItems(),
       'bot-field': (document.getElementById('f-bot') || {value:''}).value
     };
     try{
@@ -610,9 +647,17 @@
       return r.json().then(function(d){ return {status: r.status, data: d}; });
     })
     .then(function(res){
-      if(res.status === 200 && res.data && res.data.ok && res.data.rid){
+      if(res.status === 200 && res.data && res.data.ok && res.data.rid && res.data.rid !== 'XV-RFQ-OK'){
         hint.textContent = '';
         showSuccess(res.data.rid);
+        /* the basket lines were submitted with this RFQ — clear them so the
+           buyer doesn't accidentally resend the same list */
+        try{ if(window.XanvorBasket) XanvorBasket.clear();
+             else localStorage.removeItem('xanvor_enquiry_basket_v1'); }catch(_){}
+      } else if(res.data && res.data.rid === 'XV-RFQ-OK'){
+        /* honeypot decoy tripped (autofill filled the hidden field) — nothing
+           was saved; tell the buyer instead of faking success */
+        showError('Could not send — please try again, or WhatsApp +91 98377 60615.');
       } else {
         showError((res.data && res.data.error) ? res.data.error : 'Something went wrong — your details are still in the form. Please try again, or email hello@xanvor.com.');
       }

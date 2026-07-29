@@ -61,6 +61,13 @@ async function hydrate(rids) {
 
 export async function getAllRfqs() {
   const rids = (await indexStore().get(ALL_KEY, { type: 'json' })) || [];
+  /* the index is a non-atomic read-modify-write (concurrent submit+delete can
+     drop an entry) — merge with a key scan of the record store so an RFQ that
+     exists can never be invisible to the admin list */
+  try {
+    const { blobs } = await rfqStore().list();
+    for (const b of blobs || []) if (!rids.includes(b.key)) rids.push(b.key);
+  } catch { /* index alone is still fine */ }
   return hydrate(rids);
 }
 

@@ -159,3 +159,19 @@ token that the pipeline keeps renewing forever automatically.)
 - Trial access me results dikhne ka wait mat karo — **pins are private until Standard
   access is approved** (Step C warning). Serious daily posting Standard approval ke
   BAAD shuru karo; sandbox/Trial phase sirf testing ke liye hai.
+
+## Important behaviours (padh lo — surprises bachenge)
+
+- **Sandbox aur production ke ledgers ALAG hain.** Sandbox testing (`PINTEREST_API_BASE`
+  = api-sandbox) apna `pinned:sandbox` ledger use karti hai — sandbox me kitne bhi test
+  pins banao, production queue untouched rehti hai. Real API pe switch karte hi saare
+  designs phir se "unpinned" queue me honge.
+- **Refresh token mar gaya (60+ din gap)?** Naya OAuth flow chala ke naya refresh token lo,
+  Netlify me `PINTEREST_REFRESH_TOKEN` ki value NAYI daalo aur **redeploy karo** — pipeline
+  khud detect karta hai ki env token badla hai aur usi se re-seed ho jata hai. (Same value
+  dobara daalne se kuch nahi hota — value badalni zaroori hai.)
+- **Batches partial ho sakte hain.** Function ke paas ~7 second ka time budget hai; bade
+  manual batch (count 8–10) me jitne pins ban paye utne report honge, `timeBudgetExceeded: true`
+  ke saath — dobara "Post now" dabao, jahan ruka tha wahin se aage badhega.
+- **Ledger read fail hone par posting ruk jati hai** (error dikhega) — yeh jaan-bujh kar hai,
+  warna ek network hiccup pura catalogue dobara pin kar deta (duplicates).

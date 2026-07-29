@@ -21,7 +21,11 @@ function cleanRfq(raw) {
   if (!EMAIL_RE.test(email)) throw new Error('Valid email required');
 
   const incoterm = INCOTERMS.includes(str(raw.incoterm, 60)) ? str(raw.incoterm, 60) : 'Need advice';
-  const items = (Array.isArray(raw.items) ? raw.items : []).slice(0, 60).map((it) => ({
+  const rawItems = Array.isArray(raw.items) ? raw.items : [];
+  /* reject rather than silently truncate — a 70-line basket that quietly
+     becomes 60 lines loses order lines nobody ever finds out about */
+  if (rawItems.length > 60) throw new Error('Too many lines — please split the request into two RFQs of up to 60 lines each');
+  const items = rawItems.map((it) => ({
     code: str(it.code, 40),
     name: str(it.name, 160),
     qty: Math.max(1, Math.min(1000000, parseInt(it.qty, 10) || 1)),
