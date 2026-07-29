@@ -285,7 +285,9 @@
     }).join('');
   }
   function injectSeals() {
-    var footer = document.querySelector('body > footer');
+    /* NOT `body > footer` — index.html's #catalogue section is never closed,
+       so the homepage footer parses INSIDE it, not as a direct body child */
+    var footer = document.querySelector('footer');
     if (!footer || footer.querySelector('.xv-seals')) return;
     var row = document.createElement('div');
     row.className = 'xv-seals';
