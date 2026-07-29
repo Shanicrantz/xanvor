@@ -814,7 +814,7 @@
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
 
 </style>
-<link rel="stylesheet" href="assets/site-chrome.css?v=6">
+<link rel="stylesheet" href="assets/site-chrome.css?v=7">
 <script src="assets/google-ads.js?v=1"></script>
 
 </head>
@@ -889,6 +889,40 @@
   </div>
 </section>
 
+<!-- ============ NEW DESIGNS BAND ============ -->
+<style>
+  .ndband{padding:90px 6vw 70px;background:#241510;}
+  .ndband .sec-head{text-align:center;margin-bottom:44px;}
+  .ndband .eyebrow{color:#C9A57E;}
+  .ndband h2{color:#FBF6E8;}
+  .ndband h2 em{color:#C9A57E;}
+  .ndband-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;max-width:1280px;margin:0 auto;}
+  .ndb-card{display:block;background:#2E1D14;border:1px solid #43352B;border-radius:8px;overflow:hidden;text-decoration:none;transition:transform .25s,border-color .25s;}
+  .ndb-card:hover{transform:translateY(-4px);border-color:#A85D2A;}
+  .ndb-img{aspect-ratio:1/1;background:#F8F2E6;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .ndb-img img{width:100%;height:100%;object-fit:cover;}
+  .ndb-body{padding:14px 16px 16px;}
+  .ndb-name{font-family:'Fraunces',serif;font-size:16.5px;color:#FBF6E8;line-height:1.3;margin-bottom:6px;}
+  .ndb-meta{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#C9A57E;}
+  .ndb-new{display:inline-block;background:#A85D2A;color:#FBF6E8;font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;padding:3px 9px;border-radius:40px;margin-bottom:8px;}
+  .ndband-cta{text-align:center;margin-top:40px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .ndband-cta .btn-ghost{border-color:#C9A57E;color:#C9A57E;}
+  .ndband-cta .btn-ghost:hover{background:rgba(201,165,126,.1);}
+  @media(max-width:980px){.ndband-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:520px){.ndband{padding:64px 5vw 54px;}.ndband-grid{grid-template-columns:1fr 1fr;gap:12px;}}
+</style>
+<section class="ndband reveal" id="new-designs">
+  <div class="sec-head">
+    <div class="eyebrow">Fresh From the Workshop · For Buyers Worldwide</div>
+    <h2 class="display">New designs, <em>every season</em></h2>
+  </div>
+  <div class="ndband-grid" id="ndbandGrid"></div>
+  <div class="ndband-cta">
+    <a href="new-designs.html" class="btn btn-primary">View all new designs</a>
+    <a href="wholesale.html#rfq" class="btn btn-ghost">Request a quote</a>
+  </div>
+</section>
+
 <!-- ============ FEATURED PIECES ============ -->
 <section class="featured">
   <div class="featured-wrap">
@@ -931,40 +965,6 @@
     <div class="featured-cta reveal">
       <a href="#catalogue" class="btn btn-ghost">Browse Full Catalogue →</a>
     </div>
-  </div>
-</section>
-
-<!-- ============ NEW DESIGNS BAND ============ -->
-<style>
-  .ndband{padding:90px 6vw 70px;background:#241510;}
-  .ndband .sec-head{text-align:center;margin-bottom:44px;}
-  .ndband .eyebrow{color:#C9A57E;}
-  .ndband h2{color:#FBF6E8;}
-  .ndband h2 em{color:#C9A57E;}
-  .ndband-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;max-width:1280px;margin:0 auto;}
-  .ndb-card{display:block;background:#2E1D14;border:1px solid #43352B;border-radius:8px;overflow:hidden;text-decoration:none;transition:transform .25s,border-color .25s;}
-  .ndb-card:hover{transform:translateY(-4px);border-color:#A85D2A;}
-  .ndb-img{aspect-ratio:1/1;background:#F8F2E6;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-  .ndb-img img{width:100%;height:100%;object-fit:cover;}
-  .ndb-body{padding:14px 16px 16px;}
-  .ndb-name{font-family:'Fraunces',serif;font-size:16.5px;color:#FBF6E8;line-height:1.3;margin-bottom:6px;}
-  .ndb-meta{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#C9A57E;}
-  .ndb-new{display:inline-block;background:#A85D2A;color:#FBF6E8;font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;padding:3px 9px;border-radius:40px;margin-bottom:8px;}
-  .ndband-cta{text-align:center;margin-top:40px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
-  .ndband-cta .btn-ghost{border-color:#C9A57E;color:#C9A57E;}
-  .ndband-cta .btn-ghost:hover{background:rgba(201,165,126,.1);}
-  @media(max-width:980px){.ndband-grid{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:520px){.ndband{padding:64px 5vw 54px;}.ndband-grid{grid-template-columns:1fr 1fr;gap:12px;}}
-</style>
-<section class="ndband reveal" id="new-designs">
-  <div class="sec-head">
-    <div class="eyebrow">Fresh From the Workshop · For Buyers Worldwide</div>
-    <h2 class="display">New designs, <em>every season</em></h2>
-  </div>
-  <div class="ndband-grid" id="ndbandGrid"></div>
-  <div class="ndband-cta">
-    <a href="new-designs.html" class="btn btn-primary">View all new designs</a>
-    <a href="wholesale.html#rfq" class="btn btn-ghost">Request a quote</a>
   </div>
 </section>
 
@@ -1011,6 +1011,14 @@
         <div class="tb-d">MOQ, lead times, payment terms, samples, documents.</div>
         <div class="tb-a">Read answers →</div>
       </a>
+    </div>
+    <div class="xv-seals" style="padding:34px 0 0;">
+      <span class="xv-seal"><span class="xs-i">❖</span><b>GST Registered</b> GSTIN 09AAEFZ4419L1ZN</span>
+      <span class="xv-seal"><span class="xs-i">❖</span><b>Zenko Inc.</b> Registered Partnership · Moradabad</span>
+      <span class="xv-seal"><span class="xs-i">❖</span><b>100% Handmade</b> No machine look</span>
+      <span class="xv-seal"><span class="xs-i">❖</span><b>QC Approval</b> Pre-dispatch photo &amp; video</span>
+      <span class="xv-seal"><span class="xs-i">❖</span><b>Export Packing</b> EPE foam + master cartons</span>
+      <span class="xv-seal"><span class="xs-i">❖</span><b>Secure Checkout</b> Razorpay · UPI · Cards</span>
     </div>
     <div class="tb-contact">
       <a href="mailto:hello@xanvor.com">hello@xanvor.com</a> &nbsp;·&nbsp;
@@ -2507,7 +2515,7 @@
   }).join('');
 })();
 </script>
-<script src="assets/site-chrome.js?v=4"></script>
+<script src="assets/site-chrome.js?v=5"></script>
 <script src="shop-cart.js?v=hs3"></script>
 <script src="assets/account.js?v=1"></script>
 <script src="enquiry-basket.js?v=hs2"></script>

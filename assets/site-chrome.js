@@ -260,11 +260,38 @@
     ensureDrawer();
     wireNavInteractions(nav);
     polishFooter();
+    injectSeals();
     initFloatIn();
 
     // Signal for other scripts
     window.XanvorChrome = { openDrawer, closeDrawer, isHome: isHome() };
     window.dispatchEvent(new CustomEvent('xanvor:chrome-ready'));
+  }
+
+  /* Trust seals — WB-style chip row at the top of every footer. Only honest,
+     verifiable claims: registrations, process guarantees, payment rails.
+     (WB Inc's IEC/EPCH/SGS seals belong to WB Inc, not Zenko — do not copy.) */
+  var SEALS = [
+    ['❖', 'GST Registered', 'GSTIN 09AAEFZ4419L1ZN'],
+    ['❖', 'Zenko Inc.', 'Registered Partnership · Moradabad'],
+    ['❖', '100% Handmade', 'No machine look'],
+    ['❖', 'QC Approval', 'Pre-dispatch photo & video'],
+    ['❖', 'Export Packing', 'EPE foam + master cartons'],
+    ['❖', 'Secure Checkout', 'Razorpay · UPI · Cards'],
+  ];
+  function sealsHtml() {
+    return SEALS.map(function (s) {
+      return '<span class="xv-seal"><span class="xs-i">' + s[0] + '</span><b>' + s[1] + '</b> ' + s[2] + '</span>';
+    }).join('');
+  }
+  function injectSeals() {
+    var footer = document.querySelector('body > footer');
+    if (!footer || footer.querySelector('.xv-seals')) return;
+    var row = document.createElement('div');
+    row.className = 'xv-seals';
+    row.setAttribute('aria-label', 'Trust and registration seals');
+    row.innerHTML = sealsHtml();
+    footer.insertBefore(row, footer.firstChild);
   }
 
   /* Scroll-float: card grids drift up into place (staggered) as they enter
