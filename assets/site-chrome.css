@@ -464,3 +464,51 @@ footer .f-legal a:hover{color:var(--xv-rust) !important;}
   backdrop-filter:blur(10px);
   -webkit-backdrop-filter:blur(10px);
 }
+
+/* ============================================================
+   Scroll-float layer — elements drift up into place as they
+   scroll into view (staggered), the nav detaches into a floating
+   bar once scrolled, and the RFQ pill idles with a gentle bob.
+   Applied by initFloatIn() in site-chrome.js; homepage .cat-pages
+   is EXCLUDED there (its reveals are force-shown — transitions
+   stall on that giant page). Reduced-motion users get none of it.
+   ============================================================ */
+.xv-float{opacity:0; transform:translateY(24px);}
+.xv-float.xv-in{
+  opacity:1; transform:translateY(0);
+  transition:opacity .7s var(--xvf-ease,ease), transform .7s var(--xvf-ease,ease);
+}
+
+/* nav → detached floating bar in its solid/scrolled state */
+:root nav#nav.xv-nav,
+:root nav.xv-nav{
+  transition:background .35s ease, padding .35s ease, border-color .35s ease,
+             box-shadow .35s ease, top .35s ease, left .35s ease, right .35s ease,
+             border-radius .35s ease;
+}
+:root nav#nav.xv-nav.scrolled,
+:root nav.xv-nav.scrolled,
+:root nav#nav.xv-nav.xv-nav-solid,
+:root nav.xv-nav.xv-nav-solid{
+  top:10px;
+  left:clamp(8px, 2vw, 22px);
+  right:clamp(8px, 2vw, 22px);
+  border:1px solid var(--xv-line-strong,#D8CBB0) !important;
+  border-radius:18px;
+  box-shadow:0 18px 44px -18px rgba(58,39,24,.35);
+}
+
+/* the floating RFQ pill breathes; hover pauses it */
+@keyframes xv-bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+:root .xb-pill{animation:xv-bob 3.8s ease-in-out infinite;}
+:root .xb-pill:hover{animation-play-state:paused;}
+
+/* hero scroll cue bobs downward */
+@keyframes xv-bob-down{0%,100%{transform:translateY(0);}50%{transform:translateY(7px);}}
+:root .scroll-cue{animation:xv-bob-down 2.6s ease-in-out infinite;}
+
+@media (prefers-reduced-motion: reduce){
+  .xv-float{opacity:1 !important; transform:none !important; transition:none !important;}
+  :root .xb-pill, :root .scroll-cue{animation:none !important;}
+  :root nav#nav.xv-nav, :root nav.xv-nav{transition:none;}
+}

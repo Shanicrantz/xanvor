@@ -260,10 +260,59 @@
     ensureDrawer();
     wireNavInteractions(nav);
     polishFooter();
+    initFloatIn();
 
     // Signal for other scripts
     window.XanvorChrome = { openDrawer, closeDrawer, isHome: isHome() };
     window.dispatchEvent(new CustomEvent('xanvor:chrome-ready'));
+  }
+
+  /* Scroll-float: card grids drift up into place (staggered) as they enter
+     the viewport. Homepage .cat-pages is EXCLUDED — its reveals are force-
+     shown because transitions stall on that 30k px page; same reason we
+     keep a belt-and-braces timer that force-shows anything still hidden. */
+  function initFloatIn() {
+    try {
+      if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (!('IntersectionObserver' in window)) return;
+      var SEL = ['.featured-grid > *', '.trust-wrap > .t-cell', '.ndband-grid > *',
+                 '.tb-grid > *', '.nd-grid > *', '.ws-cols > *', '.cap-grid > *',
+                 '.faq-list details', 'a.card'].join(',');
+      var els = Array.prototype.slice.call(document.querySelectorAll(SEL))
+        .filter(function (el) { return !el.closest('.cat-pages'); });
+      if (!els.length) return;
+      els.forEach(function (el) {
+        var i = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
+        el.style.transitionDelay = ((i % 6) * 70) + 'ms';
+        el.classList.add('xv-float');
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('xv-in'); io.unobserve(en.target); }
+        });
+      }, { threshold: 0, rootMargin: '0px 0px -30px 0px' });
+      els.forEach(function (el) { io.observe(el); });
+      /* stall sweeps: (a) anything already past the viewport that never got
+         .xv-in, and (b) the site's classic failure — .xv-in applied but the
+         transition froze mid-flight leaving the card near-invisible. Both
+         get forced visible with transition:none. Far-below-fold elements are
+         left to the observer so the effect survives for late scrollers. */
+      function sweep(last) {
+        document.querySelectorAll('.xv-float').forEach(function (el) {
+          var isIn = el.classList.contains('xv-in');
+          var above = el.getBoundingClientRect().top < window.innerHeight + 200;
+          var stuck = isIn && parseFloat(getComputedStyle(el).opacity) < 0.9;
+          if ((!isIn && (above || last)) || stuck) {
+            el.style.setProperty('transition', 'none', 'important');
+            el.style.transitionDelay = '';
+            el.classList.add('xv-in');
+          }
+        });
+      }
+      setTimeout(function () { sweep(false); }, 4000);
+      setTimeout(function () { sweep(false); }, 8000);
+      setTimeout(function () { sweep(true); }, 15000);
+    } catch (e) { /* animation is optional — never break the page for it */ }
   }
 
   /* First-party visit tracker + welcome-offer popup. Loaded from here so it
