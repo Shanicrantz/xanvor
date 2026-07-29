@@ -359,3 +359,108 @@ footer .f-legal a:hover{color:var(--xv-rust) !important;}
   nav.xv-nav .links .sc-navbtn > span:not(.sc-cnt){display:none;}
   nav.xv-nav .links{gap:10px !important;}
 }
+
+/* ============================================================
+   XANVOR floating theme layer (WB-style presentation, XANVOR palette)
+   White-ish cards floating on warm cream: 14px radius, soft deep
+   shadows, -6px hover lift + image zoom, glow pill buttons, nav
+   shadow-on-scroll. Scoped under .xv-has-chrome so these rules
+   out-rank each page's inline card CSS regardless of load order.
+   ============================================================ */
+.xv-has-chrome{
+  --xvf-card:#FFFDF8;
+  --xvf-radius:14px;
+  --xvf-shadow-sm:0 2px 10px rgba(58,39,24,.07);
+  --xvf-shadow:0 18px 50px -20px rgba(58,39,24,.32);
+  --xvf-ease:cubic-bezier(.22,.61,.36,1);
+}
+
+/* ---- product + content cards: float at rest, lift on hover ---- */
+.xv-has-chrome .cat-item,
+.xv-has-chrome .feat-card,
+.xv-has-chrome .nd-card,
+.xv-has-chrome .cap,
+.xv-has-chrome .ws-card,
+.xv-has-chrome .card{
+  background:var(--xvf-card);
+  border-radius:var(--xvf-radius);
+  box-shadow:var(--xvf-shadow-sm);
+  transition:transform .4s var(--xvf-ease), box-shadow .4s var(--xvf-ease), border-color .3s ease;
+}
+.xv-has-chrome .cat-item:hover,
+.xv-has-chrome .feat-card:hover,
+.xv-has-chrome .nd-card:hover,
+.xv-has-chrome .cap:hover,
+.xv-has-chrome .ws-card:hover,
+.xv-has-chrome .card:hover{
+  transform:translateY(-6px);
+  box-shadow:var(--xvf-shadow);
+}
+.xv-has-chrome .cat-item:hover .cat-photo img{transform:translateZ(0) scale(1.05);}
+.xv-has-chrome .feat-card:hover .feat-img img{transform:scale(1.05);}
+
+/* dark cards (homepage new-designs band) — same float, darker glow */
+.xv-has-chrome .ndb-card{
+  border-radius:var(--xvf-radius);
+  transition:transform .4s var(--xvf-ease), box-shadow .4s var(--xvf-ease), border-color .3s ease;
+}
+.xv-has-chrome .ndb-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 50px -18px rgba(0,0,0,.55);
+}
+.xv-has-chrome .tb-card{
+  background:var(--xvf-card);
+  border-radius:var(--xvf-radius);
+  box-shadow:var(--xvf-shadow-sm);
+  transition:transform .4s var(--xvf-ease), box-shadow .4s var(--xvf-ease), border-color .3s ease;
+}
+.xv-has-chrome .tb-card:hover{transform:translateY(-6px); box-shadow:var(--xvf-shadow);}
+
+/* ---- homepage trust strip: divided row -> four floating cards ---- */
+.xv-has-chrome .trust-wrap{gap:16px;}
+.xv-has-chrome .t-cell{
+  background:var(--xvf-card);
+  border:1px solid var(--xv-line,#E6DCC8);
+  border-right:1px solid var(--xv-line,#E6DCC8);
+  border-radius:var(--xvf-radius);
+  box-shadow:var(--xvf-shadow-sm);
+  padding:22px 18px;
+  transition:transform .4s var(--xvf-ease), box-shadow .4s var(--xvf-ease);
+}
+.xv-has-chrome .t-cell:hover{transform:translateY(-4px); box-shadow:var(--xvf-shadow);}
+@media(max-width:760px){
+  .xv-has-chrome .t-cell{border-bottom:1px solid var(--xv-line,#E6DCC8); padding:18px 12px;}
+}
+
+/* ---- FAQ accordions float ---- */
+.xv-has-chrome details{
+  background:var(--xvf-card);
+  border-radius:var(--xvf-radius);
+  box-shadow:var(--xvf-shadow-sm);
+  transition:box-shadow .3s var(--xvf-ease);
+}
+.xv-has-chrome details[open]{box-shadow:var(--xvf-shadow);}
+
+/* ---- PDP buy-box + drawers already float; align radius ---- */
+.xv-has-chrome .buybox{border-radius:var(--xvf-radius); box-shadow:var(--xvf-shadow-sm);}
+
+/* ---- pill buttons: gold-glow treatment on the brand rust ---- */
+.xv-has-chrome .btn-primary,
+.xv-has-chrome .btn.btn-primary{
+  box-shadow:0 12px 28px -12px rgba(168,93,42,.65);
+  transition:transform .25s var(--xvf-ease), box-shadow .25s, background .25s;
+}
+.xv-has-chrome .btn-primary:hover,
+.xv-has-chrome .btn.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 16px 34px -12px rgba(168,93,42,.75);
+}
+.xv-has-chrome .btn-ghost:hover{transform:translateY(-2px);}
+
+/* ---- nav: soft shadow + blur once it goes solid on scroll ---- */
+.xv-has-chrome nav#nav.scrolled,
+.xv-has-chrome nav.xv-nav.xv-nav-solid{
+  box-shadow:0 2px 24px rgba(58,39,24,.10);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
