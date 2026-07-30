@@ -667,3 +667,13 @@ body.xv-intl .xv-retail-ref{
   border-top:1px dashed var(--xv-line-strong,#D8CBB0);
   margin-top:10px; padding-top:10px; opacity:.85;
 }
+
+/* escape hatch out of the geo-derived export view (product.js) */
+.xv-retail-ref .xv-show-retail{
+  display:inline-block; margin-top:6px;
+  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--xv-rust,#A85D2A); background:none; border:none;
+  border-bottom:1px solid rgba(168,93,42,.4); padding:0 0 2px; cursor:pointer;
+}
+.xv-retail-ref .xv-show-retail:hover{border-bottom-color:var(--xv-rust,#A85D2A);}

@@ -730,6 +730,14 @@
     /* export pricing is ex-GST ex-works — say so where the number is */
     const wn = buybox.querySelector('.price-block.wholesale-only .pb-note');
     if(wn) wn.textContent = 'Per piece · EXW Moradabad · ex-GST (exports are zero-rated) · indicative, final on Proforma Invoice';
+
+    /* the retail badges promise India-only things (free India shipping,
+       GST invoice, 7-day returns) that do not apply to an export order */
+    const badges = document.querySelector('.p-badges');
+    if(badges) badges.innerHTML =
+      '<span class="b fill">' + icon('hand') + ' Hand-cast in Moradabad</span>' +
+      '<span class="b">' + icon('ship') + ' EXW · FOB · CIF · DDP worldwide</span>' +
+      '<span class="b">' + icon('stamp') + ' Proforma Invoice · T/T terms</span>';
   }
 
   /* geo lands async; currency.js publishes it. Also run immediately if the
