@@ -140,6 +140,7 @@
 </style>
 <link rel="stylesheet" href="assets/site-chrome.css?v=10">
 <script src="assets/google-ads.js?v=1"></script>
+<script src="assets/pinterest-tag.js?v=1"></script>
 
 </head>
 <body data-xv-nomoney>
@@ -489,6 +490,8 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
       </div>`;
     /* Google Ads Purchase conversion */
     if(window.XanvorAds && t) window.XanvorAds.purchase(t.total, oid);
+    /* Pinterest checkout conversion */
+    if(window.XanvorPinterest && t) window.XanvorPinterest.checkout(t.total, oid);
   }
 
   async function payWithRazorpay(d, items, t, oid){
@@ -549,6 +552,8 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
       </div>`;
     /* Google Ads Purchase conversion — paid online */
     if(window.XanvorAds && t) window.XanvorAds.purchase(t.total, oid);
+    /* Pinterest checkout conversion — paid online */
+    if(window.XanvorPinterest && t) window.XanvorPinterest.checkout(t.total, oid);
   }
 
   function renderEmpty(){

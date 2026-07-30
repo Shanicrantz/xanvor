@@ -123,3 +123,53 @@ ${items.join('\n')}
 </rss>
 `;
 }
+
+/* ---- /pinterest-feed.xml — Pinterest catalog data source ----
+   Pinterest reads the same g: namespace as Google Shopping, so this
+   mirrors renderFeed() with the spec differences Pinterest cares about:
+     · availability uses spaces ("in stock"), not underscores
+     · no <g:identifier_exists> / <g:shipping> — Pinterest ignores both
+     · product_type carries the board-mapping path
+   Kept as its own renderer so tuning it can never break the live
+   Google Merchant feed. Product links must sit on the claimed domain. */
+export function renderPinterestFeed(products) {
+  const retail = products.filter(isRetail);
+  const items = retail.map(p => {
+    const incl = inclPrice(p);
+    const gal = galleryOf(p);
+    const extraImgs = gal.slice(1, 11).map(g =>
+      `\n    <g:additional_image_link>${esc(absImage(g))}</g:additional_image_link>`).join('');
+    const firstMaterial = String(p.materials || '').split('·')[0].trim();
+    const title = `${p.name} — ${firstMaterial} · XANVOR`;
+    const description = [
+      p.desc,
+      (p.highlights || []).join('. '),
+      p.sizes ? `Sizes: ${p.sizes}.` : '',
+      'Handcrafted in Moradabad, India. Wholesale, OEM and export enquiries welcome.',
+    ].filter(Boolean).join(' ').replace(/\.\./g, '.');
+    return `  <item>
+    <g:id>${esc(p.id)}</g:id>
+    <g:title>${esc(title)}</g:title>
+    <g:description>${esc(description)}</g:description>
+    <g:link>${esc(productURL(p))}</g:link>
+    <g:image_link>${esc(absImage(gal[0]))}</g:image_link>${extraImgs}
+    <g:availability>${p.availability === 'out_of_stock' ? 'out of stock' : 'in stock'}</g:availability>
+    <g:condition>new</g:condition>
+    <g:brand>XANVOR</g:brand>
+    <g:price>${p.mrp}.00 INR</g:price>
+    <g:sale_price>${incl}.00 INR</g:sale_price>
+    <g:google_product_category>${esc(p.google_category || 'Home & Garden > Kitchen & Dining > Tableware > Serveware')}</g:google_product_category>
+    <g:product_type>${esc(`XANVOR > ${p.collection}`)}</g:product_type>
+  </item>`;
+  });
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+<channel>
+  <title>XANVOR — Brass, Copper &amp; Kansa Handicrafts</title>
+  <link>${SITE}</link>
+  <description>Metal handicrafts manufacturer and exporter from Moradabad, India. Brass, copper, kansa and sheesham homeware for wholesale, OEM and private label.</description>
+${items.join('\n')}
+</channel>
+</rss>
+`;
+}
