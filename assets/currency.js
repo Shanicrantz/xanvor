@@ -218,7 +218,18 @@
   function queueSweep() {
     if (sweepQueued || IS_CHECKOUT) return;
     sweepQueued = true;
-    requestAnimationFrame(function () { sweepQueued = false; sweep(); });
+    var ran = false;
+    var run = function () {
+      if (ran) return;
+      ran = true; sweepQueued = false; sweep();
+    };
+    requestAnimationFrame(run);
+    /* rAF is parked while a tab is hidden. Without a timer the queued flag
+       latches true, so a page opened in a background tab (or any mutation
+       that happens while it is hidden) stays unconverted even after the
+       buyer switches to it. paint() no-ops on unchanged nodes, so the
+       occasional double-run this can cause costs nothing. */
+    setTimeout(run, 250);
   }
   function observe() {
     if (observer) observer.observe(document.body, { childList: true, subtree: true, characterData: true });
