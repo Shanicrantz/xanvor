@@ -81,6 +81,11 @@ function cleanProduct(raw) {
   if (offerMin) {
     if (offer && offerMin > offer) throw new Error(`offer_min ₹${offerMin} trade price ₹${offer} se zyada nahi ho sakta`);
     p.offer_min = offerMin;
+  } else if (Object.prototype.hasOwnProperty.call(raw, 'offer_min')) {
+    /* Sent but empty = the admin cleared the box → remove the floor.
+       A caller that OMITS the key (e.g. an MCP partial upsert) leaves the
+       stored floor alone, so a photo update can't silently wipe pricing. */
+    p.offer_min = null;
   }
   if ((retail || offer) && !mrp) throw new Error('retail/offer ke saath MRP zaroori hai (feed me dono jaate hain)');
   if (retail && mrp) {
@@ -129,8 +134,13 @@ export default async (req) => {
         if (!product.availability) delete products[i].availability;
         if (!product.signature) delete products[i].signature;
         if (!product.homepage) delete products[i].homepage;
+        if (product.offer_min === null) delete products[i].offer_min;
       }
-      else products.push({ ...product, modified_at: now });
+      else {
+        /* the "clear this" sentinel is meaningless on a brand-new record */
+        if (product.offer_min === null) delete product.offer_min;
+        products.push({ ...product, modified_at: now });
+      }
       const saved = await saveCatalog(products, cat.collection_order);
       return json({ ok: true, count: saved.products.length, product });
     }

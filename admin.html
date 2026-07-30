@@ -784,6 +784,10 @@
               <label class="field-label" for="f_offer">Offer / B2B</label>
               <input id="f_offer" inputmode="numeric" placeholder="2100">
             </div>
+            <div>
+              <label class="field-label" for="f_offer_min">B2B floor (min /pc)</label>
+              <input id="f_offer_min" inputmode="numeric" placeholder="khaali = koi floor nahi">
+            </div>
             <div class="span3"><div class="price-hint" id="priceHint"></div></div>
             <div class="span3">
               <label class="field-label" for="f_highlights">Highlights — one per line</label>
@@ -1150,7 +1154,7 @@
     $('f_availability').value=p?.availability||'';
     $('f_status').value=p?.status||'';
     $('f_homepage').value=p?.homepage||'';
-    $('f_mrp').value=p?.mrp||''; $('f_retail').value=p?.retail||''; $('f_offer').value=p?.offer||'';
+    $('f_mrp').value=p?.mrp||''; $('f_retail').value=p?.retail||''; $('f_offer').value=p?.offer||''; $('f_offer_min').value=p?.offer_min||'';
     $('f_highlights').value=(p?.highlights||[]).join('\n');
     $('f_signature').checked=!!p?.signature;
     galleryArr = p ? (Array.isArray(p.images)&&p.images.length ? [...p.images] : (p.image?[p.image]:[])) : [];
@@ -1828,7 +1832,7 @@
       availability: $('f_availability').value,
       status: $('f_status').value,
       homepage: $('f_homepage').value,
-      mrp: $('f_mrp').value, retail: $('f_retail').value, offer: $('f_offer').value,
+      mrp: $('f_mrp').value, retail: $('f_retail').value, offer: $('f_offer').value, offer_min: $('f_offer_min').value,
       highlights: $('f_highlights').value.split('\n').map(s=>s.trim()).filter(Boolean),
       signature: $('f_signature').checked,
       images: galleryArr, image: galleryArr[0] || '',

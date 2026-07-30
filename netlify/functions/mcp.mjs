@@ -80,6 +80,7 @@ const TOOLS = [
         mrp: { type: 'number' },
         retail: { type: 'number', description: 'B2C price ex-GST' },
         offer: { type: 'number', description: 'B2B/trade price ex-works' },
+        offer_min: { type: 'number', description: 'B2B floor — volume tiers never quote below this per-piece price' },
         highlights: { type: 'array', items: { type: 'string' }, maxItems: 8 },
         availability: { type: 'string', enum: ['in_stock', 'out_of_stock'] },
         status: { type: 'string', enum: ['live', 'draft'] },

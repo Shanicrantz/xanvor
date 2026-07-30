@@ -173,6 +173,7 @@ server.tool(
     mrp: z.number().optional(),
     retail: z.number().optional().describe('B2C price ex-GST'),
     offer: z.number().optional().describe('B2B/trade price ex-works'),
+    offer_min: z.number().optional().describe('B2B floor — volume tiers never quote below this per-piece price'),
     highlights: z.array(z.string()).max(8).optional(),
     availability: z.enum(['in_stock', 'out_of_stock']).optional(),
     status: z.enum(['live', 'draft']).optional(),
