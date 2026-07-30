@@ -8,7 +8,7 @@
    Token values are NEVER included in any response.
    ============================================================ */
 import { createHash, timingSafeEqual } from 'node:crypto';
-import { isConfigured, getPinned, getQueue, postNextPins } from './lib/pinterest.mjs';
+import { isConfigured, getPinned, getQueue, postNextPins, boardMapStatus } from './lib/pinterest.mjs';
 
 const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
   status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
@@ -34,16 +34,26 @@ export default async (req) => {
         .map(([id, v]) => ({ id, pinId: v.pinId, title: v.title, at: v.at }))
         .sort((a, b) => String(b.at).localeCompare(String(a.at)))
         .slice(0, 10);
-      let catalogRemaining = 0;
-      try { catalogRemaining = (await getQueue()).queue.length; } catch { /* catalog read best-effort */ }
+      let catalogRemaining = 0, unroutable = [];
+      try {
+        const q = await getQueue();
+        catalogRemaining = q.queue.length;
+        unroutable = q.unroutable;
+      } catch { /* catalog read best-effort */ }
+      /* board ids are configuration, not secrets — but report the map as
+         collection → routed?, so the response stays useful without pasting
+         raw ids into an admin screen */
+      const { map } = boardMapStatus();
       return json({
         configured: cfg.ok,
         reason: cfg.reason,
         mode: cfg.mode,
         boardId: !!process.env.PINTEREST_BOARD_ID,
+        routedCollections: Object.keys(map),
         pinnedCount: Object.keys(pinned).length,
         lastPosted,
         catalogRemaining,
+        unroutable,
       });
     }
 

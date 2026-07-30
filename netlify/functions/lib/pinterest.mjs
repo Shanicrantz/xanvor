@@ -13,7 +13,12 @@
      PINTEREST_ACCESS_TOKEN  static token → sandbox/static mode (no refresh)
      PINTEREST_APP_ID / PINTEREST_APP_SECRET / PINTEREST_REFRESH_TOKEN
                              continuous-refresh OAuth mode
-     PINTEREST_BOARD_ID      board that receives the pins
+     PINTEREST_BOARD_ID      default board — receives any product whose
+                             collection is not routed by PINTEREST_BOARD_MAP
+     PINTEREST_BOARD_MAP     optional JSON {"<collection>":"<board_id>"} that
+                             sends each collection to its own board. With no
+                             map set, everything goes to PINTEREST_BOARD_ID
+                             exactly as before.
 
    CRITICAL: Pinterest continuous refresh tokens ROTATE on every
    refresh call and die after 60 days if the rotated token is not
@@ -38,10 +43,49 @@ export const apiBase = () =>
 const isSandbox = () => apiBase().includes('sandbox');
 const pinnedKey = () => (isSandbox() ? 'pinned:sandbox' : 'pinned');
 
+/* ---- collection → board routing ----
+   A catalogue product carries a `collection` ("Brass", "Copper", …).
+   PINTEREST_BOARD_MAP routes each collection to its own board so a six-board
+   profile fills evenly instead of every pin landing in one place.
+   Parse failures are reported through isConfigured() rather than swallowed —
+   a typo'd map must not silently dump the whole catalogue into one board. */
+export function boardMapStatus() {
+  const raw = (process.env.PINTEREST_BOARD_MAP || '').trim();
+  if (!raw) return { map: {}, error: null };
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return { map: {}, error: 'PINTEREST_BOARD_MAP is not valid JSON' };
+  }
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    return { map: {}, error: 'PINTEREST_BOARD_MAP must be a JSON object of {"collection":"boardId"}' };
+  }
+  const map = {};
+  for (const [k, v] of Object.entries(parsed)) {
+    if (typeof v !== 'string' || !v.trim()) {
+      return { map: {}, error: `PINTEREST_BOARD_MAP["${k}"] must be a non-empty board id string` };
+    }
+    map[k.trim()] = v.trim();
+  }
+  return { map, error: null };
+}
+
+/* board for one product: its collection's board, else the default board */
+export function boardFor(p) {
+  const { map } = boardMapStatus();
+  return map[String(p?.collection || '').trim()] || process.env.PINTEREST_BOARD_ID || null;
+}
+
 /* ---- configuration status (env-only, sync) ---- */
 export function isConfigured() {
-  if (!process.env.PINTEREST_BOARD_ID) {
-    return { ok: false, mode: 'unconfigured', reason: 'PINTEREST_BOARD_ID env var not set' };
+  const { map, error: mapError } = boardMapStatus();
+  if (mapError) return { ok: false, mode: 'unconfigured', reason: mapError };
+  if (!process.env.PINTEREST_BOARD_ID && !Object.keys(map).length) {
+    return {
+      ok: false, mode: 'unconfigured',
+      reason: 'Set PINTEREST_BOARD_ID (single board) or PINTEREST_BOARD_MAP (collection → board)',
+    };
   }
   if (process.env.PINTEREST_ACCESS_TOKEN) {
     return { ok: true, mode: 'static-token', reason: null };
@@ -167,7 +211,7 @@ export function buildPin(p) {
   const img = galleryOf(p)[0];
 
   return {
-    board_id: process.env.PINTEREST_BOARD_ID,
+    board_id: boardFor(p),
     title, description, link, alt_text,
     media_source: { source_type: 'image_url', url: imageURL({ image: img }) },
   };
@@ -183,8 +227,16 @@ export async function getQueue() {
     return tb - ta;
   });
   const pinned = await getPinned();
-  const queue = eligible.filter(p => !pinned[p.id]);
-  return { eligible, queue, pinned };
+  const unpinned = eligible.filter(p => !pinned[p.id]);
+  /* A product whose collection is unmapped AND with no default board has
+     nowhere to go. Keep it OUT of the queue rather than at the head of it —
+     otherwise every cron run would retry the same dead items and never reach
+     the routable ones. Surfaced as `unroutable` so the gap stays visible. */
+  const queue = unpinned.filter(p => boardFor(p));
+  const unroutable = unpinned
+    .filter(p => !boardFor(p))
+    .map(p => ({ id: p.id, collection: p.collection || null }));
+  return { eligible, queue, pinned, unroutable };
 }
 
 /* ---- post the next N unpinned products ---- */
@@ -193,7 +245,7 @@ const TIME_BUDGET_MS = 7000; // stay under the 10s function limit even mid-batch
 export async function postNextPins(count) {
   const n = Math.max(1, Math.min(10, Number(count) || 3));
   const started = Date.now();
-  const { eligible, queue } = await getQueue(); // getPinned inside throws on store failure — never treat as empty
+  const { eligible, queue, pinned, unroutable } = await getQueue(); // getPinned inside throws on store failure — never treat as empty
   const batch = queue.slice(0, n);
 
   const posted = [], failed = [];
@@ -219,7 +271,7 @@ export async function postNextPins(count) {
         try { fresh = await getPinned(); } catch { fresh = null; }
         const merged = { ...(fresh || {}), [p.id]: entry };
         await store().setJSON(pinnedKey(), merged); // persist per pin — survive mid-batch failures
-        posted.push({ id: p.id, pinId: entry.pinId });
+        posted.push({ id: p.id, pinId: entry.pinId, boardId: body.board_id });
       } else {
         const text = (await res.text().catch(() => '')).slice(0, 300);
         failed.push({ id: p.id, status: res.status, error: text });
@@ -229,9 +281,10 @@ export async function postNextPins(count) {
 
   const result = {
     posted, failed,
-    skippedAlreadyPinned: eligible.length - queue.length,
+    skippedAlreadyPinned: eligible.filter(p => pinned[p.id]).length,
     remaining: queue.length - posted.length,
   };
+  if (unroutable.length) result.unroutable = unroutable;
   if (rateLimited) result.rateLimited = true;
   if (outOfTime) result.timeBudgetExceeded = true;
   return result;
