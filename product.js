@@ -33,10 +33,25 @@
     const base = typeof product.offer === 'number' ? product.offer
                : typeof product.retail === 'number' ? product.retail : null;
     if(base && product.mrp){
-      const unit = base * (1 - t.pct);
+      /* quote the discount on the price we will actually charge — once the
+         floor bites, the raw ladder % would overstate the saving */
+      let unit = base * (1 - t.pct);
+      if(typeof product.offer_min === 'number' && typeof product.offer === 'number'){
+        unit = Math.max(product.offer_min, unit);
+      }
       return '~' + Math.round((1 - unit / product.mrp) * 100) + '% off MRP';
     }
     return t.disc;
+  };
+
+  /* Unit price for a tier, never below the product's B2B floor (offer_min).
+     The ladder is a flat % curve shared by every product, so on a
+     thin-margin piece the deepest tier would otherwise quote below cost. */
+  const tierUnit = (product, t) => {
+    if(typeof product.offer !== 'number') return null;
+    const raw = Math.round(product.offer * (1 - t.pct));
+    const floor = typeof product.offer_min === 'number' ? product.offer_min : null;
+    return floor ? Math.max(floor, raw) : raw;
   };
 
   const tierFor = q => {
@@ -607,7 +622,7 @@
         /* wholesale unit derives from the B2B offer price; retail-only pieces
            have no offer — their trade pricing stays "on enquiry" (no NaN) */
         const t=tierFor(q);
-        const unit = typeof product.offer === 'number' ? Math.round(product.offer*(1-t.pct)) : null;
+        const unit = typeof product.offer === 'number' ? tierUnit(product, t) : null;
         if(wUnit) wUnit.textContent = unit ? fmt(unit) : 'on enquiry';
         qTier.textContent=t.label.replace(/^[^·]+·\s*/,''); qDisc.textContent=discLabelFor(t, product); qLead.textContent=t.lead;
         qTotal.textContent = unit ? fmt(unit*q) : 'on enquiry';

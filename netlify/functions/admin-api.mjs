@@ -71,9 +71,17 @@ function cleanProduct(raw) {
   if (gst) p.gst = gst;
 
   const mrp = num(raw.mrp), retail = num(raw.retail), offer = num(raw.offer);
+  const offerMin = num(raw.offer_min);
   if (mrp) p.mrp = mrp;
   if (retail) p.retail = retail;
   if (offer) p.offer = offer;
+  /* Per-product B2B floor. The volume ladder is a flat % curve, so on a
+     thin-margin piece the deepest tier can quote below cost. offer_min is
+     the lowest per-piece price the site may ever show for this product. */
+  if (offerMin) {
+    if (offer && offerMin > offer) throw new Error(`offer_min ₹${offerMin} trade price ₹${offer} se zyada nahi ho sakta`);
+    p.offer_min = offerMin;
+  }
   if ((retail || offer) && !mrp) throw new Error('retail/offer ke saath MRP zaroori hai (feed me dono jaate hain)');
   if (retail && mrp) {
     const incl = Math.round(retail * (1 + (parseFloat(gst || '18') / 100)));
