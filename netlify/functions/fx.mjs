@@ -2,12 +2,29 @@
    Read-only, public, cached at the edge. Returns the stored rate set with
    its timestamp so the client can label a stale rate honestly instead of
    showing a confident-looking number that is weeks old. */
-import { getStoredRates } from './lib/fx.mjs';
+import { getStoredRates, refreshRates } from './lib/fx.mjs';
+
+const STALE_MS = 48 * 3600 * 1000;
 
 export default async () => {
-  const data = await getStoredRates();
-  const ageMs = Date.now() - Date.parse(data.at || 0);
-  const stale = !(ageMs >= 0) || ageMs > 48 * 3600 * 1000;
+  let data = await getStoredRates();
+  let ageMs = Date.now() - Date.parse(data.at || 0);
+
+  /* Self-heal: a brand-new deploy has an empty store, and the daily cron
+     could silently fail. Rather than serve the baked table forever, refresh
+     inline when what we have is unusable. Only ever on the rare miss — the
+     edge caches this for 12h, so it is a couple of slow requests a day, and
+     a failed refresh just keeps whatever we already had. */
+  if (data.source === 'fallback' || !(ageMs >= 0) || ageMs > STALE_MS) {
+    try {
+      data = await refreshRates();
+      ageMs = 0;
+    } catch (e) {
+      console.error('fx: inline refresh failed, serving stored/fallback —', e.message);
+    }
+  }
+
+  const stale = !(ageMs >= 0) || ageMs > STALE_MS;
   return new Response(JSON.stringify({ ...data, stale }), {
     headers: {
       'content-type': 'application/json',
