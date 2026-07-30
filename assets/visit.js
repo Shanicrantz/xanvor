@@ -146,7 +146,7 @@
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
     scrim = document.createElement('div'); scrim.className = 'xv-off-scrim';
-    modal = document.createElement('div'); modal.className = 'xv-off'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-label', 'Welcome offer');
+    modal = document.createElement('div'); modal.className = 'xv-off'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-label', 'Welcome offer'); modal.setAttribute('data-xv-nomoney','');
     modal.innerHTML = ''
       + '<div class="xv-off-head">'
       + '  <button class="x" type="button" aria-label="Close">✕</button>'

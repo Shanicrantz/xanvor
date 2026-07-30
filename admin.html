@@ -1322,7 +1322,7 @@
         : '<i>General enquiry — no line items</i>';
       const status = r.status || 'new';
       const where = r.geo ? [r.geo.city, r.geo.country].filter(Boolean).join(', ') : '';
-      const meta = [r.incoterm, r.port, r.shipdate].filter(Boolean).join(' · ');
+      const meta = [r.incoterm, r.port, r.shipdate, r.currency ? 'Quote in ' + r.currency : ''].filter(Boolean).join(' · ');
       const waNum = String(r.phone||'').replace(/\D/g,'');
       return `
       <div class="ord-card" data-rid="${esc(r.rid)}">

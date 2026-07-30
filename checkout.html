@@ -138,7 +138,7 @@
   footer .f-legal{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#C5B498;line-height:1.7;}
   footer .f-legal a{color:#E7D7B4;}
 </style>
-<link rel="stylesheet" href="assets/site-chrome.css?v=7">
+<link rel="stylesheet" href="assets/site-chrome.css?v=8">
 <script src="assets/google-ads.js?v=1"></script>
 
 </head>
@@ -162,7 +162,7 @@
 <script src="assets/products.js"></script>
 <script src="/api/products.js"></script>
 <script src="assets/mass-products.js?v=2"></script>
-<script src="assets/site-chrome.js?v=7"></script>
+<script src="assets/site-chrome.js?v=8"></script>
 <script src="shop-cart.js?v=hs3"></script>
 <script>
 /* Google Shopping checkout link — /checkout?item_id={id}
@@ -307,6 +307,7 @@
         <div class="eyebrow">Secure Checkout · Retail</div>
         <h1>Almost <em>yours</em></h1>
         <div class="acc-line" id="accLine">${accLineHtml()}</div>
+        <div id="intlNote"></div>
       </div>
       <div class="co-grid">
         <div>
@@ -392,7 +393,26 @@
     const cRemove = document.getElementById('couponRemove');
     if(cRemove) cRemove.addEventListener('click', removeCoupon);
     applyProfileToForm();
+    showIntlNote();
   }
+
+  /* This checkout charges INR (Razorpay pins it) and takes an Indian address
+     — no country field, no international freight. Rather than let an overseas
+     buyer discover that after typing their details, say it up front and point
+     them at the export desk, which is the funnel that can actually serve them. */
+  function showIntlNote(){
+    const box = document.getElementById('intlNote');
+    if(!box) return;
+    const c = window.XanvorMoney && window.XanvorMoney.country;
+    if(!c || c === 'IN'){ box.innerHTML = ''; return; }
+    box.innerHTML = `
+      <div class="xv-intl-note">
+        <b>Shipping outside India?</b> This checkout delivers within India only and is charged in ₹ INR.
+        For international orders we quote in your currency, ship worldwide on your Incoterm and invoice by Proforma Invoice.
+        <br><a href="wholesale.html#rfq">Request an export quote →</a>
+      </div>`;
+  }
+  window.addEventListener('xanvor:geo-ready', showIntlNote);
 
   function placeOrder(){
     const form = document.getElementById('co-form');
@@ -474,6 +494,7 @@ Phone: ${d.phone}${d.email?'\nEmail: '+d.email:''}`;
   async function payWithRazorpay(d, items, t, oid){
     const placeBtn = document.getElementById('place');
     if(typeof Razorpay === 'undefined'){ alert('Payment is loading. Please retry in a moment, or order on WhatsApp.'); return; }
+    /* (see #intlNote below: this checkout is INR + India delivery only) */
     placeBtn.disabled = true; placeBtn.textContent = 'Starting secure payment…';
     let order;
     try{

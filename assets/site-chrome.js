@@ -94,6 +94,11 @@
         <a class="xv-desktop-only${active(['wholesale.html', 'oem-odm.html', 'faq.html'])}" href="wholesale.html">Wholesale</a>
         <a class="xv-desktop-only${active(['about.html'])}" href="${aboutHref}">About</a>
         <a class="xv-desktop-only${active(['contact.html'])}" href="${contactHref}">Contact</a>
+        <button type="button" class="xv-cur" id="xvCur" aria-haspopup="dialog" aria-expanded="false"
+                aria-label="Show prices in another currency">
+          <span id="xvCurLbl">₹ INR</span>
+          <svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+        </button>
       </div>
       <button type="button" class="xv-burger" id="xvBurger" aria-label="Open menu" aria-expanded="false">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
@@ -129,6 +134,7 @@
         <a href="contact.html">Contact</a>
         <a href="account.html">Account</a>
         <a href="checkout.html">Checkout</a>
+        <button type="button" class="xv-drawer-cur" id="xvDrawerCur">Show prices in <b id="xvDrawerCurLbl">₹ INR</b></button>
         <div class="xv-drawer-sec">Collections</div>
         <div class="xv-drawer-sub">${drawerCollectionsHtml()}</div>
       </div>
@@ -262,10 +268,123 @@
     polishFooter();
     injectSeals();
     initFloatIn();
+    loadCurrency();
+    wireCurrency();
 
     // Signal for other scripts
     window.XanvorChrome = { openDrawer, closeDrawer, isHome: isHome() };
     window.dispatchEvent(new CustomEvent('xanvor:chrome-ready'));
+  }
+
+  /* ---- Display-currency switcher ----
+     assets/currency.js owns conversion; this owns the control. Loaded as a
+     real (deferred) script rather than on idle like visit.js — price
+     annotation should land close to first paint, not seconds later. */
+  function loadCurrency() {
+    if (document.getElementById('xv-currency-js')) return;
+    var s = document.createElement('script');
+    s.id = 'xv-currency-js';
+    s.src = '/assets/currency.js?v=1';
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+
+  function curPanel() {
+    var el = document.getElementById('xvCurPanel');
+    if (el) return el;
+    el = document.createElement('div');
+    el.id = 'xvCurPanel';
+    el.className = 'xv-cur-panel';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'false');
+    el.setAttribute('aria-label', 'Show prices in another currency');
+    /* appended to <body>, never inside <nav> — mount() replaces nav.innerHTML
+       wholesale, which would destroy anything parked in there */
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function renderCurPanel() {
+    var M = window.XanvorMoney;
+    if (!M) return;
+    var panel = curPanel();
+    var rows = M.list().map(function (c) {
+      var on = c.code === M.code;
+      var note = c.code === 'INR' ? 'Charged at checkout' : 'Estimate only';
+      return '<button type="button" class="xv-cur-row' + (on ? ' on' : '') + '" data-cur="' + c.code + '">' +
+        '<span class="xv-cur-sym">' + c.sym + '</span>' +
+        '<span class="xv-cur-nm"><b>' + c.code + '</b> ' + c.name + '</span>' +
+        '<span class="xv-cur-note">' + note + '</span></button>';
+    }).join('');
+    var rateLine = '';
+    if (M.rates && M.rates.USD) {
+      var when = M.at ? new Date(M.at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+      rateLine = M.stale
+        ? 'Reference rate may be out of date — treat conversions as rough.'
+        : 'Reference rate 1 USD = ₹' + Math.round(1 / M.rates.USD) + (when ? ' · updated ' + when : '');
+    }
+    panel.innerHTML =
+      '<div class="xv-cur-head">Show prices in</div>' +
+      '<div class="xv-cur-rows">' + rows + '</div>' +
+      (rateLine ? '<div class="xv-cur-rate">' + rateLine + '</div>' : '') +
+      '<div class="xv-cur-foot">We bill in two currencies only: <b>₹ INR</b> at retail checkout ' +
+      '(India delivery), and the currency stated on your Proforma Invoice for export orders. ' +
+      'Any other figure here is an indicative conversion — not a price we can charge.</div>';
+
+    panel.querySelectorAll('[data-cur]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        window.XanvorMoney.set(b.dataset.cur, 'user');
+        closeCur();
+      });
+    });
+  }
+
+  function curLabel() {
+    var M = window.XanvorMoney;
+    if (!M) return;
+    var txt = M.code === 'INR' ? '₹ INR' : '₹ · ' + M.code;
+    var a = document.getElementById('xvCurLbl'); if (a) a.textContent = txt;
+    var b = document.getElementById('xvDrawerCurLbl'); if (b) b.textContent = txt;
+  }
+
+  function openCur() {
+    renderCurPanel();
+    curPanel().classList.add('open');
+    var btn = document.getElementById('xvCur');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+    setTimeout(function () { document.addEventListener('click', outsideCur); }, 0);
+  }
+  function closeCur() {
+    var p = document.getElementById('xvCurPanel');
+    if (p) p.classList.remove('open');
+    var btn = document.getElementById('xvCur');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('click', outsideCur);
+  }
+  function outsideCur(e) {
+    var p = document.getElementById('xvCurPanel');
+    if (!p || p.contains(e.target) || (e.target.closest && e.target.closest('.xv-cur, .xv-drawer-cur'))) return;
+    closeCur();
+  }
+
+  function wireCurrency() {
+    var toggle = function (e) {
+      e.preventDefault(); e.stopPropagation();
+      var p = document.getElementById('xvCurPanel');
+      if (p && p.classList.contains('open')) closeCur(); else openCur();
+    };
+    var nb = document.getElementById('xvCur');
+    if (nb) nb.addEventListener('click', toggle);
+    var db = document.getElementById('xvDrawerCur');
+    if (db) db.addEventListener('click', function (e) { closeDrawer(); toggle(e); });
+    document.addEventListener('keydown', function (e) {
+      var p = document.getElementById('xvCurPanel');
+      if (e.key === 'Escape' && p && p.classList.contains('open')) { closeCur(); e.stopPropagation(); }
+    });
+    window.addEventListener('xanvor:currency-change', function () { curLabel(); renderCurPanel(); });
+    /* currency.js may finish booting after us */
+    setTimeout(curLabel, 300);
+    setTimeout(curLabel, 1500);
   }
 
   /* Trust seals — WB-style chip row at the top of every footer. Only honest,

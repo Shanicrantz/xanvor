@@ -299,6 +299,7 @@ const rfqMetaText = (rfq) => [
   `Country: ${rfq.country || '—'}`,
   rfq.port ? `Destination port/city: ${rfq.port}` : '',
   `Incoterm: ${rfq.incoterm || '—'}`,
+  `Quote currency: ${rfq.currency || 'USD'}${rfq.currency && rfq.currency !== 'USD' ? ' (requested)' : ''}`,
   rfq.shipdate ? `Target ship date: ${rfq.shipdate}` : '',
   rfq.message ? `Notes: ${rfq.message}` : '',
 ].filter(Boolean);
@@ -320,6 +321,11 @@ export async function sendRfqAckEmail(rfq) {
     We reply within one working day with pricing, MOQ, lead time and finish options,
     and confirm orders by Proforma Invoice. No payment has been taken.
   </p>
+  <p style="font-size:14px;color:#6E6151;line-height:1.65;margin:0 0 6px;">
+    We will quote in <b>${esc(rfq.currency || 'USD')}</b>.${(rfq.currency && rfq.currency !== 'USD')
+      ? ' If we cannot issue in that currency we will say so in the quotation and quote in USD instead.' : ''}
+    The currency stated on your Proforma Invoice is the currency of settlement.
+  </p>
   ${rfqItemsHtml(rfq)}
   <div style="background:#F8F2E6;border:1px solid #E6DCC8;border-radius:8px;padding:14px 16px;font-size:14px;color:#43352B;line-height:1.7;">
     ${rfqMetaText(rfq).map((l) => esc(l)).join('<br>')}
@@ -336,6 +342,7 @@ export async function sendRfqAckEmail(rfq) {
     '',
     'We reply within one working day with pricing, MOQ, lead time and finish options.',
     'Orders are confirmed by Proforma Invoice. No payment has been taken.',
+    `We will quote in ${rfq.currency || 'USD'}. The currency on your Proforma Invoice is the currency of settlement.`,
     '',
     ...rfqItemsText(rfq),
     '',

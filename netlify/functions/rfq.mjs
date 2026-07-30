@@ -13,6 +13,10 @@ const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
 const str = (v, max) => String(v ?? '').trim().slice(0, max);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const INCOTERMS = ['EXW Moradabad', 'FOB Nhava Sheva / Mundra', 'CIF (destination port)', 'DDP (door delivery)', 'Need advice'];
+/* Currency the buyer would like the quotation/Proforma Invoice issued in.
+   USD is the standard and the fallback for anything unrecognised.
+   Keep in sync with QUOTE_CCY in enquiry-basket.js and wholesale.html. */
+const QUOTE_CCY = ['USD', 'EUR', 'GBP', 'AED', 'INR'];
 
 function cleanRfq(raw) {
   const name = str(raw.name, 120);
@@ -21,6 +25,8 @@ function cleanRfq(raw) {
   if (!EMAIL_RE.test(email)) throw new Error('Valid email required');
 
   const incoterm = INCOTERMS.includes(str(raw.incoterm, 60)) ? str(raw.incoterm, 60) : 'Need advice';
+  const rawCcy = str(raw.currency, 8).toUpperCase();
+  const currency = QUOTE_CCY.includes(rawCcy) ? rawCcy : 'USD';
   const rawItems = Array.isArray(raw.items) ? raw.items : [];
   /* reject rather than silently truncate — a 70-line basket that quietly
      becomes 60 lines loses order lines nobody ever finds out about */
@@ -41,6 +47,7 @@ function cleanRfq(raw) {
     country: str(raw.country, 80),
     port: str(raw.port, 120),
     incoterm,
+    currency,
     shipdate: str(raw.shipdate, 120),
     message: str(raw.message, 3000),
     source: ['basket', 'form'].includes(raw.source) ? raw.source : 'form',

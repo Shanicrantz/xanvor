@@ -273,6 +273,10 @@
   @media(min-width:720px){
     .rfq-grid{grid-template-columns:1fr 1fr;}
     .rfq-grid .span2{grid-column:1 / -1;}
+    .rfq-grid .rfq-note{
+      font-family:'JetBrains Mono',monospace; font-size:10.5px; line-height:1.7;
+      letter-spacing:.04em; color:var(--faint); margin:-4px 0 2px;
+    }
   }
   .rfq-field label{
     display:block;font-family:'JetBrains Mono',monospace;font-size:10.5px;
@@ -325,7 +329,7 @@
   .close-band p{font-size:15.5px;color:var(--soft);max-width:560px;margin:0 auto 22px;}
   .close-band .ws-ctas{justify-content:center;}
 </style>
-<link rel="stylesheet" href="assets/site-chrome.css?v=7">
+<link rel="stylesheet" href="assets/site-chrome.css?v=8">
 <script src="assets/google-ads.js?v=1"></script>
 
 </head>
@@ -479,9 +483,20 @@
         </select>
       </div>
       <div class="rfq-field">
+        <label for="f-currency">Preferred quote currency</label>
+        <select id="f-currency" name="currency">
+          <option value="USD" selected>USD — US Dollar (standard)</option>
+          <option value="EUR">EUR — Euro (on request)</option>
+          <option value="GBP">GBP — Pound Sterling (on request)</option>
+          <option value="AED">AED — UAE Dirham (on request)</option>
+          <option value="INR">INR — Indian Rupee (India buyers)</option>
+        </select>
+      </div>
+      <div class="rfq-field">
         <label for="f-qty">Target quantity &amp; timeline</label>
         <input id="f-qty" name="shipdate" type="text" placeholder="e.g. 500 pcs, within 60 days">
       </div>
+      <p class="rfq-note span2">We quote in USD as standard. Other currencies are issued on request at the rate stated on the quotation — the currency on your Proforma Invoice is the currency of settlement.</p>
       <div class="rfq-field span2">
         <label for="f-message">Message</label>
         <textarea id="f-message" name="message" placeholder="Products, sizes, finishes, private label…"></textarea>
@@ -541,10 +556,10 @@
   </div>
 </footer>
 
-<script src="assets/site-chrome.js?v=7"></script>
+<script src="assets/site-chrome.js?v=8"></script>
 <script src="shop-cart.js?v=hs3"></script>
 <script src="assets/account.js?v=1"></script>
-<script src="enquiry-basket.js?v=hs2"></script>
+<script src="enquiry-basket.js?v=hs3"></script>
 <script>
 (function(){
   var form = document.getElementById('rfq-form');
@@ -627,6 +642,7 @@
       country: val('f-country'),
       port: val('f-port'),
       incoterm: val('f-incoterm'),
+      currency: val('f-currency'),
       shipdate: val('f-qty'),
       message: val('f-message'),
       source: 'form',

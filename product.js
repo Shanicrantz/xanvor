@@ -662,6 +662,56 @@
     });
   });
 
+  /* ---- Export-first view for buyers outside India ----
+     Retail here is INR-only and ships within India (Razorpay pins INR,
+     checkout takes no country). Showing an overseas buyer an Add-to-Cart
+     they cannot use — and a ₹ retail price that is not their price — sends
+     the wrong number. So for non-IN visitors the trade panel becomes the
+     whole buybox: wholesale mode is forced, retail CTAs go, and the retail
+     figure survives only as one compact reference line.
+
+     That line stays ON PURPOSE. Our Google Shopping feed is India-targeted
+     and Google crawls from abroad; a page with no retail price at all reads
+     as a landing-page price mismatch. It also keeps an Indian buyer on a VPN
+     from thinking the piece is unavailable. Deleting it is one line, but it
+     costs the Merchant Center listing. */
+  function applyExportView(){
+    if(document.body.classList.contains('xv-intl')) return;
+    document.body.classList.add('xv-intl');
+
+    const buybox = document.getElementById('buybox');
+    if(!buybox) return;
+
+    /* force the wholesale side of the dual-mode buybox */
+    const qIn = document.getElementById('qtyInput');
+    if(qIn){
+      const th = (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.WHOLESALE_MIN) || 50;
+      if((parseInt(qIn.value,10)||1) < th){ qIn.value = th; qIn.dispatchEvent(new Event('input')); }
+    }
+
+    /* demote the retail price to a single reference line */
+    const rb = buybox.querySelector('.price-block.retail-only');
+    if(rb){
+      const amt = rb.querySelector('.pb-offer');
+      const line = document.createElement('div');
+      line.className = 'pb-note xv-retail-ref';
+      line.innerHTML = 'Retail in India: <b>' + (amt ? amt.textContent.trim() : '—') +
+        '</b> incl. GST — India delivery only, charged in ₹.';
+      rb.replaceWith(line);
+    }
+    /* export pricing is ex-GST ex-works — say so where the number is */
+    const wn = buybox.querySelector('.price-block.wholesale-only .pb-note');
+    if(wn) wn.textContent = 'Per piece · EXW Moradabad · ex-GST (exports are zero-rated) · indicative, final on Proforma Invoice';
+  }
+
+  /* geo lands async; currency.js publishes it. Also run immediately if the
+     answer is already cached from an earlier page view. */
+  window.addEventListener('xanvor:geo-ready', function(e){
+    const c = e && e.detail && e.detail.country;
+    if(c && c !== 'IN') applyExportView();
+  });
+  if(window.XanvorMoney && window.XanvorMoney.country && window.XanvorMoney.country !== 'IN') applyExportView();
+
   /* ---- nav scroll ---- */
   const nav = document.getElementById('nav');
   const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);

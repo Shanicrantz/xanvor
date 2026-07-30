@@ -17,6 +17,16 @@
     oxidised:'Oxidised', silver:'Silver'
   };
   const INCOTERMS = ['Need advice', 'EXW Moradabad', 'FOB Nhava Sheva / Mundra', 'CIF (destination port)', 'DDP (door delivery)'];
+  /* Quote currency the buyer would like on the Proforma Invoice. USD is our
+     standard; the rest are issued on request. Must stay in sync with
+     QUOTE_CCY in netlify/functions/rfq.mjs. */
+  const QUOTE_CCY = [
+    { code:'USD', label:'US Dollar (standard)' },
+    { code:'EUR', label:'Euro (on request)' },
+    { code:'GBP', label:'Pound Sterling (on request)' },
+    { code:'AED', label:'UAE Dirham (on request)' },
+    { code:'INR', label:'Indian Rupee (India buyers)' },
+  ];
 
   /* ---- storage ---- */
   const read = () => {
@@ -403,7 +413,7 @@
         `).join('')}
       </div>
       <div class="xb-form-wrap">
-        <div class="xb-form-head">Shipping & contact — quoted in USD or ₹, your choice of terms</div>
+        <div class="xb-form-head">Shipping & contact — your terms, your quote currency</div>
         <form class="xb-form" id="xb-form" novalidate>
           <p hidden><label>Leave blank: <input name="bot-field" id="xb-bot" tabindex="-1" autocomplete="off"></label></p>
           <div class="f2">
@@ -447,6 +457,15 @@
               <label for="xb-shipdate">Target Timeline</label>
               <input id="xb-shipdate" type="text" name="shipdate" placeholder="e.g. within 60 days">
             </div>
+          </div>
+          <div class="f2">
+            <div class="f">
+              <label for="xb-currency">Quote Currency</label>
+              <select id="xb-currency" name="currency">
+                ${QUOTE_CCY.map(c=>`<option value="${esc(c.code)}"${c.code==='USD'?' selected':''}>${esc(c.code)} — ${esc(c.label)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="f"></div>
           </div>
           <div class="f">
             <label for="xb-message">Notes (packaging, finishes, private label…)</label>
@@ -519,6 +538,7 @@
       country: fieldVal('xb-country'),
       port: fieldVal('xb-port'),
       incoterm: fieldVal('xb-incoterm'),
+      currency: fieldVal('xb-currency'),
       shipdate: fieldVal('xb-shipdate'),
       message: fieldVal('xb-message'),
       'bot-field': fieldVal('xb-bot'),

@@ -70,7 +70,8 @@ nav.xv-nav .links{
 nav.xv-nav .links > a,
 nav.xv-nav .links .nav-cat-btn,
 nav.xv-nav .links .sc-navbtn,
-nav.xv-nav .links .ac-navbtn{
+nav.xv-nav .links .ac-navbtn,
+nav.xv-nav .links .xv-cur{
   font-family:'JetBrains Mono',ui-monospace,monospace !important;
   font-size:10.5px !important;
   font-weight:400 !important;
@@ -93,7 +94,8 @@ nav.xv-nav .links > a:hover,
 nav.xv-nav .links .nav-cat-btn:hover,
 nav.xv-nav .links .nav-cat.open .nav-cat-btn,
 nav.xv-nav .links .sc-navbtn:hover,
-nav.xv-nav .links .ac-navbtn:hover{
+nav.xv-nav .links .ac-navbtn:hover,
+nav.xv-nav .links .xv-cur:hover{
   color:var(--xv-rust) !important;
   border-bottom-color:var(--xv-rust) !important;
 }
@@ -544,4 +546,124 @@ footer .xv-seal b{color:#D9CEB5;}
 footer .xv-seal:hover{border-color:var(--xv-brass); transform:translateY(-3px);}
 @media(max-width:560px){
   .xv-seal{font-size:8.5px; padding:8px 12px; letter-spacing:.1em;}
+}
+
+/* ============================================================
+   Display-currency layer (assets/currency.js)
+   The ₹ figure always stays; the converted amount is a subordinate
+   "≈ $42" beside it. Never a replacement — see currency.js header.
+   ============================================================ */
+.xv-approx{
+  font-style:normal; white-space:nowrap;
+  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-size:.82em; letter-spacing:.04em; color:var(--xv-faint,#9A8E7C);
+  margin-left:.35em;
+}
+nav.xv-nav .links .xv-cur{gap:5px !important; cursor:pointer;}
+nav.xv-nav .links .xv-cur .chev{width:9px; height:9px; flex:none;}
+nav.xv-nav .links .xv-cur[aria-expanded="true"]{color:var(--xv-rust) !important; border-bottom-color:var(--xv-rust) !important;}
+
+/* drawer row */
+.xv-drawer-cur{
+  display:flex !important; width:100%; align-items:center; justify-content:space-between;
+  gap:10px; text-align:left; padding:14px 12px; border-radius:10px;
+  color:rgba(251,246,232,.88); background:none; border:none; cursor:pointer;
+  font-family:'Space Grotesk','JetBrains Mono',system-ui,sans-serif; font-size:15px; font-weight:500;
+}
+.xv-drawer-cur:hover{background:rgba(255,255,255,.06); color:#fff;}
+.xv-drawer-cur b{color:var(--xv-brass-soft,#C9A57E); font-weight:600;}
+
+/* panel — appended to <body>, above the nav but below the offer modal */
+.xv-cur-panel{
+  position:fixed; top:64px; right:clamp(8px,2vw,22px); z-index:9500;
+  width:min(340px,92vw); max-height:min(76vh,560px); overflow-y:auto;
+  background:var(--xv-paper,#FCFAF4); border:1px solid var(--xv-line-strong,#D8CBB0);
+  border-radius:14px; box-shadow:0 26px 64px -26px rgba(58,39,24,.5);
+  padding:10px; opacity:0; visibility:hidden; transform:translateY(-8px);
+  transition:opacity .2s ease, transform .2s ease, visibility .2s;
+}
+.xv-cur-panel.open{opacity:1; visibility:visible; transform:translateY(0);}
+.xv-cur-head{
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--xv-faint,#9A8E7C);
+  padding:8px 12px 10px; border-bottom:1px solid var(--xv-line,#E6DCC8); margin-bottom:4px;
+}
+.xv-cur-row{
+  display:flex; width:100%; align-items:center; gap:11px;
+  padding:9px 11px; border:none; background:none; border-radius:8px;
+  cursor:pointer; text-align:left; font-family:inherit;
+}
+.xv-cur-row:hover{background:var(--xv-paper-2,#F8F2E6);}
+.xv-cur-row.on{background:rgba(168,93,42,.08);}
+.xv-cur-sym{
+  font-family:'Fraunces',Georgia,serif; font-size:16px; color:var(--xv-rust,#A85D2A);
+  width:34px; text-align:center; flex:none; line-height:1;
+}
+.xv-cur-nm{
+  flex:1; min-width:0; font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:15px; color:var(--xv-claret,#241510);
+}
+.xv-cur-nm b{font-weight:600; margin-right:5px;}
+.xv-cur-note{
+  font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--xv-faint,#9A8E7C); flex:none;
+}
+.xv-cur-rate, .xv-cur-foot{
+  font-family:'JetBrains Mono',monospace; font-size:9.5px; line-height:1.75;
+  letter-spacing:.03em; color:var(--xv-soft,#6E6151); padding:10px 12px 2px;
+}
+.xv-cur-foot{border-top:1px solid var(--xv-line,#E6DCC8); margin-top:6px; padding-bottom:8px;}
+.xv-cur-foot b{color:var(--xv-claret,#241510);}
+
+/* geo offer bar — appears once, dismissible, never auto-switches */
+.xv-cur-offer{
+  position:fixed; left:50%; bottom:22px; transform:translate(-50%,14px); z-index:9400;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center;
+  max-width:min(620px,94vw); padding:13px 18px;
+  background:var(--xv-claret,#241510); color:#FBF6E8; border-radius:50px;
+  box-shadow:0 18px 44px -16px rgba(0,0,0,.5);
+  font-family:'Cormorant Garamond',Georgia,serif; font-size:15.5px;
+  opacity:0; transition:opacity .35s ease, transform .35s ease;
+}
+.xv-cur-offer.in{opacity:1; transform:translate(-50%,0);}
+.xv-cur-offer b{color:var(--xv-brass-soft,#C9A57E);}
+.xv-cur-offer button{
+  font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.16em;
+  text-transform:uppercase; border-radius:50px; padding:8px 15px; cursor:pointer;
+  border:1px solid rgba(251,246,232,.3); background:transparent; color:#FBF6E8;
+}
+.xv-cur-offer .xv-cur-yes{background:var(--xv-rust,#A85D2A); border-color:var(--xv-rust,#A85D2A);}
+.xv-cur-offer .xv-cur-yes:hover{background:#C0712F;}
+.xv-cur-offer .xv-cur-no:hover{border-color:#FBF6E8;}
+@media(max-width:560px){
+  .xv-cur-offer{bottom:88px; font-size:14px; padding:12px 14px;}
+  nav.xv-nav .links .xv-cur .chev{display:none;}
+}
+
+/* international notice on the India-only retail checkout */
+.xv-intl-note{
+  max-width:900px; margin:0 auto 18px; padding:16px 20px;
+  background:rgba(168,93,42,.07); border:1px solid var(--xv-rust,#A85D2A);
+  border-radius:12px; font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:15.5px; line-height:1.6; color:#43352B;
+}
+.xv-intl-note b{color:var(--xv-claret,#241510);}
+.xv-intl-note a{
+  display:inline-block; margin-top:8px;
+  font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--xv-rust,#A85D2A);
+}
+
+/* ---- Export-first PDP (body.xv-intl, set by product.js for non-IN geo) ----
+   Retail is INR-only and India-delivery-only, so overseas buyers get the
+   trade panel as the whole buybox. The retail figure survives as one
+   reference line (.xv-retail-ref) — see product.js applyExportView(). */
+body.xv-intl #ctaCart,
+body.xv-intl #ctaBuy,
+body.xv-intl .bb-toggle [data-mode="retail"]{display:none !important;}
+body.xv-intl .bb-toggle{pointer-events:none;}
+body.xv-intl .bb-toggle [data-mode="wholesale"]{width:100%; cursor:default;}
+body.xv-intl .xv-retail-ref{
+  border-top:1px dashed var(--xv-line-strong,#D8CBB0);
+  margin-top:10px; padding-top:10px; opacity:.85;
 }
