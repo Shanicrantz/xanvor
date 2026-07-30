@@ -70,8 +70,12 @@
     country: null
   };
 
-  /* checkout shows what Razorpay charges — never annotate it */
-  var IS_CHECKOUT = /checkout\.html$/i.test(location.pathname);
+  /* Checkout shows what Razorpay charges — never annotate it.
+     Netlify serves the page at BOTH /checkout.html and the clean /checkout
+     (which is the URL Google Shopping links to), so match the route, not the
+     filename. Belt-and-braces: the page also carries data-xv-nomoney. */
+  var IS_CHECKOUT = /(^|\/)checkout(\.html)?\/?$/i.test(location.pathname) ||
+    !!document.querySelector('body[data-xv-nomoney]');
 
   /* ---------- conversion + formatting ---------- */
   function rateFor(code) {
@@ -79,19 +83,26 @@
     return (state.rates && state.rates[code]) || null;
   }
 
+  /* Below ~10 units we keep 2 decimals. Rounding those to whole units
+     flattens the whole sub-₹1000 catalogue: ₹129, ₹149 and ₹179 would all
+     print "$1", and a 15% rupee step would look like a 100% dollar step. */
+  var DP_BELOW = 10;
+
   function convert(inr, code) {
     var r = rateFor(code);
     if (r === null) return null;
     var v = Number(inr) * r;
-    /* whole units; sub-unit amounts would read as fake precision */
-    return v < 1 ? Math.round(v * 100) / 100 : Math.round(v);
+    return v < DP_BELOW ? Math.round(v * 100) / 100 : Math.round(v);
   }
 
   function format(amount, code) {
     var c = CUR[code] || CUR.USD;
     var n;
     try {
-      n = new Intl.NumberFormat(c.locale, { maximumFractionDigits: amount < 1 ? 2 : 0 }).format(amount);
+      n = new Intl.NumberFormat(c.locale, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: amount < DP_BELOW ? 2 : 0
+      }).format(amount);
     } catch (e) { n = String(amount); }
     /* three-letter codes read better with a space: "AED 134", "$42" */
     return c.sym.length > 1 ? c.sym + ' ' + n : c.sym + n;
@@ -159,7 +170,11 @@
     });
   }
 
-  /* paint every wrapped amount for the active currency */
+  /* Paint every wrapped amount for the active currency.
+     CRITICAL: a textContent write always queues a MutationRecord even when
+     the string is byte-identical, and our own observer listens for those —
+     so an unconditional repaint feeds itself a new frame forever. Each node
+     therefore records what it last rendered and no-ops when nothing changed. */
   function paint(root) {
     var scope = root && root.querySelectorAll ? root : document;
     var nodes = scope.querySelectorAll('.xv-money[data-inr]');
@@ -167,8 +182,12 @@
       var el = nodes[i];
       var inr = parseFloat(el.getAttribute('data-inr'));
       if (!Number.isFinite(inr)) continue;
+      var live = state.code !== 'INR' && rateFor(state.code);
+      var stamp = (live ? state.code : 'INR') + '|' + inr;
+      if (el.getAttribute('data-xv-shown') === stamp) continue;
+
       var base = '₹' + Number(inr).toLocaleString('en-IN');
-      if (state.code === 'INR' || !rateFor(state.code)) {
+      if (!live) {
         el.textContent = base;
       } else {
         el.innerHTML = '';
@@ -178,20 +197,31 @@
         i2.textContent = approx(inr);
         el.appendChild(i2);
       }
+      el.setAttribute('data-xv-shown', stamp);
     }
   }
 
+  var observer = null;
   var sweepQueued = false, sweeping = false;
   function sweep() {
     if (sweeping) return;
     sweeping = true;
+    /* Detach while we mutate, and drop the records our own writes produced,
+       so the observer can never re-arm itself off this sweep. */
+    if (observer) observer.disconnect();
     try { wrapIn(document.body); paint(document); }
-    finally { sweeping = false; }
+    finally {
+      sweeping = false;
+      if (observer) { observer.takeRecords(); observe(); }
+    }
   }
   function queueSweep() {
     if (sweepQueued || IS_CHECKOUT) return;
     sweepQueued = true;
     requestAnimationFrame(function () { sweepQueued = false; sweep(); });
+  }
+  function observe() {
+    if (observer) observer.observe(document.body, { childList: true, subtree: true, characterData: true });
   }
 
   /* ---------- rates ---------- */
@@ -199,7 +229,15 @@
     return fetch('/api/fx', { credentials: 'omit' })
       .then(function (r) { return r.json(); })
       .then(function (d) {
-        if (d && d.rates) { state.rates = d.rates; state.at = d.at; state.stale = !!d.stale; }
+        if (d && d.rates) {
+          state.rates = d.rates;
+          state.at = d.at;
+          /* Don't trust the cached boolean: /api/fx is edge-cached for 12h,
+             so a body stamped stale:false can still be served after it has
+             gone stale. Re-derive from the timestamp we were given. */
+          var age = Date.now() - Date.parse(d.at || 0);
+          state.stale = !!d.stale || !(age >= 0 && age <= 48 * 3600 * 1000);
+        }
         return state.rates;
       })
       .catch(function () { return null; });
@@ -234,6 +272,12 @@
 
   /* ---------- geo (offer only — never switch silently) ---------- */
   function loadGeo() {
+    /* An explicit "I'm shopping in India" outranks any IP verdict — VPNs,
+       CGNAT and corporate proxies routinely place Indian buyers abroad, and
+       a 30-day cached wrong answer would otherwise hide retail from them
+       with no way back. Set by the escape hatch in product.js. */
+    var override = ls.get('xv_geo_override');
+    if (override) { state.country = override; return Promise.resolve(override); }
     var cached = null;
     try { cached = JSON.parse(ls.get(STORE_GEO) || 'null'); } catch (e) { /* ignore */ }
     if (cached && cached.c && (Date.now() - cached.at) < 30 * 24 * 3600 * 1000) {
@@ -278,7 +322,15 @@
       api.set(suggest, 'suggested'); bar.remove();
     });
     bar.querySelector('.xv-cur-no').addEventListener('click', function () { bar.remove(); });
-    setTimeout(function () { if (bar.isConnected) bar.classList.remove('in'); }, 16000);
+    /* Fade AND remove. Leaving a faded-out fixed bar in the DOM parks an
+       invisible ~620×99px click trap over the page — and its "Show USD"
+       button would still be clickable, switching the site with no visible
+       cause, which is exactly the silent switch this design forbids. */
+    setTimeout(function () {
+      if (!bar.isConnected) return;
+      bar.classList.remove('in');
+      setTimeout(function () { bar.remove(); }, 450);
+    }, 16000);
   }
 
   /* ---------- boot ---------- */
@@ -291,8 +343,8 @@
        enhancer, checkout summary re-renders. Debounced + re-entrancy-guarded
        so our own writes can't loop. */
     if (!IS_CHECKOUT && window.MutationObserver) {
-      new MutationObserver(function () { queueSweep(); })
-        .observe(document.body, { childList: true, subtree: true, characterData: true });
+      observer = new MutationObserver(function () { queueSweep(); });
+      observe();
     }
 
     if (state.code !== 'INR') loadRates().then(function () { paint(document); });

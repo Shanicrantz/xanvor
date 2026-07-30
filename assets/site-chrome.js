@@ -295,6 +295,10 @@
     el = document.createElement('div');
     el.id = 'xvCurPanel';
     el.className = 'xv-cur-panel';
+    /* the panel explains the rate ("1 USD = ₹96") — without this the sweep
+       would annotate its own explainer into "1 USD = ₹96 ≈ $1" */
+    el.setAttribute('data-xv-nomoney', '');
+    el.setAttribute('tabindex', '-1');
     el.setAttribute('role', 'dialog');
     el.setAttribute('aria-modal', 'false');
     el.setAttribute('aria-label', 'Show prices in another currency');
@@ -347,11 +351,18 @@
     var b = document.getElementById('xvDrawerCurLbl'); if (b) b.textContent = txt;
   }
 
+  var curOpener = null;
   function openCur() {
     renderCurPanel();
-    curPanel().classList.add('open');
+    var p = curPanel();
+    p.classList.add('open');
     var btn = document.getElementById('xvCur');
     if (btn) btn.setAttribute('aria-expanded', 'true');
+    /* keyboard users must be able to reach the options — the panel is
+       appended at the end of <body>, nowhere near the button in tab order */
+    curOpener = document.activeElement;
+    var first = p.querySelector('.xv-cur-row');
+    (first || p).focus();
     setTimeout(function () { document.addEventListener('click', outsideCur); }, 0);
   }
   function closeCur() {
@@ -360,6 +371,8 @@
     var btn = document.getElementById('xvCur');
     if (btn) btn.setAttribute('aria-expanded', 'false');
     document.removeEventListener('click', outsideCur);
+    if (curOpener && curOpener.focus) curOpener.focus();
+    curOpener = null;
   }
   function outsideCur(e) {
     var p = document.getElementById('xvCurPanel');

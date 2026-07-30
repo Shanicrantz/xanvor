@@ -11,12 +11,16 @@
   const fmt = n => '₹' + Number(n).toLocaleString('en-IN');
 
   /* ---- Bulk-pricing tiers (illustrative; final pricing on enquiry) ---- */
+  /* Trade pricing starts at the MOQ (50 pcs), not at 1 — a 1–49 "sample"
+     tier undercut the MOQ we state everywhere else, and quoted a trade rate
+     to buyers who are really retail. The MOQ tier IS the offer price (0%
+     off); volume steps down from there. */
   const TIERS = [
-    { id:'s',   q:5,    pct:0,    label:'Sample · 1–49 pcs',          disc:'Standard',         lead:'2–3 weeks',           ship:'Air cargo · DHL/FedEx' },
-    { id:'a',   q:50,   pct:0.12, label:'Trial order · 50–199 pcs',   disc:'~12% off sample',  lead:'4–5 weeks',           ship:'FOB · EXW · DDP' },
-    { id:'b',   q:200,  pct:0.22, label:'Volume · 200–499 pcs',       disc:'~22% off sample',  lead:'6–7 weeks',           ship:'FOB · EXW · DDP' },
-    { id:'c',   q:500,  pct:0.32, label:'Bulk · 500–999 pcs',         disc:'~32% off sample',  lead:'8–10 weeks',          ship:'FOB Mundra / Nhava Sheva' },
-    { id:'d',   q:1000, pct:0.40, label:'Container · 1000+ pcs',      disc:'~40% off sample',  lead:'10–12 weeks · split shipment available', ship:'FOB · CIF · DDP' },
+    { id:'a',   q:50,   pct:0,    label:'MOQ · 50–199 pcs',           disc:'Trade base',       lead:'4–5 weeks',           ship:'FOB · EXW · DDP' },
+    { id:'b',   q:200,  pct:0.12, label:'Volume · 200–499 pcs',       disc:'~12% off trade',   lead:'6–7 weeks',           ship:'FOB · EXW · DDP' },
+    { id:'c',   q:500,  pct:0.22, label:'Bulk · 500–999 pcs',         disc:'~22% off trade',   lead:'8–10 weeks',          ship:'FOB Mundra / Nhava Sheva' },
+    { id:'d',   q:1000, pct:0.32, label:'Container · 1000–1999 pcs',  disc:'~32% off trade',   lead:'10–12 weeks · split shipment available', ship:'FOB · CIF · DDP' },
+    { id:'e',   q:2000, pct:0.40, label:'Programme · 2000+ pcs',      disc:'~40% off trade',   lead:'12–14 weeks · scheduled releases', ship:'FOB · CIF · DDP' },
   ];
   /* Tier discounts are applied to the trade (offer) price — but "~12% off
      sample" reads weak to a bulk buyer. Where we know MRP, show the discount
@@ -36,10 +40,10 @@
   };
 
   const tierFor = q => {
-    if(q < 50)   return TIERS[0];
-    if(q < 200)  return TIERS[1];
-    if(q < 500)  return TIERS[2];
-    if(q < 1000) return TIERS[3];
+    if(q < 200)  return TIERS[0];   /* below MOQ falls back to the MOQ rate */
+    if(q < 500)  return TIERS[1];
+    if(q < 1000) return TIERS[2];
+    if(q < 2000) return TIERS[3];
     return TIERS[4];
   };
 
@@ -587,7 +591,11 @@
     const rQ=document.getElementById('rQ'), rSub=document.getElementById('rSub'), rGst=document.getElementById('rGst'), rTot=document.getElementById('rTot');
     const wUnit=document.getElementById('wUnit'), qTier=document.getElementById('qTier'), qDisc=document.getElementById('qDisc'), qLead=document.getElementById('qLead'), qTotal=document.getElementById('qTotal');
     function update(){
-      const q=clampQ(qtyInput.value); qtyInput.value=q;
+      let q=clampQ(qtyInput.value);
+      /* under the export view there is no retail side to fall back to —
+         stepping below the MOQ would leave the buybox with no CTAs at all */
+      if(document.body.classList.contains('xv-intl')) q=Math.max(q,THRESHOLD);
+      qtyInput.value=q;
       const wholesale = q>=THRESHOLD;
       buybox.classList.toggle('is-wholesale', wholesale);
       [...toggle.children].forEach(b=>b.classList.toggle('on',(b.dataset.mode==='wholesale')===wholesale));
@@ -685,19 +693,39 @@
     /* force the wholesale side of the dual-mode buybox */
     const qIn = document.getElementById('qtyInput');
     if(qIn){
-      const th = (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.WHOLESALE_MIN) || 50;
-      if((parseInt(qIn.value,10)||1) < th){ qIn.value = th; qIn.dispatchEvent(new Event('input')); }
+      qIn.min = String(THRESHOLD);
+      if((parseInt(qIn.value,10)||1) < THRESHOLD){
+        qIn.value = THRESHOLD;
+        qIn.dispatchEvent(new Event('input', { bubbles:true }));
+      }
     }
 
-    /* demote the retail price to a single reference line */
+    /* Demote the retail price to a single reference line.
+       Read the CANONICAL rupee integer, not the rendered text — by now
+       currency.js may already have annotated it, and copying "₹2,988 ≈ $31"
+       into a new node would leave two conversions fighting on one page. */
     const rb = buybox.querySelector('.price-block.retail-only');
     if(rb){
       const amt = rb.querySelector('.pb-offer');
+      const money = amt && amt.querySelector('.xv-money[data-inr]');
+      const inr = money ? parseFloat(money.getAttribute('data-inr')) : NaN;
+      const shown = Number.isFinite(inr)
+        ? '₹' + Number(inr).toLocaleString('en-IN')
+        : (amt ? amt.textContent.trim() : '—');
       const line = document.createElement('div');
       line.className = 'pb-note xv-retail-ref';
-      line.innerHTML = 'Retail in India: <b>' + (amt ? amt.textContent.trim() : '—') +
-        '</b> incl. GST — India delivery only, charged in ₹.';
+      line.innerHTML = 'Retail in India: <b>' + shown +
+        '</b> incl. GST — India delivery only, charged in ₹. ' +
+        '<button type="button" class="xv-show-retail">Shopping from India? Show retail →</button>';
       rb.replaceWith(line);
+      /* Escape hatch. Geo is a guess: VPNs, CGNAT and travel routinely place
+         Indian buyers abroad, and a 30-day cached wrong answer would hide the
+         retail buy path with no way back. One click pins IN and reloads. */
+      const esc = line.querySelector('.xv-show-retail');
+      if(esc) esc.addEventListener('click', function(){
+        try{ localStorage.setItem('xv_geo_override','IN'); }catch(e){}
+        location.reload();
+      });
     }
     /* export pricing is ex-GST ex-works — say so where the number is */
     const wn = buybox.querySelector('.price-block.wholesale-only .pb-note');

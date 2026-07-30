@@ -1682,6 +1682,15 @@ h3{font-family:'Fraunces',serif;font-weight:400;font-size:16.5px;color:var(--cla
   function priceOf(card){
     var el = card.querySelector('.price');
     if(!el) return null;
+    /* Sort on the canonical rupee integer. Once the currency layer has
+       annotated a price ("₹2,124 ≈ $22"), stripping non-digits would sort
+       on 2124 22 → 212422 and shuffle the cheap end of the catalogue. */
+    var m = el.querySelector('.xv-money[data-inr]') ||
+            (el.matches('.xv-money[data-inr]') ? el : null);
+    if(m){
+      var c = parseFloat(m.getAttribute('data-inr'));
+      if(Number.isFinite(c)) return c;
+    }
     var n = parseInt(String(el.textContent).replace(/[^\d]/g,''),10);
     return Number.isFinite(n) ? n : null;
   }
