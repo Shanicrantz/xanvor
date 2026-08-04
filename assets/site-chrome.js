@@ -256,12 +256,11 @@
       a.addEventListener('click', closeDrawer);
     });
 
-    // scroll state — also collapses the utility strip above the nav
+    /* The utility strip collapses on real scroll only. It used to key off the
+       same flag as the nav's solid state — now that the nav is solid from the
+       first pixel, that would have hidden the strip permanently. */
     const onScroll = () => {
-      const solid = nav.classList.contains('xv-nav-solid');
-      const on = solid || window.scrollY > 36;
-      nav.classList.toggle('scrolled', on);
-      document.documentElement.classList.toggle('xv-scrolled', on);
+      document.documentElement.classList.toggle('xv-scrolled', window.scrollY > 36);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -315,9 +314,13 @@
     nav.id = 'nav';
     nav.classList.add('xv-nav');
 
-    // Solid nav on non-hero pages (everything except homepage)
+    /* Solid nav everywhere, homepage included. The transparent state was built
+       for the ivory brand hero; the homepage now opens on the TIDELINE range
+       hero, which is a dark photograph — and the nav's link colour is a dark
+       slate, so transparent-over-photo left the whole menu unreadable at
+       scroll 0. A solid ivory bar reads on both. */
+    nav.classList.add('xv-nav-solid', 'scrolled');
     if (!isHome()) {
-      nav.classList.add('xv-nav-solid', 'scrolled');
       document.body.classList.add('xv-inner-page');
     } else {
       document.body.classList.add('xv-home');

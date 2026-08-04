@@ -814,7 +814,7 @@
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
 
 </style>
-<link rel="stylesheet" href="assets/site-chrome.css?v=13">
+<link rel="stylesheet" href="assets/site-chrome.css?v=14">
 <script src="assets/google-ads.js?v=2"></script>
 <script src="assets/pinterest-tag.js?v=1"></script>
 
@@ -855,6 +855,117 @@
     <a href="#contact">Contact</a>
   </div>
 </nav>
+
+<!-- ============ TIDELINE RANGE ============ -->
+<!-- A range band of its own, the way #nacre has one. Same self-hiding contract:
+     it stays display:none until TIDELINE pieces are actually live in the
+     catalogue, so the homepage never shows an empty grid while the range is
+     still in draft. Filters on `series` starting with TIDELINE — the range name
+     lives in the data, not here. -->
+<style>
+  .xv-tide{padding:0 0 clamp(78px,9.5vw,116px);background:var(--xv-claret-deep,#1A0F09);display:none;}
+  .xv-tide.is-on{display:block;}
+
+  /* ---- Range hero ----
+     Full-bleed lifestyle plate, the range title sitting on it. The source is a
+     1024² render, so it is served at a modest 1.5x and never larger — pushing it
+     further just smears it. The scrim is what makes the type legible, not the
+     photograph, so the copy stays readable whatever image is swapped in. */
+  /* First section on the page now, so the fixed utility strip (34px) and nav
+     (~64px) sit on top of it — the min-height carries that so the visible
+     picture area is not eaten by the bar. */
+  .xv-tide-hero{position:relative;min-height:clamp(480px,52vw,660px);display:flex;align-items:flex-end;
+    padding-top:124px;
+    background:#1A0F09 url('assets/tideline-hero.jpg?v=1') center/cover no-repeat;
+    margin-bottom:clamp(46px,5.5vw,72px);}
+  .xv-tide-hero::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(26,15,9,.34) 0%,rgba(26,15,9,.52) 46%,rgba(26,15,9,.92) 100%);}
+  .xv-tide-hero-in{position:relative;z-index:1;width:100%;max-width:1280px;margin:0 auto;
+    padding:clamp(40px,6vw,72px) 6vw clamp(34px,4.5vw,52px);}
+  .xv-tide-hero .eyebrow{color:var(--brass-soft,#C9A57E);}
+  .xv-tide-hero h2{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:600;
+    /* 22ch, not 16 — at 16 the line broke as "TIDELINE — the / sea, cast and /
+       hammered", which reads as three fragments. 22 lands the break after "sea,". */
+    font-size:clamp(34px,6vw,66px);line-height:1.04;color:var(--bone-warm,#FBF6E8);margin-top:14px;max-width:22ch;}
+  .xv-tide-hero h2 em{font-style:italic;color:var(--brass-soft,#C9A57E);}
+  .xv-tide-hero p{font-size:17px;line-height:1.7;color:#DCCBB2;margin-top:18px;max-width:56ch;}
+  .xv-tide-hero .xv-tide-cta{margin-top:26px;justify-content:flex-start;}
+  @media(max-width:640px){
+    .xv-tide-hero{background-image:url('assets/tideline-hero-sm.jpg?v=1');min-height:440px;}
+  }
+
+  .xv-tide .eyebrow{color:var(--brass-soft,#C9A57E);}
+  .xv-tide h2{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:600;
+    font-size:clamp(29px,4.2vw,46px);line-height:1.08;color:var(--bone-warm,#FBF6E8);margin-top:14px;}
+  .xv-tide h2 em{font-style:italic;color:var(--brass-soft,#C9A57E);}
+  .xv-tide-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;max-width:1280px;margin:0 auto;padding:0 6vw;}
+  .xt-card{display:block;text-decoration:none;overflow:hidden;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:14px;
+    transition:transform .25s ease, border-color .25s ease, background .25s ease;}
+  .xt-card:hover{transform:translateY(-4px);border-color:var(--brass,#B68B5C);background:rgba(255,255,255,.08);}
+  .xt-img{aspect-ratio:1/1;overflow:hidden;background:#241510;}
+  .xt-img img{width:100%;height:100%;object-fit:cover;}
+  .xt-body{padding:13px 15px 16px;}
+  .xt-name{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:600;font-size:16px;
+    color:var(--bone-warm,#FBF6E8);line-height:1.25;margin-bottom:6px;}
+  .xt-meta{font-family:var(--xv-ui,'Jost',sans-serif);font-size:9px;font-weight:500;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--brass-soft,#C9A57E);line-height:1.6;}
+  .xv-tide-cta{margin-top:42px;display:flex;gap:13px;justify-content:center;flex-wrap:wrap;padding:0 6vw;}
+  .xv-tide-note{margin-top:22px;text-align:center;font-family:var(--xv-ui,'Jost',sans-serif);font-size:9.5px;
+    font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#9A8468;padding:0 6vw;}
+  @media(max-width:1100px){.xv-tide-grid{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:640px){.xv-tide{padding:0 0 60px;}.xv-tide-grid{grid-template-columns:1fr 1fr;gap:12px;}}
+</style>
+<section class="xv-tide reveal xv-on-dark" id="tideline">
+  <div class="xv-tide-hero">
+    <div class="xv-tide-hero-in">
+      <div class="eyebrow">New Range &nbsp;·&nbsp; Coastal &nbsp;·&nbsp; Wholesale &amp; Export</div>
+      <h2>TIDELINE — the sea, <em>cast and hammered</em></h2>
+      <p>Shell, wave, coral and tide, worked in aluminium, brass and iron. Sand-cast as solid masses, drawn in bent rod, or cut as pierced profiles and tabbed into hammered plinths — one metal per piece, finished by hand.</p>
+      <div class="xv-tide-cta">
+        <a href="tideline.html" class="btn btn-primary">View the full range</a>
+        <a href="wholesale.html#rfq" class="btn btn-ghost">Request a quote</a>
+      </div>
+    </div>
+  </div>
+  <div class="xv-tide-grid" id="tidelineGrid"></div>
+  <div class="xv-tide-note">MOQ 50 per design &nbsp;·&nbsp; EXW Moradabad &nbsp;·&nbsp; Quoted per order</div>
+</section>
+<script>
+(function(){
+  var grid = document.getElementById('tidelineGrid');
+  if(!grid) return;
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function paint(){
+    var all = window.XANVOR_PRODUCTS || [];
+    var items = all.filter(function(p){ return /^TIDELINE/.test(p.series || ''); });
+    if(!items.length) return false;
+    grid.innerHTML = items.slice(0,10).map(function(p){
+      var img = p.image || (p.images && p.images[0]) || '';
+      /* srcset alongside src — assets/img-opt.js is not what fills this grid, but
+         the same CDN sizing is wanted, and setting src alone elsewhere on this
+         page has bitten us before. */
+      var lo = window.xvImg ? window.xvImg(img,640) : img;
+      var hi = window.xvImg ? window.xvImg(img,1280) : img;
+      return '<a class="xt-card" href="product.html?id=' + encodeURIComponent(p.id) + '">'
+        + '<div class="xt-img">' + (img ? '<img src="' + esc(lo) + '" srcset="' + esc(hi) + ' 2x" alt="'
+            + esc(p.name) + '" loading="lazy" decoding="async">' : '') + '</div>'
+        + '<div class="xt-body">'
+        + '<div class="xt-name">' + esc(p.name) + '</div>'
+        + '<div class="xt-meta">' + esc(p.materials || '') + '</div>'
+        + '</div></a>';
+    }).join('');
+    document.getElementById('tideline').classList.add('is-on');
+    return true;
+  }
+  if(!paint()){
+    /* /api/products.js replaces XANVOR_PRODUCTS after this inline script runs. */
+    var tries = 0;
+    var t = setInterval(function(){ if(paint() || ++tries > 40) clearInterval(t); }, 150);
+  }
+})();
+</script>
 
 <!-- ============ HERO ============ -->
 <header class="hero" id="top">
@@ -928,113 +1039,6 @@
     <a href="wholesale.html#rfq" class="btn btn-ghost">Request a quote</a>
   </div>
 </section>
-
-<!-- ============ TIDELINE RANGE ============ -->
-<!-- A range band of its own, the way #nacre has one. Same self-hiding contract:
-     it stays display:none until TIDELINE pieces are actually live in the
-     catalogue, so the homepage never shows an empty grid while the range is
-     still in draft. Filters on `series` starting with TIDELINE — the range name
-     lives in the data, not here. -->
-<style>
-  .xv-tide{padding:0 0 clamp(78px,9.5vw,116px);background:var(--xv-claret-deep,#1A0F09);display:none;}
-  .xv-tide.is-on{display:block;}
-
-  /* ---- Range hero ----
-     Full-bleed lifestyle plate, the range title sitting on it. The source is a
-     1024² render, so it is served at a modest 1.5x and never larger — pushing it
-     further just smears it. The scrim is what makes the type legible, not the
-     photograph, so the copy stays readable whatever image is swapped in. */
-  .xv-tide-hero{position:relative;min-height:clamp(380px,46vw,560px);display:flex;align-items:flex-end;
-    background:#1A0F09 url('assets/tideline-hero.jpg?v=1') center/cover no-repeat;
-    margin-bottom:clamp(46px,5.5vw,72px);}
-  .xv-tide-hero::after{content:"";position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(26,15,9,.34) 0%,rgba(26,15,9,.52) 46%,rgba(26,15,9,.92) 100%);}
-  .xv-tide-hero-in{position:relative;z-index:1;width:100%;max-width:1280px;margin:0 auto;
-    padding:clamp(40px,6vw,72px) 6vw clamp(34px,4.5vw,52px);}
-  .xv-tide-hero .eyebrow{color:var(--brass-soft,#C9A57E);}
-  .xv-tide-hero h2{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:600;
-    /* 22ch, not 16 — at 16 the line broke as "TIDELINE — the / sea, cast and /
-       hammered", which reads as three fragments. 22 lands the break after "sea,". */
-    font-size:clamp(34px,6vw,66px);line-height:1.04;color:var(--bone-warm,#FBF6E8);margin-top:14px;max-width:22ch;}
-  .xv-tide-hero h2 em{font-style:italic;color:var(--brass-soft,#C9A57E);}
-  .xv-tide-hero p{font-size:17px;line-height:1.7;color:#DCCBB2;margin-top:18px;max-width:56ch;}
-  .xv-tide-hero .xv-tide-cta{margin-top:26px;justify-content:flex-start;}
-  @media(max-width:640px){
-    .xv-tide-hero{background-image:url('assets/tideline-hero-sm.jpg?v=1');min-height:440px;}
-  }
-
-  .xv-tide .eyebrow{color:var(--brass-soft,#C9A57E);}
-  .xv-tide h2{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:600;
-    font-size:clamp(29px,4.2vw,46px);line-height:1.08;color:var(--bone-warm,#FBF6E8);margin-top:14px;}
-  .xv-tide h2 em{font-style:italic;color:var(--brass-soft,#C9A57E);}
-  .xv-tide-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;max-width:1280px;margin:0 auto;padding:0 6vw;}
-  .xt-card{display:block;text-decoration:none;overflow:hidden;
-    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:14px;
-    transition:transform .25s ease, border-color .25s ease, background .25s ease;}
-  .xt-card:hover{transform:translateY(-4px);border-color:var(--brass,#B68B5C);background:rgba(255,255,255,.08);}
-  .xt-img{aspect-ratio:1/1;overflow:hidden;background:#241510;}
-  .xt-img img{width:100%;height:100%;object-fit:cover;}
-  .xt-body{padding:13px 15px 16px;}
-  .xt-name{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:600;font-size:16px;
-    color:var(--bone-warm,#FBF6E8);line-height:1.25;margin-bottom:6px;}
-  .xt-meta{font-family:var(--xv-ui,'Jost',sans-serif);font-size:9px;font-weight:500;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--brass-soft,#C9A57E);line-height:1.6;}
-  .xv-tide-cta{margin-top:42px;display:flex;gap:13px;justify-content:center;flex-wrap:wrap;padding:0 6vw;}
-  .xv-tide-note{margin-top:22px;text-align:center;font-family:var(--xv-ui,'Jost',sans-serif);font-size:9.5px;
-    font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#9A8468;padding:0 6vw;}
-  @media(max-width:1100px){.xv-tide-grid{grid-template-columns:repeat(3,1fr);}}
-  @media(max-width:640px){.xv-tide{padding:0 0 60px;}.xv-tide-grid{grid-template-columns:1fr 1fr;gap:12px;}}
-</style>
-<section class="xv-tide reveal xv-on-dark" id="tideline">
-  <div class="xv-tide-hero">
-    <div class="xv-tide-hero-in">
-      <div class="eyebrow">New Range &nbsp;·&nbsp; Coastal &nbsp;·&nbsp; Wholesale &amp; Export</div>
-      <h2>TIDELINE — the sea, <em>cast and hammered</em></h2>
-      <p>Shell, wave, coral and tide, worked in aluminium, brass and iron. Sand-cast as solid masses, drawn in bent rod, or cut as pierced profiles and tabbed into hammered plinths — one metal per piece, finished by hand.</p>
-      <div class="xv-tide-cta">
-        <a href="all-products.html" class="btn btn-primary">View the full range</a>
-        <a href="wholesale.html#rfq" class="btn btn-ghost">Request a quote</a>
-      </div>
-    </div>
-  </div>
-  <div class="xv-tide-grid" id="tidelineGrid"></div>
-  <div class="xv-tide-note">MOQ 50 per design &nbsp;·&nbsp; EXW Moradabad &nbsp;·&nbsp; Quoted per order</div>
-</section>
-<script>
-(function(){
-  var grid = document.getElementById('tidelineGrid');
-  if(!grid) return;
-  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
-  function paint(){
-    var all = window.XANVOR_PRODUCTS || [];
-    var items = all.filter(function(p){ return /^TIDELINE/.test(p.series || ''); });
-    if(!items.length) return false;
-    grid.innerHTML = items.slice(0,10).map(function(p){
-      var img = p.image || (p.images && p.images[0]) || '';
-      /* srcset alongside src — assets/img-opt.js is not what fills this grid, but
-         the same CDN sizing is wanted, and setting src alone elsewhere on this
-         page has bitten us before. */
-      var lo = window.xvImg ? window.xvImg(img,640) : img;
-      var hi = window.xvImg ? window.xvImg(img,1280) : img;
-      return '<a class="xt-card" href="product.html?id=' + encodeURIComponent(p.id) + '">'
-        + '<div class="xt-img">' + (img ? '<img src="' + esc(lo) + '" srcset="' + esc(hi) + ' 2x" alt="'
-            + esc(p.name) + '" loading="lazy" decoding="async">' : '') + '</div>'
-        + '<div class="xt-body">'
-        + '<div class="xt-name">' + esc(p.name) + '</div>'
-        + '<div class="xt-meta">' + esc(p.materials || '') + '</div>'
-        + '</div></a>';
-    }).join('');
-    document.getElementById('tideline').classList.add('is-on');
-    return true;
-  }
-  if(!paint()){
-    /* /api/products.js replaces XANVOR_PRODUCTS after this inline script runs. */
-    var tries = 0;
-    var t = setInterval(function(){ if(paint() || ++tries > 40) clearInterval(t); }, 150);
-  }
-})();
-</script>
 
 <!-- ============ ABOUT ============ -->
 <!-- The homepage previously jumped straight from the trust strip into product
@@ -3159,7 +3163,7 @@
   }).join('');
 })();
 </script>
-<script src="assets/site-chrome.js?v=16"></script>
+<script src="assets/site-chrome.js?v=17"></script>
 <script src="shop-cart.js?v=hs5"></script>
 <script src="assets/account.js?v=2"></script>
 <script src="enquiry-basket.js?v=hs6"></script>

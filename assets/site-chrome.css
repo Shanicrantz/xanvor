@@ -875,13 +875,16 @@ body{
 
 /* The nav sits below the strip until the page scrolls, then the strip slides
    up and the nav takes the top. Both move together so nothing ever overlaps. */
-/* `nav#nav.xv-nav` at the top of this file carries an ID, so a plain
-   `.xv-has-utility nav.xv-nav` loses the `top` cascade to it. Match the ID too. */
+/* The nav's solid state is set by `:root nav#nav.xv-nav.xv-nav-solid{top:10px}`
+   — a 10px inset that gives the bar its floating-pill look. That selector is
+   more specific than anything reasonable here, so these carry !important and
+   keep the 10px inset, just measured from below the utility strip. Without it
+   the nav sat on top of the strip and clipped the wordmark. */
 .xv-has-utility nav#nav.xv-nav,
-.xv-has-utility nav.xv-nav{ top:var(--xv-utility-h); }
+.xv-has-utility nav.xv-nav{ top:calc(var(--xv-utility-h) + 10px) !important; }
 .xv-scrolled .xv-utility{ transform:translateY(-100%); opacity:0; pointer-events:none; }
 .xv-has-utility.xv-scrolled nav#nav.xv-nav,
-.xv-has-utility.xv-scrolled nav.xv-nav{ top:0; }
+.xv-has-utility.xv-scrolled nav.xv-nav{ top:10px !important; }
 
 /* Inner pages start scrolled (solid nav), so they must not reserve the strip. */
 .xv-inner-page .xv-utility{ position:absolute; }
