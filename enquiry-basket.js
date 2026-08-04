@@ -79,7 +79,7 @@
     display:flex; align-items:center; gap:10px;
     background:#A85D2A; color:#FBF6E8;
     border:none; border-radius:50px;
-    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:11px; font-weight:500;
     letter-spacing:.18em; text-transform:uppercase;
     padding:14px 20px;
     box-shadow:0 10px 30px -8px rgba(58,39,24,.45);
@@ -115,7 +115,7 @@
     box-shadow:-20px 0 60px -20px rgba(36,21,16,.4);
     transform:translateX(100%); transition:transform .35s cubic-bezier(.2,.7,.2,1);
     display:flex; flex-direction:column;
-    font-family:'Cormorant Garamond',serif;
+    font-family:var(--xv-body,Jost,Inter,system-ui,sans-serif);
   }
   .xb-drawer[data-open="true"]{transform:translateX(0);}
 
@@ -125,12 +125,12 @@
     background:#F8F2E6;
   }
   .xb-head .xb-title{
-    font-family:'Fraunces',serif; font-weight:400; font-size:22px;
+    font-family:var(--xv-display,Cormorant Garamond,Georgia,serif); font-weight:400; font-size:22px;
     color:#241510;
   }
   .xb-head .xb-title em{font-style:italic; color:#A85D2A;}
   .xb-head .xb-sub{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:9.5px;
     letter-spacing:.22em; text-transform:uppercase; color:#A85D2A;
     margin-top:4px;
   }
@@ -147,11 +147,11 @@
   /* empty state */
   .xb-empty{padding:60px 20px; text-align:center;}
   .xb-empty .xb-emoji{
-    font-family:'Fraunces',serif; font-style:italic; font-size:42px;
+    font-family:var(--xv-display,Cormorant Garamond,Georgia,serif); font-style:italic; font-size:42px;
     color:#A85D2A; line-height:1; margin-bottom:14px;
   }
   .xb-empty h4{
-    font-family:'Fraunces',serif; font-weight:400; font-size:22px;
+    font-family:var(--xv-display,Cormorant Garamond,Georgia,serif); font-weight:400; font-size:22px;
     color:#241510; margin-bottom:8px;
   }
   .xb-empty p{
@@ -160,7 +160,7 @@
   }
   .xb-empty a{
     display:inline-block; margin:0 4px 8px;
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:500;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:10.5px; font-weight:500;
     letter-spacing:.2em; text-transform:uppercase;
     border:1px solid #A85D2A; color:#A85D2A;
     padding:11px 20px; border-radius:50px; transition:all .2s;
@@ -185,15 +185,15 @@
   .xb-thumb img{max-width:100%; max-height:100%; object-fit:contain;}
   .xb-item .xb-meta{min-width:0;}
   .xb-item .xb-name{
-    font-family:'Fraunces',serif; font-weight:400; font-size:16px;
+    font-family:var(--xv-display,Cormorant Garamond,Georgia,serif); font-weight:400; font-size:16px;
     color:#241510; line-height:1.25; margin-bottom:4px;
   }
   .xb-item .xb-code{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:9.5px;
     letter-spacing:.16em; color:#A85D2A;
   }
   .xb-item .xb-finish{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:9.5px;
     letter-spacing:.14em; color:#5A4636; margin-top:4px;
     text-transform:uppercase;
   }
@@ -204,18 +204,18 @@
   }
   .xb-item .xb-qty button{
     width:26px; height:26px; border:none; background:transparent;
-    font-family:'Cormorant Garamond',serif; font-size:16px; color:#241510;
+    font-family:var(--xv-body,Jost,Inter,system-ui,sans-serif); font-size:16px; color:#241510;
     cursor:pointer;
   }
   .xb-item .xb-qty input{
     width:48px; height:26px; border:none; background:transparent;
-    text-align:center; font-family:'Fraunces',serif; font-size:14px;
+    text-align:center; font-family:var(--xv-display,Cormorant Garamond,Georgia,serif); font-size:14px;
     color:#241510; -moz-appearance:textfield;
   }
   .xb-item .xb-qty input::-webkit-outer-spin-button,
   .xb-item .xb-qty input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
   .xb-item .xb-qty .xb-pcs{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.14em;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:9.5px; letter-spacing:.14em;
     color:#9A8E7C; padding:0 10px 0 4px; text-transform:uppercase;
   }
   .xb-item .xb-rm{
@@ -233,13 +233,13 @@
     margin-left:-26px; margin-right:-26px;
   }
   .xb-form-head{
-    font-family:'JetBrains Mono',monospace; font-size:10px;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:10px;
     letter-spacing:.22em; text-transform:uppercase; color:#A85D2A;
     margin-bottom:14px;
   }
   .xb-form{display:flex; flex-direction:column; gap:12px;}
   .xb-form label{
-    font-family:'JetBrains Mono',monospace; font-size:9.5px;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:9.5px;
     letter-spacing:.18em; text-transform:uppercase; color:#5A4636;
     margin-bottom:4px;
   }
@@ -248,7 +248,7 @@
   .xb-form input, .xb-form textarea, .xb-form select{
     width:100%; background:#fff; color:#241510;
     border:1px solid #D8CBB0; padding:11px 13px;
-    font-family:'Cormorant Garamond',serif; font-size:15px; line-height:1.5;
+    font-family:var(--xv-body,Jost,Inter,system-ui,sans-serif); font-size:15px; line-height:1.5;
     border-radius:5px; transition:border-color .2s;
   }
   .xb-form input:focus, .xb-form textarea:focus, .xb-form select:focus{
@@ -265,7 +265,7 @@
   .xb-send{
     width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
     background:#A85D2A; color:#FBF6E8; border:none;
-    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:11px; font-weight:500;
     letter-spacing:.22em; text-transform:uppercase;
     padding:15px 22px; border-radius:50px; cursor:pointer;
     transition:background .25s, transform .2s;
@@ -276,27 +276,27 @@
   .xb-send svg{width:14px; height:14px;}
   .xb-foot .xb-note{
     text-align:center; margin-top:10px;
-    font-family:'JetBrains Mono',monospace; font-size:9px;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:9px;
     letter-spacing:.18em; text-transform:uppercase; color:#9A8E7C;
   }
   .xb-error{
     display:none; margin-bottom:12px; padding:12px 16px;
     background:rgba(178,58,44,.08); border:1px solid #B23A2C; border-radius:6px;
-    font-family:'Cormorant Garamond',serif; font-size:15px; line-height:1.5;
+    font-family:var(--xv-body,Jost,Inter,system-ui,sans-serif); font-size:15px; line-height:1.5;
     color:#7C2418;
   }
   .xb-error.show{display:block;}
   .xb-success{
     display:none; padding:20px 22px; margin-top:14px;
     background:rgba(168,93,42,.08); border:1px solid #A85D2A; border-radius:6px;
-    font-family:'Cormorant Garamond',serif; font-size:15.5px; line-height:1.6;
+    font-family:var(--xv-body,Jost,Inter,system-ui,sans-serif); font-size:15.5px; line-height:1.6;
     color:#241510;
   }
   .xb-success.show{display:block;}
   .xb-success strong{color:#A85D2A;}
   .xb-success .xb-rid{
     display:inline-block; margin:6px 0;
-    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.1em;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif); font-size:12px; letter-spacing:.1em;
     background:#241510; color:#FBF6E8; padding:6px 12px; border-radius:4px;
   }
 
@@ -588,7 +588,10 @@
         const serverMsg = err && err.message ? String(err.message) : '';
         showError(serverMsg && !/fetch|network|json/i.test(serverMsg)
           ? serverMsg + ' — your list is safe.'
-          : 'Could not send just now — your list is safe. Please try again, or WhatsApp us at +91 98377 60615.');
+          /* Trade desk line, not the general +91 98377 60615 — this is the RFQ
+             path, so follow-ups must reach the desk that owns the reference.
+             Mirrored in wholesale.html and netlify/functions/lib/notify.mjs. */
+          : 'Could not send just now — your list is safe. Please try again, or WhatsApp our trade desk on +91 78957 21271.');
       });
   }
 
@@ -603,9 +606,15 @@
       <strong>Order request sent.</strong><br>
       Your reference: <span class="xb-rid">${esc(rid || '')}</span><br>
       We reply within one working day with pricing, MOQ, lead time and finish options —
-      confirmed by Proforma Invoice. A copy is on its way to your email.
+      confirmed by Proforma Invoice. A copy is on its way to your email.<br>
+      In a hurry? WhatsApp our trade desk on
+      <a href="https://wa.me/917895721271" target="_blank" rel="noopener">+91 78957 21271</a>,
+      quoting that reference.
     `;
     ok.classList.add('show');
+    /* RFQ submitted is the conversion for a B2B account — the purchase
+       conversion can never fire now that retail checkout is removed. */
+    try { if (window.XanvorAds && window.XanvorAds.lead) window.XanvorAds.lead(rid); } catch (_) {}
     // server has the RFQ — safe to clear now (the success card stays visible)
     api.clear();
   }

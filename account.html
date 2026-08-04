@@ -5,12 +5,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XANVOR — My Account</title>
-<meta name="description" content="Log in to track your XANVOR orders and manage your details.">
+<!-- Was "track your XANVOR orders"; briefly "view your XANVOR enquiries", but this page
+     has no enquiry list — it renders /api/orders/mine. Kept to orders, dropped "track". -->
+<meta name="description" content="Log in to view your XANVOR orders and manage your buyer details.">
 <meta name="robots" content="noindex, follow">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --claret:#3A2718; --claret-deep:#241510; --ink:#1F140C;
@@ -22,40 +24,40 @@
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  body{background:var(--bone);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  body{background:var(--bone);color:var(--ink);font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   a{color:inherit;text-decoration:none;}
   img{display:block;max-width:100%;}
   button{font-family:inherit;cursor:pointer;}
 
   nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;background:rgba(252,250,244,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-  nav .brand{font-family:'Fraunces',serif;font-weight:400;font-size:21px;letter-spacing:.16em;color:var(--claret-deep);}
+  nav .brand{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:400;font-size:21px;letter-spacing:.16em;color:var(--claret-deep);}
   nav .links{display:flex;gap:28px;align-items:center;}
-  nav .links a{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#5A4636;padding-bottom:3px;border-bottom:1px solid transparent;transition:all .25s;}
+  nav .links a{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#5A4636;padding-bottom:3px;border-bottom:1px solid transparent;transition:all .25s;}
   nav .links a:hover{color:var(--rust);border-bottom-color:var(--rust);}
   @media(max-width:640px){ nav .links a.hide-sm{display:none;} }
 
   .wrap{max-width:900px;margin:0 auto;padding:120px 6vw 80px;}
   .ac-head{margin-bottom:34px;}
-  .ac-head .eyebrow{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--rust);margin-bottom:12px;}
-  .ac-head h1{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(30px,4vw,46px);color:var(--claret-deep);}
+  .ac-head .eyebrow{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--rust);margin-bottom:12px;}
+  .ac-head h1{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:300;font-size:clamp(30px,4vw,46px);color:var(--claret-deep);}
   .ac-head h1 em{font-style:italic;color:var(--rust);}
 
   .panel{background:var(--paper);border:1px solid var(--line-strong);border-radius:10px;padding:26px 26px 28px;max-width:520px;}
   .panel.wide{max-width:none;}
   .panel + .panel{margin-top:22px;}
-  .panel h2{font-family:'Fraunces',serif;font-weight:400;font-size:22px;color:var(--claret-deep);margin-bottom:4px;}
-  .panel .ph{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:18px;}
+  .panel h2{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:400;font-size:22px;color:var(--claret-deep);margin-bottom:4px;}
+  .panel .ph{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:18px;}
 
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   .form-grid .full{grid-column:1 / -1;}
   @media(max-width:520px){ .form-grid{grid-template-columns:1fr;} }
-  .field label{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#5A4636;margin-bottom:6px;}
-  .field input{width:100%;background:#fff;color:var(--claret-deep);border:1px solid var(--line-strong);padding:12px 13px;font-family:'Cormorant Garamond',serif;font-size:16px;border-radius:6px;transition:border-color .2s;}
+  .field label{display:block;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#5A4636;margin-bottom:6px;}
+  .field input{width:100%;background:#fff;color:var(--claret-deep);border:1px solid var(--line-strong);padding:12px 13px;font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif);font-size:16px;border-radius:6px;transition:border-color .2s;}
   .field input:focus{outline:none;border-color:var(--rust);}
   .field input::placeholder{color:#B6A98F;}
-  .otp-input{letter-spacing:.5em;text-align:center;font-family:'JetBrains Mono',monospace;font-size:22px !important;}
+  .otp-input{letter-spacing:.5em;text-align:center;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:22px !important;}
 
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;padding:14px 22px;border-radius:50px;transition:all .25s;border:1px solid transparent;cursor:pointer;width:100%;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;padding:14px 22px;border-radius:50px;transition:all .25s;border:1px solid transparent;cursor:pointer;width:100%;}
   .btn-primary{background:var(--rust);color:var(--bone-warm);box-shadow:0 8px 24px -8px rgba(168,93,42,.5);}
   .btn-primary:hover{background:#C0712F;transform:translateY(-1px);}
   .btn-primary[disabled]{opacity:.55;pointer-events:none;transform:none;}
@@ -63,22 +65,22 @@
   .btn-ghost:hover{border-color:var(--rust);color:var(--rust);}
   .btn-link{width:auto;background:none;border:none;padding:0;font-size:10px;letter-spacing:.16em;color:var(--rust);text-decoration:underline;}
 
-  .msg{margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;padding:11px 14px;border-radius:7px;line-height:1.6;}
+  .msg{margin-top:14px;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:11px;letter-spacing:.04em;padding:11px 14px;border-radius:7px;line-height:1.6;}
   .msg.err{background:#FBEAEA;color:var(--bad);border:1px solid #E4B9B9;}
   .msg.ok{background:#E9F5EE;color:var(--ok);border:1px solid #BFE3CF;}
   .row-between{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap;}
 
   .ac-hero{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px;}
-  .ac-hero .who{font-family:'Fraunces',serif;font-size:22px;color:var(--claret-deep);}
+  .ac-hero .who{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-size:22px;color:var(--claret-deep);}
   .ac-hero .who em{font-style:italic;color:var(--rust);}
-  .ac-hero .sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A7359;margin-top:4px;}
+  .ac-hero .sub{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:11px;color:#8A7359;margin-top:4px;}
 
   .order-card{border:1px solid var(--line-strong);border-radius:9px;padding:18px 20px;background:#fff;}
   .order-card + .order-card{margin-top:14px;}
   .oc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
-  .oc-oid{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:var(--rust);}
-  .oc-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-faint);margin-top:3px;}
-  .status{display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:50px;white-space:nowrap;}
+  .oc-oid{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:12px;letter-spacing:.1em;color:var(--rust);}
+  .oc-date{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10px;color:var(--ink-faint);margin-top:3px;}
+  .status{display:inline-flex;align-items:center;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:50px;white-space:nowrap;}
   .status-placed{background:#EFE3CB;color:#7A5A2E;}
   .status-paid{background:#DCEAF7;color:#1F5C8A;}
   .status-confirmed{background:#DCEAF7;color:#1F5C8A;}
@@ -88,19 +90,19 @@
   .oc-items{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:15px;color:#43352B;}
   .oc-items div{padding:3px 0;}
   .oc-foot{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
-  .oc-total{font-family:'Fraunces',serif;font-size:18px;color:var(--claret-deep);}
-  .oc-tracking{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#5A4636;background:var(--paper-2);border:1px dashed var(--line-strong);border-radius:6px;padding:6px 10px;}
+  .oc-total{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-size:18px;color:var(--claret-deep);}
+  .oc-tracking{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;color:#5A4636;background:var(--paper-2);border:1px dashed var(--line-strong);border-radius:6px;padding:6px 10px;}
 
   .empty{text-align:center;padding:40px 20px;}
-  .empty .e{font-family:'Fraunces',serif;font-style:italic;font-size:38px;color:var(--rust);margin-bottom:10px;}
+  .empty .e{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-style:italic;font-size:38px;color:var(--rust);margin-bottom:10px;}
   .empty p{color:#5A4636;margin-bottom:18px;}
 
   footer{background:var(--band);padding:40px 6vw;text-align:center;margin-top:70px;}
-  footer .f-legal{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#C5B498;line-height:1.7;}
+  footer .f-legal{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.06em;color:#C5B498;line-height:1.7;}
   footer .f-legal a{color:#E7D7B4;}
 </style>
-<link rel="stylesheet" href="assets/site-chrome.css?v=10">
-<script src="assets/google-ads.js?v=1"></script>
+<link rel="stylesheet" href="assets/site-chrome.css?v=13">
+<script src="assets/google-ads.js?v=2"></script>
 <script src="assets/pinterest-tag.js?v=1"></script>
 
 </head>
@@ -109,7 +111,8 @@
 <nav>
   <a href="index.html" class="brand">XANVOR</a>
   <div class="links">
-    <a href="Hot-Serve Collection.html" class="hide-sm">Continue shopping</a>
+    <!-- Was "Continue shopping" — nothing is bought on this site; the link browses the catalogue. -->
+    <a href="Hot-Serve Collection.html" class="hide-sm">Browse the catalogue</a>
     <a href="index.html#contact" class="hide-sm">Help</a>
   </div>
 </nav>
@@ -121,8 +124,8 @@
 </footer>
 
 <script src="assets/img-opt.js?v=2"></script>
-<script src="assets/site-chrome.js?v=11"></script>
-<script src="shop-cart.js?v=hs3"></script>
+<script src="assets/site-chrome.js?v=16"></script>
+<script src="shop-cart.js?v=hs5"></script>
 <script>
 (function(){
   const root = document.getElementById('root');
@@ -182,7 +185,11 @@
 
       <div class="panel">
         <h2>My details</h2>
-        <div class="ph">Saved here pre-fills your next checkout</div>
+        <!-- Was "pre-fills your next checkout" — there is no checkout. Do not claim it
+             pre-fills the RFQ either: the enquiry drawer restores its own fields from
+             localStorage (xanvor_rfq_contact_v1 in enquiry-basket.js) and never reads
+             /api/auth/me, so this line now only claims what the Save button does. -->
+        <div class="ph">Saved to your XANVOR account — update them any time</div>
         <form id="ac_profile" class="form-grid">
           <div class="field"><label>Full name</label><input name="name" value="${esc(c.name)}" placeholder="Your name"></div>
           <div class="field"><label>Phone / WhatsApp</label><input name="phone" value="${esc(c.phone)}" placeholder="+91 …"></div>
@@ -206,8 +213,9 @@
   function renderOrders(){
     if(state.orders === null) return '';
     if(!state.orders.length){
+      /* Was "Start shopping" — no cart or checkout on the site; this just opens the catalogue. */
       return `<div class="empty"><div class="e">✺</div><p>No orders yet — your XANVOR pieces will show up here.</p>
-        <a class="btn btn-ghost" style="width:auto;display:inline-flex;" href="Hot-Serve Collection.html">Start shopping</a></div>`;
+        <a class="btn btn-ghost" style="width:auto;display:inline-flex;" href="Hot-Serve Collection.html">Browse the catalogue</a></div>`;
     }
     return state.orders.map(o => {
       const date = o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '';

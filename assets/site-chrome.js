@@ -9,15 +9,22 @@
     { num: 'III', name: 'Brass',                sub: 'Singing bowls & heritage',       href: '#c-brass', homeOnly: true },
     { num: 'IV',  name: 'Sheesham & Wood',      sub: 'Trays & spice boxes',            href: '#c-wood', homeOnly: true },
     { num: 'V',   name: 'Wireform Furniture',   sub: 'Baskets · tables · seating',     href: '#c-furniture', homeOnly: true },
-    { num: 'VI',  name: 'Hot-Serve',            sub: 'Warmers · hot-pots · domes',     href: 'Hot-Serve Collection.html', badge: 'New' },
-    { num: 'VII', name: 'Serving Trays',        sub: 'Brass · gemstone handles',       href: '#c-trays', homeOnly: true },
-    { num: 'VIII',name: 'Copper Home',          sub: 'Trays · bowls · chargers',       href: '#c-copperhome', homeOnly: true },
-    { num: 'IX',  name: 'The Jewel Collection', sub: 'Gemstone-set brass',             href: '#c-jewel', homeOnly: true },
-    { num: 'X',   name: 'Canisters & Vanity',   sub: 'Jars · boxes · canisters',       href: '#c-canister', homeOnly: true },
-    { num: 'XI',  name: 'Ribbed Storage',       sub: 'Bronze · gold · silver cases',   href: '#c-ribbed', homeOnly: true },
-    { num: 'XII', name: 'Metal Wall Art',       sub: 'Wall panels · mirrors · décor',  href: '#c-wallart', homeOnly: true },
-    { num: 'XIII',name: 'Kansa Dinnerware',     sub: 'Bronze thalis · katoris',        href: '#c-kansa', homeOnly: true },
-    { num: 'XIV', name: 'Kitchen Utilities',    sub: 'Wire · sheet · mass retail',     href: '#c-utility', homeOnly: true },
+    { num: 'VI',  name: 'Serving Trays',        sub: 'Brass · gemstone handles',       href: '#c-trays', homeOnly: true },
+    { num: 'VII', name: 'Copper Home',          sub: 'Trays · bowls · chargers',       href: '#c-copperhome', homeOnly: true },
+    { num: 'VIII',name: 'The Jewel Collection', sub: 'Gemstone-set brass',             href: '#c-jewel', homeOnly: true },
+    { num: 'IX',  name: 'Canisters & Vanity',   sub: 'Jars · boxes · canisters',       href: '#c-canister', homeOnly: true },
+    { num: 'X',   name: 'Ribbed Storage',       sub: 'Bronze · gold · silver cases',   href: '#c-ribbed', homeOnly: true },
+    { num: 'XI',  name: 'Metal Wall Art',       sub: 'Wall panels · mirrors · décor',  href: '#c-wallart', homeOnly: true },
+    { num: 'XII', name: 'Kansa Dinnerware',     sub: 'Bronze thalis · katoris',        href: '#c-kansa', homeOnly: true },
+    /* sub was 'Wire · sheet · mass retail' — on an export-only site that reads as
+       XANVOR selling retail. It meant volume/high-quantity lines. */
+    { num: 'XIII',name: 'Kitchen Utilities',    sub: 'Wire · sheet · volume lines',    href: '#c-utility', homeOnly: true },
+    /* Hot-Serve sits last by request. It is the only collection with its own page
+       rather than an on-page #c-… band, so the numbering of the thirteen on-page
+       groups is now unbroken I–XIII and this one closes the list at XIV.
+       ORDER IS MIRRORED IN index.html: the nav dropdown, the #collections tiles,
+       the .cat-jump rail and each .cat-group's <span class="num">. */
+    { num: 'XIV', name: 'Hot-Serve',            sub: 'Warmers · hot-pots · domes',     href: 'Hot-Serve Collection.html', badge: 'New' },
   ];
 
   function isHome() {
@@ -67,7 +74,9 @@
     const home = isHome();
     const brandHref = home ? '#top' : 'index.html';
     const shopHref = 'all-products.html';
-    const aboutHref = 'about.html';
+    /* The homepage now carries its own #about band, so on home the nav scrolls
+       to it the way Contact already did, instead of leaving the page. */
+    const aboutHref = home ? '#about' : 'about.html';
     const contactHref = home ? '#contact' : 'contact.html';
     const pk = pageKey();
 
@@ -76,7 +85,7 @@
     return `
       <a href="${brandHref}" class="brand">XANVOR</a>
       <div class="links" id="xvNavLinks">
-        <a class="xv-desktop-only${active(['all-products.html'])}" href="${shopHref}">Shop</a>
+        <a class="xv-desktop-only${active(['all-products.html'])}" href="${shopHref}">Products</a>
         <div class="nav-cat xv-desktop-only" id="navCat">
           <button class="nav-cat-btn" type="button" aria-haspopup="true" aria-expanded="false">
             Collections ${chevSvg()}
@@ -99,12 +108,37 @@
           <span id="xvCurLbl">₹ INR</span>
           <svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
         </button>
+        <a class="xv-quote xv-desktop-only" href="wholesale.html#rfq">Request a Quote &rarr;</a>
       </div>
       <button type="button" class="xv-burger" id="xvBurger" aria-label="Open menu" aria-expanded="false">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
           <path d="M3 5h14M3 10h14M3 15h14"/>
         </svg>
       </button>`;
+  }
+
+  /* The homepage is a single-page narrative (about → collections → products →
+     lookbook → craft → finishes → quality → markets → catalogue → contact), and
+     the top nav has no room left for nine more links. On mobile the drawer is
+     the only navigation, so the section index lives there — home only, because
+     these anchors resolve to index.html#… noise on every other page. */
+  const HOME_SECTIONS = [
+    ['#about', 'About XANVOR'],
+    ['#collections', 'The collections'],
+    ['#lookbook', 'Lookbook'],
+    ['#craft', 'The craft'],
+    ['#finishes', 'Finishes'],
+    ['#quality', 'Quality'],
+    ['#markets', 'Markets & terms'],
+    ['#catalogue', 'Full catalogue'],
+    ['#contact', 'Trade desk'],
+  ];
+  function drawerSectionsHtml() {
+    if (!isHome()) return '';
+    return '<div class="xv-drawer-sec">On this page</div>'
+      + '<div class="xv-drawer-sub">'
+      + HOME_SECTIONS.map(function (s) { return '<a href="' + s[0] + '">' + s[1] + '</a>'; }).join('')
+      + '</div>';
   }
 
   function ensureDrawer() {
@@ -124,7 +158,7 @@
         </button>
       </div>
       <div class="xv-drawer-body">
-        <a href="all-products.html">Shop all</a>
+        <a href="all-products.html">All products</a>
         <a href="new-designs.html">New designs</a>
         <a href="wholesale.html">Wholesale &amp; export</a>
         <a href="oem-odm.html">OEM / private label</a>
@@ -133,13 +167,19 @@
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
         <a href="account.html">Account</a>
-        <a href="checkout.html">Checkout</a>
+        <!-- "Checkout" dropped: checkout.html now hard-redirects to the RFQ form,
+             so the link only ever bounced the buyer somewhere else. The quote CTA
+             below replaces it as the drawer's primary action. -->
+        <a href="wholesale.html#rfq">Request a quote</a>
         <button type="button" class="xv-drawer-cur" id="xvDrawerCur">Show prices in <b id="xvDrawerCurLbl">₹ INR</b></button>
+        ${drawerSectionsHtml()}
         <div class="xv-drawer-sec">Collections</div>
         <div class="xv-drawer-sub">${drawerCollectionsHtml()}</div>
       </div>
       <div class="xv-drawer-foot">
-        Manufacturer · Exporter · Ecommerce<br>
+        <!-- was "Manufacturer · Exporter · Ecommerce" — the retail cart and
+             checkout are off, so the site sells nothing directly. -->
+        Manufacturer · Exporter · OEM<br>
         <a href="mailto:hello@xanvor.com">hello@xanvor.com</a>
       </div>`;
     document.body.appendChild(scrim);
@@ -216,13 +256,42 @@
       a.addEventListener('click', closeDrawer);
     });
 
-    // scroll state
+    // scroll state — also collapses the utility strip above the nav
     const onScroll = () => {
       const solid = nav.classList.contains('xv-nav-solid');
-      nav.classList.toggle('scrolled', solid || window.scrollY > 36);
+      const on = solid || window.scrollY > 36;
+      nav.classList.toggle('scrolled', on);
+      document.documentElement.classList.toggle('xv-scrolled', on);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  /* Utility strip above the nav — the standing trade line wbinc.in runs across
+     the top of every page. It slides away on scroll (see .xv-scrolled in
+     site-chrome.css) so it costs nothing once the buyer is reading.
+     Every claim here has to be independently true: the GSTIN is on the seals,
+     the MOQ and the one-working-day reply are stated on wholesale.html and
+     faq.html. Do NOT add a rating or a founding year — neither is evidenced
+     anywhere in this repo. */
+  function ensureUtilityBar() {
+    if (document.getElementById('xvUtility')) return;
+    const bar = document.createElement('div');
+    bar.className = 'xv-utility';
+    bar.id = 'xvUtility';
+    bar.innerHTML =
+      '<div class="xv-utility-in">'
+      + '<div class="xv-utility-facts">'
+      + '<span>Zenko Inc. &middot; GST-registered exporter, Moradabad</span>'
+      + '<span class="xv-u-sep">&middot;</span>'
+      + '<span>MOQ from 50 pcs &middot; EXW &middot; FOB &middot; CIF &middot; DDP</span>'
+      + '<span class="xv-u-sep">&middot;</span>'
+      + '<span>Reply within one working day</span>'
+      + '</div>'
+      + '<a class="xv-utility-cta" href="wholesale.html#rfq">Request a Quote &rarr;</a>'
+      + '</div>';
+    document.body.insertBefore(bar, document.body.firstChild);
+    document.documentElement.classList.add('xv-has-utility');
   }
 
   function polishFooter() {
@@ -263,6 +332,7 @@
     if (prevCart && links) links.appendChild(prevCart);
     if (prevAc && links) links.appendChild(prevAc);
 
+    ensureUtilityBar();
     ensureDrawer();
     wireNavInteractions(nav);
     polishFooter();
@@ -308,13 +378,26 @@
     return el;
   }
 
+  /* Per-currency note. Was: INR "Charged at checkout", everything else
+     "Estimate only". Nothing is charged at any checkout — the retail cart is
+     off and every order settles against a Proforma Invoice. INR is simply the
+     currency the catalogue figures are written in; USD is the standard quote
+     currency, with EUR / GBP / AED issued on request. The rest of the list
+     converts for reading only — we do not quote in them. */
+  var QUOTE_NOTE = {
+    USD: 'Standard quote currency',
+    EUR: 'Quoted on request',
+    GBP: 'Quoted on request',
+    AED: 'Quoted on request'
+  };
+
   function renderCurPanel() {
     var M = window.XanvorMoney;
     if (!M) return;
     var panel = curPanel();
     var rows = M.list().map(function (c) {
       var on = c.code === M.code;
-      var note = c.code === 'INR' ? 'Charged at checkout' : 'Estimate only';
+      var note = c.code === 'INR' ? 'Catalogue currency' : (QUOTE_NOTE[c.code] || 'Indicative conversion');
       return '<button type="button" class="xv-cur-row' + (on ? ' on' : '') + '" data-cur="' + c.code + '">' +
         '<span class="xv-cur-sym">' + c.sym + '</span>' +
         '<span class="xv-cur-nm"><b>' + c.code + '</b> ' + c.name + '</span>' +
@@ -331,9 +414,13 @@
       '<div class="xv-cur-head">Show prices in</div>' +
       '<div class="xv-cur-rows">' + rows + '</div>' +
       (rateLine ? '<div class="xv-cur-rate">' + rateLine + '</div>' : '') +
-      '<div class="xv-cur-foot">We bill in two currencies only: <b>₹ INR</b> at retail checkout ' +
-      '(India delivery), and the currency stated on your Proforma Invoice for export orders. ' +
-      'Any other figure here is an indicative conversion — not a price we can charge.</div>';
+      /* Was "We bill in two currencies only: ₹ INR at retail checkout (India
+         delivery), and the currency stated on your Proforma Invoice for export
+         orders." The INR-at-checkout rail no longer exists — the retail cart is
+         off — so the PI is the only billing currency left. */
+      '<div class="xv-cur-foot">We bill in one currency only: the one stated on your ' +
+      '<b>Proforma Invoice</b>. Every other figure on this site is an indicative ' +
+      'conversion of the catalogue price — not a figure we can invoice.</div>';
 
     panel.querySelectorAll('[data-cur]').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -409,7 +496,10 @@
     ['❖', '100% Handmade', 'No machine look'],
     ['❖', 'QC Approval', 'Pre-dispatch photo & video'],
     ['❖', 'Export Packing', 'EPE foam + master cartons'],
-    ['❖', 'Secure Checkout', 'Razorpay · UPI · Cards'],
+    /* Was "Secure Checkout · Razorpay · UPI · Cards". Razorpay and the retail
+       cart are off (RETAIL_IDS empty in render.mjs), so this seal appeared in
+       every page footer advertising a payment rail that no longer exists. */
+    ['❖', 'Export Terms', 'EXW · FOB · CIF · DDP'],
   ];
   function sealsHtml() {
     return SEALS.map(function (s) {
@@ -417,8 +507,9 @@
     }).join('');
   }
   function injectSeals() {
-    /* NOT `body > footer` — index.html's #catalogue section is never closed,
-       so the homepage footer parses INSIDE it, not as a direct body child */
+    /* Plain `footer`, not `body > footer`. index.html's #catalogue section is
+       now properly closed so the homepage footer IS a direct body child, but
+       other pages nest theirs — this selector works for both. */
     var footer = document.querySelector('footer');
     if (!footer || footer.querySelector('.xv-seals')) return;
     var row = document.createElement('div');
@@ -497,7 +588,7 @@
     if (document.getElementById('xv-visit-js')) return;
     var s = document.createElement('script');
     s.id = 'xv-visit-js';
-    s.src = '/assets/visit.js?v=1';   /* absolute — /checkout has no dir base */
+    s.src = '/assets/visit.js?v=4';   /* absolute — /checkout has no dir base */
     s.async = true;
     document.head.appendChild(s);
   }

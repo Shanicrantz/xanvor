@@ -113,11 +113,11 @@
     + '.xv-off-scrim[data-open="true"]{opacity:1;pointer-events:auto;}'
     + '.xv-off{position:fixed;z-index:9700;left:50%;top:50%;transform:translate(-50%,-46%) scale(.97);opacity:0;pointer-events:none;'
     + 'width:min(420px,92vw);background:#FCFAF4;border:1px solid #D8CBB0;border-radius:14px;box-shadow:0 30px 80px -20px rgba(36,21,16,.5);'
-    + 'font-family:\'Cormorant Garamond\',Georgia,serif;color:#241510;transition:opacity .3s ease,transform .3s cubic-bezier(.2,.7,.2,1);overflow:hidden;}'
+    + 'font-family:var(--xv-body,Jost,Inter,system-ui,sans-serif);color:#241510;transition:opacity .3s ease,transform .3s cubic-bezier(.2,.7,.2,1);overflow:hidden;}'
     + '.xv-off[data-open="true"]{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1);}'
     + '.xv-off-head{background:#241510;padding:20px 24px 18px;text-align:center;}'
-    + '.xv-off-head .e{font-family:\'JetBrains Mono\',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:#C9A57E;}'
-    + '.xv-off-head h3{font-family:\'Fraunces\',Georgia,serif;font-weight:400;font-size:25px;color:#FBF6E8;margin:7px 0 0;line-height:1.2;}'
+    + '.xv-off-head .e{font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif);font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:#C9A57E;}'
+    + '.xv-off-head h3{font-family:var(--xv-display,Cormorant Garamond,Georgia,serif);font-weight:400;font-size:25px;color:#FBF6E8;margin:7px 0 0;line-height:1.2;}'
     + '.xv-off-head h3 em{font-style:italic;color:#DCAB60;}'
     + '.xv-off-body{padding:20px 24px 22px;}'
     + '.xv-off-body p{font-size:16px;line-height:1.5;color:#5A4636;margin:0 0 15px;}'
@@ -125,15 +125,15 @@
     + 'font-family:inherit;font-size:16px;margin-bottom:9px;}'
     + '.xv-off input:focus{outline:none;border-color:#A85D2A;}'
     + '.xv-off button.go{width:100%;margin-top:5px;background:#A85D2A;color:#FBF6E8;border:none;border-radius:50px;padding:14px;'
-    + 'font-family:\'JetBrains Mono\',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .2s;}'
+    + 'font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif);font-size:11px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .2s;}'
     + '.xv-off button.go:hover{background:#C0712F;}'
     + '.xv-off button.go[disabled]{opacity:.6;cursor:default;}'
-    + '.xv-off .fine{font-family:\'JetBrains Mono\',monospace;font-size:8.5px;letter-spacing:.1em;color:#9A8E7C;text-align:center;margin-top:12px;line-height:1.7;text-transform:uppercase;}'
-    + '.xv-off .err{font-family:\'JetBrains Mono\',monospace;font-size:10.5px;color:#A32D2D;margin:2px 0 8px;}'
+    + '.xv-off .fine{font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif);font-size:8.5px;letter-spacing:.1em;color:#9A8E7C;text-align:center;margin-top:12px;line-height:1.7;text-transform:uppercase;}'
+    + '.xv-off .err{font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif);font-size:10.5px;color:#A32D2D;margin:2px 0 8px;}'
     + '.xv-off .x{position:absolute;top:11px;right:13px;width:30px;height:30px;border:none;border-radius:50%;background:rgba(251,246,232,.12);'
     + 'color:#FBF6E8;font-size:15px;line-height:1;cursor:pointer;}'
     + '.xv-off .x:hover{background:rgba(251,246,232,.24);}'
-    + '.xv-off .code{font-family:\'JetBrains Mono\',monospace;font-size:23px;letter-spacing:.16em;color:#A85D2A;background:#F8F2E6;'
+    + '.xv-off .code{font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif);font-size:23px;letter-spacing:.16em;color:#A85D2A;background:#F8F2E6;'
     + 'border:1px dashed #D8CBB0;border-radius:9px;padding:15px;text-align:center;margin:4px 0 12px;}'
     + '.xv-off .ok{text-align:center;}'
     + '.xv-off .ok .tick{width:52px;height:52px;border-radius:50%;background:#1F8A5B;color:#fff;font-size:26px;line-height:52px;margin:0 auto 12px;}';
@@ -223,9 +223,27 @@
     });
   }
 
+  /* ---- Export-only: the welcome offer is switched off ----------------------
+     This popup offered "₹200 off your first order · min order ₹1,499" and handed
+     back a coupon code that /api/coupon honoured AT CHECKOUT. There is no
+     checkout any more — Razorpay and the cart are off and RETAIL_IDS is empty
+     in netlify/functions/lib/render.mjs — so the code could never be redeemed.
+     Promising an export buyer a ₹200 discount off an INR minimum-order value is
+     also the wrong offer for a B2B account quoted in USD at MOQ 50+.
+
+     Visit TRACKING above is untouched: /api/track, the visitor id and the
+     heartbeat all still run, so admin "on site now" keeps working. Only the
+     offer modal is suppressed. Flip this to true (and restore retail) to bring
+     it back, or repurpose the modal as a trade price-list / catalogue capture,
+     which is the B2B equivalent of this lead magnet.
+
+     Same one-line-switch pattern as shop-cart.js (RETAIL_ENABLED) and
+     checkout.html (RETAIL_CHECKOUT_ENABLED). */
+  var WELCOME_OFFER_ENABLED = false;
+
   /* triggers: timed, or exit-intent on desktop — never on checkout/account
      (don't interrupt someone who is already paying) */
-  if (!offerDone() && !/checkout|account|admin/.test(location.pathname)) {
+  if (WELCOME_OFFER_ENABLED && !offerDone() && !/checkout|account|admin/.test(location.pathname)) {
     setTimeout(open, OFFER_DELAY_MS);
     document.addEventListener('mouseout', function onOut(e) {
       if (e.clientY <= 0 && !e.relatedTarget) { document.removeEventListener('mouseout', onOut); open(); }

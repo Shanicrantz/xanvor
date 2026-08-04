@@ -5,15 +5,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XANVOR — The Hot-Serve Collection</title>
-<meta name="description" content="XANVOR Hot-Serve Collection — hand-hammered insulated food warmers, hot-pots and serving domes from Moradabad. Trade catalogue 2026 with offer pricing.">
+<meta name="description" content="XANVOR Hot-Serve Collection — hand-hammered insulated food warmers, hot-pots and serving domes from Moradabad. Trade catalogue 2026 — MOQ tier pricing, quoted EXW Moradabad on request.">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <meta property="og:title" content="XANVOR — The Hot-Serve Collection">
-<meta property="og:description" content="Hand-hammered food warmers, hot-pots & serving domes — trade catalogue with offer pricing.">
+<meta property="og:description" content="Hand-hammered food warmers, hot-pots & serving domes — trade catalogue with MOQ tier pricing, quoted EXW Moradabad on request.">
 <meta property="og:image" content="assets/products/xv-fw-101.jpg">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --claret:#3A2718; --claret-deep:#241510; --ink:#1F140C;
@@ -27,7 +27,7 @@
   html{scroll-behavior:smooth;}
   body{
     background:var(--bone); color:var(--ink);
-    font-family:'Cormorant Garamond',serif; font-size:19px; line-height:1.6;
+    font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif); font-size:19px; line-height:1.6;
     -webkit-font-smoothing:antialiased; overflow-x:hidden;
   }
   body::after{
@@ -47,10 +47,10 @@
     background:rgba(252,250,244,.82); backdrop-filter:blur(10px);
   }
   nav.scrolled{ background:rgba(252,250,244,.96); padding:13px 6vw; border-bottom:1px solid var(--line); }
-  nav .brand{ font-family:'Fraunces',serif; font-weight:400; font-size:21px; letter-spacing:.16em; color:var(--claret-deep); }
+  nav .brand{ font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif); font-weight:400; font-size:21px; letter-spacing:.16em; color:var(--claret-deep); }
   nav .links{display:flex;gap:34px;}
   nav .links a{
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.2em;
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:10.5px; letter-spacing:.2em;
     text-transform:uppercase; color:#5A4636; padding-bottom:3px;
     border-bottom:1px solid transparent; transition:all .25s;
   }
@@ -61,7 +61,7 @@
   .nav-cat{position:relative;display:inline-flex;}
   .nav-cat-btn{
     display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;
-    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
     color:#5A4636;padding:0 0 3px;border-bottom:1px solid transparent;transition:color .25s,border-color .25s;
   }
   .nav-cat-btn .chev{width:9px;height:9px;transition:transform .28s;}
@@ -77,16 +77,16 @@
   .nav-cat:hover .cat-menu,.nav-cat.open .cat-menu{opacity:1;visibility:visible;transform:translateY(0);}
   .cat-menu::before{content:"";position:absolute;top:-16px;left:0;right:0;height:16px;}
   .cat-menu .cm-h{
-    font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9px;letter-spacing:.24em;text-transform:uppercase;
     color:#8A7359;padding:8px 12px 10px;border-bottom:1px solid var(--line);margin-bottom:6px;
   }
   .cat-menu a{display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:8px;transition:background .16s;}
   .cat-menu a:hover{background:var(--paper-2);}
-  .cat-menu .cm-num{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:var(--rust);width:24px;text-align:center;flex:none;line-height:1;}
+  .cat-menu .cm-num{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-style:italic;font-size:19px;color:var(--rust);width:24px;text-align:center;flex:none;line-height:1;}
   .cat-menu .cm-t{display:flex;flex-direction:column;gap:3px;}
-  .cat-menu .cm-t b{font-family:'Fraunces',serif;font-weight:400;font-size:17px;color:var(--claret-deep);line-height:1.1;}
-  .cat-menu .cm-t span{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:#8A7359;}
-  .cat-menu a.cm-new .cm-badge{margin-left:auto;align-self:center;background:var(--rust);color:var(--bone-warm);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:50px;}
+  .cat-menu .cm-t b{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:400;font-size:17px;color:var(--claret-deep);line-height:1.1;}
+  .cat-menu .cm-t span{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:#8A7359;}
+  .cat-menu a.cm-new .cm-badge{margin-left:auto;align-self:center;background:var(--rust);color:var(--bone-warm);font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:50px;}
   @media(max-width:680px){ .cat-menu{right:auto;left:50%;transform:translateX(-50%) translateY(8px);} .nav-cat.open .cat-menu{transform:translateX(-50%) translateY(0);} }
 
   /* hero band */
@@ -98,7 +98,7 @@
     text-align:center;
   }
   .col-hero .crumbs{
-    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.22em;
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.22em;
     text-transform:uppercase;color:#7A6650;margin-bottom:26px;
     display:flex;gap:9px;justify-content:center;align-items:center;flex-wrap:wrap;
   }
@@ -106,11 +106,11 @@
   .col-hero .crumbs .sep{color:var(--ink-faint);}
   .col-hero .crumbs .here{color:var(--rust);}
   .col-hero .eyebrow{
-    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.32em;
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.32em;
     text-transform:uppercase;color:var(--rust);margin-bottom:18px;
   }
   .col-hero h1{
-    font-family:'Fraunces',serif;font-weight:300;line-height:1.04;
+    font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:300;line-height:1.04;
     font-size:clamp(36px,5.4vw,62px);color:var(--claret-deep);margin-bottom:20px;
   }
   .col-hero h1 em{font-style:italic;color:var(--rust);}
@@ -122,7 +122,7 @@
     background:var(--band);color:#F1E4CF;
     display:flex;justify-content:center;flex-wrap:wrap;gap:10px 38px;
     padding:18px 6vw;
-    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.16em;
     text-transform:uppercase;
   }
   .spec-strip span{display:inline-flex;align-items:center;gap:9px;}
@@ -144,12 +144,14 @@
   .card:hover{border-color:var(--rust);transform:translateY(-3px);box-shadow:0 22px 52px -30px rgba(58,39,24,.45);}
   .card .pin{
     position:absolute;top:14px;left:14px;z-index:2;background:var(--band);color:#F6ECDB;
-    font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.18em;
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9px;font-weight:500;letter-spacing:.18em;
     text-transform:uppercase;padding:6px 11px;border-radius:50px;
   }
+  /* dormant under export-only — the "N% off" badge and the struck-through MRP
+     are no longer rendered (see the grid script). Kept for a retail restore. */
   .card .off-tag{
     position:absolute;top:14px;right:14px;z-index:2;background:var(--rust);color:var(--bone-warm);
-    font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.1em;
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9px;font-weight:500;letter-spacing:.1em;
     text-transform:uppercase;padding:6px 9px;border-radius:50px;
   }
   .card .ph{
@@ -162,22 +164,22 @@
   }
   .card:hover .ph img{transform:scale(1.045);}
   .card .body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:7px;flex:1;}
-  .card .orn{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:var(--rust);line-height:1;}
-  .card h3{font-family:'Fraunces',serif;font-weight:400;font-size:21px;color:var(--claret-deep);line-height:1.2;}
+  .card .orn{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-style:italic;font-size:19px;color:var(--rust);line-height:1;}
+  .card h3{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:400;font-size:21px;color:var(--claret-deep);line-height:1.2;}
   .card .desc{font-size:14.5px;line-height:1.5;color:#5A4636;flex:1;}
   .card .meta{
-    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9.5px;letter-spacing:.12em;
     text-transform:uppercase;color:#8A7359;
   }
   .card .price{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;padding-top:12px;margin-top:4px;border-top:1px solid var(--line);}
-  .card .offer{font-family:'Fraunces',serif;font-weight:400;font-size:26px;color:var(--claret-deep);line-height:1;}
-  .card .mrp{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--ink-faint);text-decoration:line-through;}
-  .card .wholesale-note{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#8A7359;margin-top:6px;}
+  .card .offer{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:400;font-size:26px;color:var(--claret-deep);line-height:1;}
+  .card .mrp{font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif);font-size:16px;color:var(--ink-faint);text-decoration:line-through;}
+  .card .wholesale-note{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#8A7359;margin-top:6px;}
   .card .foot{
     display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;
   }
-  .card .code{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--ink);}
-  .card .arr{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);}
+  .card .code{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10px;letter-spacing:.12em;color:var(--ink);}
+  .card .arr{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);}
   .card:hover .arr{color:#C0712F;}
 
   /* feature (signature) card spans full row */
@@ -208,16 +210,16 @@
   footer{background:var(--band);padding:56px 6vw 40px;text-align:center;}
   footer .f-mark{width:74px;margin:0 auto 22px;opacity:.96;filter:brightness(1.15);}
   footer .f-rule{width:40px;height:1px;background:var(--brass);margin:0 auto 22px;}
-  footer .f-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--brass);margin-bottom:10px;}
-  footer .f-legal{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#C5B498;line-height:1.7;}
+  footer .f-tag{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--brass);margin-bottom:10px;}
+  footer .f-legal{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.06em;color:#C5B498;line-height:1.7;}
   footer .f-legal a{color:#E7D7B4;}
-  footer .f-policy{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 22px;margin:18px auto 14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;}
+  footer .f-policy{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 22px;margin:18px auto 14px;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;}
   footer .f-policy a{color:#D9CBAE;}
   footer .f-policy a:hover{color:var(--brass-soft);}
   footer .f-policy .sep{color:#8C7657;}
 </style>
-<link rel="stylesheet" href="assets/site-chrome.css?v=10">
-<script src="assets/google-ads.js?v=1"></script>
+<link rel="stylesheet" href="assets/site-chrome.css?v=13">
+<script src="assets/google-ads.js?v=2"></script>
 <script src="assets/pinterest-tag.js?v=1"></script>
 
 </head>
@@ -280,7 +282,9 @@
 <footer>
   <img class="f-mark" src="assets/logo_mark.png" alt="XANVOR">
   <div class="f-rule"></div>
-  <div class="f-tag">Manufacturer · Exporter · Ecommerce</div>
+<!-- was "Manufacturer · Exporter · Ecommerce" — the retail cart and checkout are
+       switched off, so the site no longer runs an ecommerce channel. -->
+  <div class="f-tag">Manufacturer · Exporter · OEM</div>
   <div class="f-policy" role="navigation" aria-label="Policies">
     <a href="about.html">About</a>
     <span class="sep">&middot;</span>
@@ -304,9 +308,9 @@
 <script src="assets/products.js"></script>
 <script src="/api/products.js"></script>
 <script src="assets/mass-products.js?v=2"></script>
-<script src="assets/site-chrome.js?v=11"></script>
-<script src="shop-cart.js?v=hs3"></script>
-<script src="assets/account.js?v=1"></script>
+<script src="assets/site-chrome.js?v=16"></script>
+<script src="shop-cart.js?v=hs5"></script>
+<script src="assets/account.js?v=2"></script>
 <script>
 (function(){
   const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -314,25 +318,36 @@
   const items = (window.XANVOR_PRODUCTS || []).filter(p => p.collection === 'Hot-Serve');
   const grid = document.getElementById('grid');
 
+  /* ---- Export-only: this grid paints the TRADE figure, never retail ----------
+     This page renders straight from window.XANVOR_PRODUCTS with no retail gate,
+     so until now every one of the 12 SKUs painted p.retail as the headline, a
+     struck-through p.mrp and an "N% off" badge — a consumer price a visitor
+     could not transact at, since there is no cart and no checkout. The headline
+     is now p.offer: the per-piece trade rate at MOQ, EXW Moradabad, ex-GST and
+     indicative — the firm price comes on the Proforma Invoice.
+
+     This is a MIRROR of the RETAIL_IDS kill-switch in
+     netlify/functions/lib/render.mjs (also mirrored in product.js and
+     checkout.html). If retail is ever restored, come back HERE too — this page
+     has no RETAIL_IDS gate of its own, so flipping the set elsewhere will not
+     bring the retail price, MRP or off-tag back on these cards. */
   grid.innerHTML = items.map(p => {
-    const off = (p.mrp && p.retail) ? Math.round((1 - p.retail / p.mrp) * 100) : 0;
     const feature = p.signature ? ' feature' : '';
     const size = (p.sizes || '').split('(')[0].trim();
     return `
       <a class="card${feature}" href="product.html?id=${esc(p.id)}">
         ${p.tag ? `<span class="pin">${esc(p.tag)}</span>` : ''}
-        ${off ? `<span class="off-tag">${off}% off</span>` : ''}
         <div class="ph"><img src="${esc(window.xvImg ? xvImg(p.image, 640) : p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async"></div>
         <div class="body">
           <span class="orn">&#x2767;</span>
           <h3>${esc(p.name)}</h3>
           <p class="desc">${esc(p.desc)}</p>
           <div class="meta">${esc(p.materials)}${size ? ' · ' + esc(size) : ''}</div>
+          ${typeof p.offer === 'number' ? `
           <div class="price">
-            <span class="offer">${fmt(p.retail||p.offer)}</span>
-            ${p.mrp ? `<span class="mrp">${fmt(p.mrp)}</span>` : ''}
+            <span class="offer">${fmt(p.offer)}</span>
           </div>
-          ${p.offer ? `<div class="wholesale-note">Wholesale ${fmt(p.offer)}/pc · 50+ pcs</div>` : ''}
+          <div class="wholesale-note">Trade price · per piece · MOQ ${esc(p.moq || '50 pcs')} · indicative</div>` : ''}
           <div class="foot"><span class="code">${esc(p.code)}</span><span class="arr">View piece &rarr;</span></div>
         </div>
       </a>`;

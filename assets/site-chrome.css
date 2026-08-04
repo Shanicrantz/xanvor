@@ -48,7 +48,7 @@ nav.xv-nav.xv-nav-solid{
   padding:11px 4.5vw !important;
 }
 nav.xv-nav .brand{
-  font-family:'Fraunces',Georgia,serif !important;
+  font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif) !important;
   font-weight:400 !important;
   font-size:20px !important;
   letter-spacing:.16em !important;
@@ -72,7 +72,7 @@ nav.xv-nav .links .nav-cat-btn,
 nav.xv-nav .links .sc-navbtn,
 nav.xv-nav .links .ac-navbtn,
 nav.xv-nav .links .xv-cur{
-  font-family:'JetBrains Mono',ui-monospace,monospace !important;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif) !important;
   font-size:10.5px !important;
   font-weight:400 !important;
   letter-spacing:.16em !important;
@@ -99,6 +99,29 @@ nav.xv-nav .links .xv-cur:hover{
   color:var(--xv-rust) !important;
   border-bottom-color:var(--xv-rust) !important;
 }
+
+/* Export-first: the standing quote CTA. XANVOR converts on RFQ, not checkout, so
+   the primary action sits in the nav on every page the way it does on wbinc.in.
+   Overrides the plain-link nav rules above, hence the pill styling and !important. */
+nav.xv-nav .links > a.xv-quote{
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif) !important;
+  font-size:10px !important;
+  letter-spacing:.16em !important;
+  text-transform:uppercase !important;
+  color:var(--xv-bone,#FBF6E8) !important;
+  background:var(--xv-rust,#A85D2A) !important;
+  border:none !important;
+  border-bottom:none !important;
+  padding:9px 16px !important;
+  border-radius:50px !important;
+  white-space:nowrap;
+  transition:background .2s, transform .2s;
+}
+nav.xv-nav .links > a.xv-quote:hover{
+  background:#C0712F !important;
+  border-bottom-color:transparent !important;
+  transform:translateY(-1px);
+}
 nav.xv-nav .links > a.xv-active{
   color:var(--xv-rust) !important;
   border-bottom-color:var(--xv-rust) !important;
@@ -124,7 +147,7 @@ nav.xv-nav .nav-cat.open .cat-menu{
 }
 nav.xv-nav .cat-menu::before{content:"";position:absolute;top:-14px;left:0;right:0;height:14px;}
 nav.xv-nav .cat-menu .cm-h{
-  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:9px; letter-spacing:.2em;
   text-transform:uppercase; color:var(--xv-faint);
   padding:8px 12px 10px; border-bottom:1px solid var(--xv-line); margin-bottom:4px;
 }
@@ -136,21 +159,21 @@ nav.xv-nav .cat-menu a{
 }
 nav.xv-nav .cat-menu a:hover{background:var(--xv-paper-2);}
 nav.xv-nav .cat-menu .cm-num{
-  font-family:'Fraunces',serif; font-style:italic; font-size:18px;
+  font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif); font-style:italic; font-size:18px;
   color:var(--xv-rust); width:22px; text-align:center; flex:none; line-height:1;
 }
 nav.xv-nav .cat-menu .cm-t{display:flex;flex-direction:column;gap:2px;min-width:0;}
 nav.xv-nav .cat-menu .cm-t b{
-  font-family:'Fraunces',serif; font-weight:400; font-size:15.5px;
+  font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif); font-weight:400; font-size:15.5px;
   color:var(--xv-claret); line-height:1.15; letter-spacing:0; text-transform:none;
 }
 nav.xv-nav .cat-menu .cm-t span{
-  font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:.1em;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:8.5px; letter-spacing:.1em;
   text-transform:uppercase; color:var(--xv-faint);
 }
 nav.xv-nav .cat-menu .cm-badge{
   margin-left:auto; background:var(--xv-rust); color:var(--xv-bone-warm);
-  font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.1em;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:8px; letter-spacing:.1em;
   text-transform:uppercase; padding:3px 7px; border-radius:50px; flex:none;
 }
 
@@ -185,7 +208,7 @@ nav.xv-nav .cat-menu .cm-badge{
   padding:20px 20px 16px; border-bottom:1px solid rgba(255,255,255,.08);
 }
 .xv-drawer-head .t{
-  font-family:'Fraunces',serif; letter-spacing:.14em; font-size:16px; color:#FBF6E8;
+  font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif); letter-spacing:.14em; font-size:16px; color:#FBF6E8;
 }
 .xv-drawer-close{
   width:38px; height:38px; border-radius:9px; border:1px solid rgba(255,255,255,.15);
@@ -199,7 +222,7 @@ nav.xv-nav .cat-menu .cm-badge{
   display:flex; width:100%; align-items:center; justify-content:space-between;
   gap:10px; text-align:left; padding:14px 12px; border-radius:10px;
   color:rgba(251,246,232,.88); text-decoration:none; background:none; border:none;
-  font-family:'Space Grotesk','JetBrains Mono',system-ui,sans-serif;
+  font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif);
   font-size:15px; font-weight:500; cursor:pointer;
   transition:background .15s, color .15s;
 }
@@ -207,7 +230,7 @@ nav.xv-nav .cat-menu .cm-badge{
 .xv-drawer-body button.xv-drawer-link:hover{background:rgba(255,255,255,.06); color:#fff;}
 .xv-drawer-body a.xv-active{color:var(--xv-brass-soft);}
 .xv-drawer-sec{
-  font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.18em;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:9.5px; letter-spacing:.18em;
   text-transform:uppercase; color:rgba(201,165,126,.75);
   padding:16px 12px 8px;
 }
@@ -217,7 +240,7 @@ nav.xv-nav .cat-menu .cm-badge{
 }
 .xv-drawer-foot{
   padding:14px 18px 22px; border-top:1px solid rgba(255,255,255,.08);
-  font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.08em;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:10px; letter-spacing:.08em;
   color:rgba(251,246,232,.45); line-height:1.6;
 }
 .xv-drawer-foot a{color:var(--xv-brass-soft); text-decoration:none;}
@@ -247,14 +270,14 @@ footer .f-rule{
   margin:0 auto 20px !important;
 }
 footer .f-tag{
-  font-family:'JetBrains Mono',monospace !important; font-size:10px !important;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif) !important; font-size:10px !important;
   letter-spacing:.22em !important; text-transform:uppercase !important;
   color:var(--xv-rust) !important; margin-bottom:16px !important;
 }
 footer .f-policy{
   display:flex !important; flex-wrap:wrap; justify-content:center; align-items:center;
   gap:6px 4px; margin-bottom:18px !important;
-  font-family:'JetBrains Mono',monospace !important; font-size:10.5px !important;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif) !important; font-size:10.5px !important;
   letter-spacing:.08em !important;
 }
 footer .f-policy a{
@@ -264,19 +287,24 @@ footer .f-policy a{
 footer .f-policy a:hover{color:var(--xv-rust) !important; background:rgba(168,93,42,.08);}
 footer .f-policy .sep{color:var(--xv-line-strong) !important; padding:0 2px;}
 footer .f-legal{
-  font-family:'JetBrains Mono',monospace !important; font-size:10.5px !important;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif) !important; font-size:10.5px !important;
   letter-spacing:.04em !important; color:var(--xv-faint) !important; line-height:1.75 !important;
 }
 footer .f-legal a{color:var(--xv-soft) !important; text-decoration:none !important;}
 footer .f-legal a:hover{color:var(--xv-rust) !important;}
 
 /* ── Homepage polish helpers ── */
+/* Was `border-radius:4px; letter-spacing:.18em` — the old squared, widely
+   tracked button. It outranked the new pill rule in the theme layer at the
+   bottom of this file (0,3,0 vs 0,1,0), so the hero buttons stayed square
+   while every other button turned into a pill. Left as a selector so the
+   hero keeps its own hook, but now matching the system. */
 .hero .cta-row .btn{
-  border-radius:4px;
-  letter-spacing:.18em;
+  border-radius:50px;
+  letter-spacing:.03em;
 }
 .hero .cta-row .btn-primary{
-  box-shadow:0 10px 28px -12px rgba(168,93,42,.55);
+  box-shadow:0 12px 28px -12px var(--xv-gold-glow,rgba(182,139,92,.55));
 }
 .cat-item,
 .featured-grid a{
@@ -305,12 +333,12 @@ footer .f-legal a:hover{color:var(--xv-rust) !important;}
   padding:18px 16px;
 }
 .xv-shop-filters h3{
-  font-family:'Fraunces',serif; font-weight:400; font-size:16px;
+  font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif); font-weight:400; font-size:16px;
   color:var(--xv-claret); margin-bottom:12px;
 }
 .xv-shop-filters label{
   display:flex; align-items:center; gap:8px;
-  font-family:'Space Grotesk',system-ui,sans-serif; font-size:13px;
+  font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif); font-size:13px;
   color:var(--xv-soft); padding:6px 0; cursor:pointer;
 }
 .xv-shop-filters input{width:auto; accent-color:var(--xv-rust);}
@@ -320,7 +348,7 @@ footer .f-legal a:hover{color:var(--xv-rust) !important;}
 }
 .xv-shop-toolbar input[type="search"],
 .xv-shop-toolbar select{
-  font-family:'Space Grotesk',system-ui,sans-serif;
+  font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif);
   font-size:13.5px;
   border:1px solid var(--xv-line-strong);
   border-radius:8px;
@@ -330,7 +358,7 @@ footer .f-legal a:hover{color:var(--xv-rust) !important;}
 }
 .xv-shop-toolbar input[type="search"]{flex:1; min-width:180px; max-width:320px;}
 .xv-shop-count{
-  font-family:'JetBrains Mono',monospace; font-size:10.5px;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:10.5px;
   letter-spacing:.1em; text-transform:uppercase; color:var(--xv-faint);
   margin-left:auto;
 }
@@ -528,7 +556,7 @@ footer .f-legal a:hover{color:var(--xv-rust) !important;}
 footer .xv-seals{border-bottom:1px solid rgba(182,139,92,.16); margin-bottom:26px;}
 .xv-seal{
   display:inline-flex; align-items:center; gap:8px;
-  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);
   font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
   color:var(--xv-soft); white-space:nowrap;
   border:1px solid var(--xv-line-strong);
@@ -555,7 +583,7 @@ footer .xv-seal:hover{border-color:var(--xv-brass); transform:translateY(-3px);}
    ============================================================ */
 .xv-approx{
   font-style:normal; white-space:nowrap;
-  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);
   font-size:.82em; letter-spacing:.04em; color:var(--xv-faint,#9A8E7C);
   margin-left:.35em;
 }
@@ -568,7 +596,7 @@ nav.xv-nav .links .xv-cur[aria-expanded="true"]{color:var(--xv-rust) !important;
   display:flex !important; width:100%; align-items:center; justify-content:space-between;
   gap:10px; text-align:left; padding:14px 12px; border-radius:10px;
   color:rgba(251,246,232,.88); background:none; border:none; cursor:pointer;
-  font-family:'Space Grotesk','JetBrains Mono',system-ui,sans-serif; font-size:15px; font-weight:500;
+  font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif); font-size:15px; font-weight:500;
 }
 .xv-drawer-cur:hover{background:rgba(255,255,255,.06); color:#fff;}
 .xv-drawer-cur b{color:var(--xv-brass-soft,#C9A57E); font-weight:600;}
@@ -584,7 +612,7 @@ nav.xv-nav .links .xv-cur[aria-expanded="true"]{color:var(--xv-rust) !important;
 }
 .xv-cur-panel.open{opacity:1; visibility:visible; transform:translateY(0);}
 .xv-cur-head{
-  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:9px; letter-spacing:.2em;
   text-transform:uppercase; color:var(--xv-faint,#9A8E7C);
   padding:8px 12px 10px; border-bottom:1px solid var(--xv-line,#E6DCC8); margin-bottom:4px;
 }
@@ -596,20 +624,20 @@ nav.xv-nav .links .xv-cur[aria-expanded="true"]{color:var(--xv-rust) !important;
 .xv-cur-row:hover{background:var(--xv-paper-2,#F8F2E6);}
 .xv-cur-row.on{background:rgba(168,93,42,.08);}
 .xv-cur-sym{
-  font-family:'Fraunces',Georgia,serif; font-size:16px; color:var(--xv-rust,#A85D2A);
+  font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif); font-size:16px; color:var(--xv-rust,#A85D2A);
   width:34px; text-align:center; flex:none; line-height:1;
 }
 .xv-cur-nm{
-  flex:1; min-width:0; font-family:'Cormorant Garamond',Georgia,serif;
+  flex:1; min-width:0; font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif);
   font-size:15px; color:var(--xv-claret,#241510);
 }
 .xv-cur-nm b{font-weight:600; margin-right:5px;}
 .xv-cur-note{
-  font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.12em;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:8px; letter-spacing:.12em;
   text-transform:uppercase; color:var(--xv-faint,#9A8E7C); flex:none;
 }
 .xv-cur-rate, .xv-cur-foot{
-  font-family:'JetBrains Mono',monospace; font-size:9.5px; line-height:1.75;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:9.5px; line-height:1.75;
   letter-spacing:.03em; color:var(--xv-soft,#6E6151); padding:10px 12px 2px;
 }
 .xv-cur-foot{border-top:1px solid var(--xv-line,#E6DCC8); margin-top:6px; padding-bottom:8px;}
@@ -622,13 +650,13 @@ nav.xv-nav .links .xv-cur[aria-expanded="true"]{color:var(--xv-rust) !important;
   max-width:min(620px,94vw); padding:13px 18px;
   background:var(--xv-claret,#241510); color:#FBF6E8; border-radius:50px;
   box-shadow:0 18px 44px -16px rgba(0,0,0,.5);
-  font-family:'Cormorant Garamond',Georgia,serif; font-size:15.5px;
+  font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif); font-size:15.5px;
   opacity:0; transition:opacity .35s ease, transform .35s ease;
 }
 .xv-cur-offer.in{opacity:1; transform:translate(-50%,0);}
 .xv-cur-offer b{color:var(--xv-brass-soft,#C9A57E);}
 .xv-cur-offer button{
-  font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.16em;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:9.5px; letter-spacing:.16em;
   text-transform:uppercase; border-radius:50px; padding:8px 15px; cursor:pointer;
   border:1px solid rgba(251,246,232,.3); background:transparent; color:#FBF6E8;
 }
@@ -644,13 +672,13 @@ nav.xv-nav .links .xv-cur[aria-expanded="true"]{color:var(--xv-rust) !important;
 .xv-intl-note{
   max-width:900px; margin:0 auto 18px; padding:16px 20px;
   background:rgba(168,93,42,.07); border:1px solid var(--xv-rust,#A85D2A);
-  border-radius:12px; font-family:'Cormorant Garamond',Georgia,serif;
+  border-radius:12px; font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif);
   font-size:15.5px; line-height:1.6; color:#43352B;
 }
 .xv-intl-note b{color:var(--xv-claret,#241510);}
 .xv-intl-note a{
   display:inline-block; margin-top:8px;
-  font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.18em;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif); font-size:10px; letter-spacing:.18em;
   text-transform:uppercase; color:var(--xv-rust,#A85D2A);
 }
 
@@ -671,9 +699,196 @@ body.xv-intl .xv-retail-ref{
 /* escape hatch out of the geo-derived export view (product.js) */
 .xv-retail-ref .xv-show-retail{
   display:inline-block; margin-top:6px;
-  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);
   font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
   color:var(--xv-rust,#A85D2A); background:none; border:none;
   border-bottom:1px solid rgba(168,93,42,.4); padding:0 0 2px; cursor:pointer;
 }
 .xv-retail-ref .xv-show-retail:hover{border-bottom-color:var(--xv-rust,#A85D2A);}
+
+/* ============================================================
+   WB-SYSTEM LUXURY THEME LAYER
+   ------------------------------------------------------------
+   Adopts wbinc.in's design system — its type pairing, band rhythm,
+   pill buttons and tracked gold eyebrows — but keeps XANVOR's own
+   palette (brass / rust / claret / ivory) so the two houses read as
+   siblings, not clones.
+
+   This file is linked AFTER every page's inline <style>, so plain
+   element and single-class rules here win without !important.
+   Anything a page sets at higher specificity is left alone on
+   purpose — the homepage does its own fuller treatment.
+
+   TYPE MAP (applied across the site by the font-family tokens below;
+   every declaration was rewritten to var(--xv-…) so there is one
+   place to change a face):
+     was Fraunces           -> --xv-display  Cormorant Garamond 600
+     was Cormorant Garamond -> --xv-body     Jost           (the pair
+     was JetBrains Mono     -> --xv-ui       Jost            flips —
+     was Space Grotesk/Inter-> --xv-body     Jost            Cormorant
+                                                             is now
+     the heading face and Jost carries body + UI, exactly as WB does.)
+   ============================================================ */
+:root{
+  /* ---- type ---- */
+  --xv-display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --xv-body:'Jost','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --xv-ui:'Jost','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+
+  /* ---- bands: ivory -> sand -> claret, the WB three-step rhythm ---- */
+  --xv-ivory:#FBF6E8;
+  --xv-sand:#F4EEE2;
+  --xv-claret-deep:#1A0F09;
+
+  /* ---- accent: brass is XANVOR's gold ---- */
+  --xv-cream:#E7D6B4;
+  --xv-gold-glow:rgba(182,139,92,.55);
+}
+
+/* Jost is a geometric sans and sits optically small next to the old
+   serif body face; 15.5px matches WB's body size. */
+body{
+  font-family:var(--xv-body);
+  font-size:15.5px;
+  letter-spacing:.01em;
+  text-rendering:optimizeLegibility;
+}
+
+/* Cormorant needs weight to read as a luxury display face rather than a
+   book face — WB sets 600. Kept off `h1,h2…` so page-level heading rules
+   (which are nearly all higher-specificity) stay in charge of size. */
+.display,
+.sec-head h2,
+.section-head h2{
+  font-family:var(--xv-display);
+  font-weight:600;
+  letter-spacing:.004em;
+}
+
+/* ---- Eyebrow: WB's signature tracked, uppercase, gold micro-label ---- */
+.eyebrow,
+.policy-eyebrow,
+.ws-eyebrow,
+.ok-eyebrow{
+  font-family:var(--xv-ui);
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  line-height:1.5;
+}
+
+/* ---- Buttons: pill, Jost 500, brass fill + brass glow, or hairline ghost ---- */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-family:var(--xv-ui);
+  font-size:13.5px;
+  font-weight:500;
+  letter-spacing:.03em;
+  text-transform:none;
+  padding:14px 30px;
+  border-radius:50px;
+  border:1.5px solid transparent;
+  text-decoration:none;
+  transition:background .22s ease, border-color .22s ease, color .22s ease, transform .22s ease, box-shadow .22s ease;
+}
+.btn-sm{padding:10px 20px;font-size:12.5px;}
+
+.btn-primary,
+.btn-solid{
+  background:var(--xv-brass);
+  color:var(--xv-claret);
+  border-color:var(--xv-brass);
+  box-shadow:0 12px 28px -12px var(--xv-gold-glow);
+}
+.btn-primary:hover,
+.btn-solid:hover{
+  background:var(--xv-brass-soft);
+  border-color:var(--xv-brass-soft);
+  transform:translateY(-2px);
+}
+
+.btn-ghost{
+  background:transparent;
+  color:var(--xv-brass);
+  border-color:rgba(182,139,92,.5);
+  box-shadow:none;
+}
+.btn-ghost:hover{
+  background:rgba(182,139,92,.1);
+  border-color:var(--xv-brass);
+  transform:translateY(-2px);
+}
+
+/* On the deep bands the ghost outline has to come off the background,
+   not off the brass — same rule WB uses over its navy. */
+.xv-on-dark .btn-ghost{
+  color:var(--xv-bone-warm);
+  border-color:rgba(251,246,232,.5);
+}
+.xv-on-dark .btn-ghost:hover{
+  background:rgba(251,246,232,.1);
+  border-color:var(--xv-bone-warm);
+}
+
+/* ---- Cards over a deep band: barely-there fill, hairline edge ---- */
+.xv-on-dark .xv-card{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:14px;
+}
+.xv-on-dark .xv-card:hover{
+  background:rgba(255,255,255,.08);
+  border-color:var(--xv-brass);
+}
+
+/* ---- Utility strip: the standing trade line above the nav (wbinc.in) ---- */
+:root{ --xv-utility-h:34px; }
+.xv-utility{
+  position:fixed; top:0; left:0; right:0; z-index:101;
+  height:var(--xv-utility-h);
+  background:var(--xv-claret-deep,#1A0F09);
+  color:rgba(251,246,232,.72);
+  display:flex; align-items:center;
+  transition:transform .35s ease, opacity .3s ease;
+}
+.xv-utility-in{
+  width:100%; padding:0 4.5vw;
+  display:flex; align-items:center; justify-content:space-between; gap:18px;
+}
+.xv-utility-facts{
+  display:flex; align-items:center; gap:10px; flex-wrap:nowrap;
+  overflow:hidden; white-space:nowrap;
+  font-family:var(--xv-ui); font-size:10.5px; font-weight:400; letter-spacing:.1em;
+}
+.xv-u-sep{color:rgba(251,246,232,.3);}
+.xv-utility-cta{
+  flex:none;
+  font-family:var(--xv-ui); font-size:10.5px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--xv-brass-soft,#C9A57E); text-decoration:none;
+  transition:color .2s ease;
+}
+.xv-utility-cta:hover{color:var(--xv-bone-warm,#FBF6E8);}
+
+/* The nav sits below the strip until the page scrolls, then the strip slides
+   up and the nav takes the top. Both move together so nothing ever overlaps. */
+/* `nav#nav.xv-nav` at the top of this file carries an ID, so a plain
+   `.xv-has-utility nav.xv-nav` loses the `top` cascade to it. Match the ID too. */
+.xv-has-utility nav#nav.xv-nav,
+.xv-has-utility nav.xv-nav{ top:var(--xv-utility-h); }
+.xv-scrolled .xv-utility{ transform:translateY(-100%); opacity:0; pointer-events:none; }
+.xv-has-utility.xv-scrolled nav#nav.xv-nav,
+.xv-has-utility.xv-scrolled nav.xv-nav{ top:0; }
+
+/* Inner pages start scrolled (solid nav), so they must not reserve the strip. */
+.xv-inner-page .xv-utility{ position:absolute; }
+
+@media(max-width:820px){
+  /* Only the quote CTA survives on a phone — the fact line cannot be read at
+     10px on one line, and wrapping it would double the strip's height. */
+  .xv-utility-facts{display:none;}
+  .xv-utility-in{justify-content:center;}
+}

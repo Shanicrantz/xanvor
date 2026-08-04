@@ -1,3 +1,21 @@
+> **⚠️ SUPERSEDED — 2026-08-03. XANVOR is export-only B2B; Google Merchant Center is dropped.**
+>
+> Razorpay checkout and the retail cart were removed and every product now converts
+> through the RFQ / enquiry basket. Merchant Center requires a working consumer
+> checkout, so the site can no longer participate in Shopping ads *or* free listings
+> — there is no B2B mode in Merchant Center that removes that requirement.
+>
+> `RETAIL_IDS` in `netlify/functions/lib/render.mjs` is now an **empty set**, so
+> `merchant-feed.xml` and `pinterest-feed.xml` emit **zero items**. The endpoints are
+> left in place, and repopulating that list (plus restoring Razorpay) is what would
+> bring the feeds back.
+>
+> Google Ads moves to **Search campaigns on B2B intent, worldwide**, converting on
+> **RFQ submitted** — not Shopping, not purchase. See `assets/google-ads.js`; the
+> lead conversion label still needs creating in the Ads account.
+>
+> Everything below describes the previous retail setup and is kept for reference only.
+
 # XANVOR — Google SEO, Merchant Center & catalogue admin
 
 ## How products work (live catalogue — no deploys)
@@ -22,7 +40,8 @@ Notes:
 - `assets/products.js` stays in the repo only as the **seed** — first admin save makes the
   blob catalogue the source of truth. (Seed snapshot: `netlify/functions/data/products-seed.mjs`.)
 - Old product photos stay at `assets/products/`; new uploads go to `/img/…` blobs. Both work.
-- Only products with **MRP + retail/offer** enter the merchant feed (Google needs a price).
+- ~~Only products with **MRP + retail/offer** enter the merchant feed~~ — now gated on
+  `RETAIL_IDS` in `render.mjs`, which is empty. No product enters the feed.
 - Prices in feed/PDP/JSON-LD are **GST-inclusive** (India policy) and use each product's own
   `gst` field. "Out of stock" in admin → `out_of_stock` in the feed.
 - Deploys are only needed for design/code changes now.

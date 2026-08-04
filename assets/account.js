@@ -9,7 +9,7 @@
 (function(){
   const css = `
   .ac-navbtn{display:inline-flex;align-items:center;gap:7px;
-    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    font-family:var(--xv-ui,Jost,Inter,system-ui,sans-serif);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
     color:#5A4636;text-decoration:none;padding:0 0 3px;border-bottom:1px solid transparent;transition:color .25s,border-color .25s;}
   .ac-navbtn:hover{color:#A85D2A;border-bottom-color:#A85D2A;}
   .ac-navbtn svg{width:15px;height:15px;}

@@ -123,7 +123,7 @@ exports.handler = async (event) => {
     </p>` : ''}
 
   <div style="margin-top:34px;padding-top:18px;border-top:1px solid #E6DCC8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9A8E7C;line-height:1.6;">
-    XANVOR · Manufacturer · Exporter · Ecommerce<br>
+    XANVOR · Manufacturer · Exporter · OEM<br>
     A house brand of Zenko Inc · Moradabad, India
   </div>
 </div>

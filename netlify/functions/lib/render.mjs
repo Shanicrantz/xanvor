@@ -28,7 +28,27 @@ export const inclPrice = (p) => {
   return Math.round(base * (1 + rate));
 };
 
-export const isRetail = (p) => typeof (p.retail || p.offer) === 'number' && !!p.mrp;
+/* ---- Export-only: no consumer retail anywhere on the site ------------------
+   XANVOR sells B2B/export. Razorpay checkout is removed and there is no cart —
+   every product converts through the RFQ / enquiry basket instead, priced as an
+   MOQ tier ladder EXW Moradabad.
+
+   This EMPTY set is the single kill-switch for the whole retail path. Every gate
+   reads it, so nothing needs to be deleted to turn retail off:
+     · this file      — Google Merchant + Pinterest feeds emit zero items
+     · product.js     — retail buybox and JSON-LD offers never render
+     · checkout.html  — the cart deep link can never populate
+
+   To bring a SKU back to retail, put its id here AND in the two mirrors below.
+   It must carry both mrp and retail, and Razorpay must be restored first —
+   listing a product in the Merchant feed with no working checkout is a policy
+   violation, not just a broken link.
+
+   MIRRORED IN: product.js (buybox + JSON-LD gate) and checkout.html (cart gate). */
+export const RETAIL_IDS = new Set([]);
+
+export const isRetail = (p) =>
+  RETAIL_IDS.has(p.id) && typeof (p.retail || p.offer) === 'number' && !!p.mrp;
 
 /* drafts live in the admin catalogue but never reach the public site/Google */
 export const liveOnly = (products) => products.filter(p => p.status !== 'draft');

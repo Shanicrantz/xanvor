@@ -11,6 +11,15 @@
   const fmt = n => '₹' + Number(n).toLocaleString('en-IN');
 
   /* ---- Bulk-pricing tiers (illustrative; final pricing on enquiry) ---- */
+  /* Export-only: no consumer retail. Razorpay and the cart are removed; every
+     product converts through the RFQ basket on an MOQ tier ladder, EXW Moradabad.
+     This empty list is the kill-switch — an empty RETAIL_IDS means hasRetail and
+     isPriced are false for everything, so the retail buybox and the JSON-LD Offer
+     never render. MIRRORED IN netlify/functions/lib/render.mjs (feed gate) and
+     checkout.html (cart gate). */
+  const RETAIL_IDS = [];
+  const isRetailSku = (p) => p && RETAIL_IDS.indexOf(p.id) !== -1;
+
   /* Trade pricing starts at the MOQ (50 pcs), not at 1 — a 1–49 "sample"
      tier undercut the MOQ we state everywhere else, and quoted a trade rate
      to buyers who are really retail. The MOQ tier IS the offer price (0%
@@ -257,7 +266,7 @@
       material: (product.materials||'').split('·').map(s=>s.trim()).filter(Boolean).join(', ') || undefined,
     };
     /* offers only on retail-priced pieces; price is the GST-inclusive amount the buyer pays */
-    const isPriced = typeof (product.retail || product.offer) === 'number' && product.mrp;
+    const isPriced = isRetailSku(product) && typeof (product.retail || product.offer) === 'number' && product.mrp;
     if(isPriced){
       const rate  = (parseFloat(product.gst) / 100) || (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.GST) || 0.18;
       const base  = product.retail || product.offer;
@@ -294,21 +303,39 @@
 
   /* ---- pricing (Hot-Serve collection carries an offer price) ---- */
   const hasPrice = typeof product.offer === 'number';
-  /* retail buy-box shows for anything customer-priced: retail (B2C) OR offer
-     (legacy B2B-priced pieces) — offer-only was the old gate, which wrongly
-     sent retail-only products (kn-101, ut-*) to the enquiry-only view */
-  const hasRetail = typeof (product.retail || product.offer) === 'number' && !!product.mrp;
-  const discPct  = hasPrice ? Math.round((1 - product.offer / product.mrp) * 100) : 0;
-  const priceBlock = hasPrice ? `
-        <div class="price-block">
+  const hasRetail = isRetailSku(product)
+    && typeof (product.retail || product.offer) === 'number' && !!product.mrp;
+
+  /* mrp is absent on every trade product, and `offer / undefined` is NaN — which
+     rendered literally as "₹NaN  NaN% off" in the headline price block. Guard on
+     mrp, not on hasPrice. */
+  const discPct  = (hasPrice && product.mrp)
+    ? Math.round((1 - product.offer / product.mrp) * 100) : 0;
+
+  /* Trade pieces show the MOQ ladder as a RANGE, never the bare ex-works floor —
+     publishing that single number hands the buyer the bottom of the ladder. */
+  const tradeLo = hasPrice ? tierUnit(product, TIERS[TIERS.length - 1]) : null;
+  const tradeHi = hasPrice ? tierUnit(product, TIERS[0]) : null;
+
+  const priceBlock = !hasPrice ? '' : (hasRetail ? `
+        <div class="price-block retail-only">
           <div class="pb-label">Offer price · trade, ex-works</div>
           <div class="pb-row">
             <span class="pb-offer">${fmt(product.offer)}</span>
-            <span class="pb-mrp">${fmt(product.mrp)}</span>
-            <span class="pb-off">${discPct}% off</span>
+            ${product.mrp ? `<span class="pb-mrp">${fmt(product.mrp)}</span>
+            <span class="pb-off">${discPct}% off</span>` : ''}
           </div>
           <div class="pb-note">Per piece · ex-GST (${esc(product.gst||'18%')}) · ex-works Moradabad</div>
-        </div>` : '';
+        </div>` : `
+        <div class="price-block wholesale-only">
+          <div class="pb-label">Trade price · by order quantity</div>
+          <div class="pb-row">
+            <span class="pb-offer">${fmt(tradeLo)}</span>
+            <span class="pb-range-sep">&ndash;</span>
+            <span class="pb-offer">${fmt(tradeHi)}</span>
+          </div>
+          <div class="pb-note">Per piece · EXW Moradabad · ex-GST (exports are zero-rated) · indicative, final on Proforma Invoice</div>
+        </div>`);
 
   /* ---- highlights → feature list (falls back to generic spec list) ---- */
   const fIcons = ['shield','clock','box','stamp','gear'];
@@ -357,8 +384,8 @@
           <div class="pb-label">Price · per piece</div>
           <div class="pb-row">
             <span class="pb-offer">${fmt(incl)}</span>
-            <span class="pb-mrp">${fmt(product.mrp)}</span>
-            <span class="pb-off">${rdisc}% off</span>
+            ${product.mrp ? `<span class="pb-mrp">${fmt(product.mrp)}</span>
+            <span class="pb-off">${rdisc}% off</span>` : ''}
           </div>
           <div class="pb-note">Inclusive of ${gstPct}% GST · Free shipping across India</div>
         </div>
@@ -659,6 +686,12 @@
       const t=tierFor(q);
       qTier.textContent=t.label.replace(/^[^·]+·\s*/,'');
       qDisc.textContent=discLabelFor(t, product); qLead.textContent=t.lead; qShip.textContent=t.ship;
+      /* The trade ladder was computed but never rendered on this branch: qUnit
+         stayed pinned at the base offer and qTotal at "—" no matter what quantity
+         was typed. tierUnit() already honours the offer_min floor. */
+      const unit = tierUnit(product, t);
+      if(qUnit)  qUnit.textContent  = unit ? fmt(unit) : 'disclosed on enquiry';
+      if(qTotal) qTotal.textContent = unit ? fmt(unit * q) : 'on enquiry';
       [...tierChips.children].forEach(b=>b.classList.toggle('on',parseInt(b.dataset.q,10)===t.q));
       if(tableBody)[...tableBody.children].forEach(tr=>tr.classList.toggle('active',tr.dataset.tier===t.id));
     }

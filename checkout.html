@@ -2,15 +2,34 @@
 <html lang="en">
 <head>
 <script>document.documentElement.classList.add('js');</script>
+<script>
+/* Export-only: Razorpay checkout is removed — XANVOR converts through the B2B
+   RFQ flow. The page is still reachable by URL (old links, bookmarks, the
+   Google Shopping deep link), so send those visitors to the enquiry form
+   rather than showing them a payment page that cannot take an order.
+   Set RETAIL_CHECKOUT_ENABLED back to `true` to restore retail checkout. */
+(function(){
+  var RETAIL_CHECKOUT_ENABLED = false;
+  if (!RETAIL_CHECKOUT_ENABLED) {
+    location.replace('wholesale.html#rfq');
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XANVOR — Checkout</title>
+<!-- Was "XANVOR — Checkout" / "XANVOR retail checkout." — there is no checkout
+     under export-only. All this page does now is forward to the RFQ form
+     (see the redirect script above); the title and description say so. -->
+<title>XANVOR — Redirecting to the trade enquiry form</title>
 <meta name="robots" content="noindex, follow">
-<meta name="description" content="XANVOR retail checkout.">
+<meta name="description" content="XANVOR sells wholesale and export only. This page forwards to the trade enquiry (RFQ) form.">
+<!-- The forward above is JS-only. Without JS the visitor would sit on a page
+     whose title promises a redirect that never happens — so mirror it here. -->
+<noscript><meta http-equiv="refresh" content="0; url=wholesale.html#rfq"></noscript>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --claret:#3A2718; --claret-deep:#241510; --ink:#1F140C;
@@ -22,22 +41,22 @@
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  body{background:var(--bone);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  body{background:var(--bone);color:var(--ink);font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   a{color:inherit;text-decoration:none;}
   img{display:block;max-width:100%;}
   button{font-family:inherit;cursor:pointer;}
 
   nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;background:rgba(252,250,244,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-  nav .brand{font-family:'Fraunces',serif;font-weight:400;font-size:21px;letter-spacing:.16em;color:var(--claret-deep);}
+  nav .brand{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:400;font-size:21px;letter-spacing:.16em;color:var(--claret-deep);}
   nav .links{display:flex;gap:28px;align-items:center;}
-  nav .links a{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#5A4636;padding-bottom:3px;border-bottom:1px solid transparent;transition:all .25s;}
+  nav .links a{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#5A4636;padding-bottom:3px;border-bottom:1px solid transparent;transition:all .25s;}
   nav .links a:hover{color:var(--rust);border-bottom-color:var(--rust);}
   @media(max-width:640px){ nav .links a.hide-sm{display:none;} }
 
   .wrap{max-width:1140px;margin:0 auto;padding:120px 6vw 80px;}
   .co-head{margin-bottom:34px;}
-  .co-head .eyebrow{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--rust);margin-bottom:12px;}
-  .co-head h1{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(30px,4vw,46px);color:var(--claret-deep);}
+  .co-head .eyebrow{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--rust);margin-bottom:12px;}
+  .co-head h1{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:300;font-size:clamp(30px,4vw,46px);color:var(--claret-deep);}
   .co-head h1 em{font-style:italic;color:var(--rust);}
 
   .co-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:38px;align-items:start;}
@@ -45,15 +64,15 @@
 
   .panel{background:var(--paper);border:1px solid var(--line-strong);border-radius:10px;padding:26px 26px 28px;}
   .panel + .panel{margin-top:22px;}
-  .panel h2{font-family:'Fraunces',serif;font-weight:400;font-size:22px;color:var(--claret-deep);margin-bottom:4px;}
-  .panel .ph{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:18px;}
+  .panel h2{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:400;font-size:22px;color:var(--claret-deep);margin-bottom:4px;}
+  .panel .ph{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin-bottom:18px;}
 
   /* form */
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   .form-grid .full{grid-column:1 / -1;}
   @media(max-width:520px){ .form-grid{grid-template-columns:1fr;} }
-  .field label{display:block;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#5A4636;margin-bottom:6px;}
-  .field input{width:100%;background:#fff;color:var(--claret-deep);border:1px solid var(--line-strong);padding:12px 13px;font-family:'Cormorant Garamond',serif;font-size:16px;border-radius:6px;transition:border-color .2s;}
+  .field label{display:block;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#5A4636;margin-bottom:6px;}
+  .field input{width:100%;background:#fff;color:var(--claret-deep);border:1px solid var(--line-strong);padding:12px 13px;font-family:var(--xv-body,'Jost','Inter',system-ui,sans-serif);font-size:16px;border-radius:6px;transition:border-color .2s;}
   .field input:focus{outline:none;border-color:var(--rust);}
   .field input::placeholder{color:#B6A98F;}
 
@@ -65,9 +84,9 @@
   .pay .dot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--line-strong);flex:none;margin-top:2px;position:relative;transition:border-color .18s;}
   .pay.on .dot{border-color:var(--rust);}
   .pay.on .dot::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--rust);}
-  .pay .pt{font-family:'Fraunces',serif;font-size:17px;color:var(--claret-deep);line-height:1.2;}
-  .pay .pd{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8A7359;margin-top:4px;}
-  .pay .pbadge{margin-left:auto;align-self:center;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:#EFE3CB;color:#7A5A2E;padding:3px 8px;border-radius:50px;}
+  .pay .pt{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-size:17px;color:var(--claret-deep);line-height:1.2;}
+  .pay .pd{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8A7359;margin-top:4px;}
+  .pay .pbadge{margin-left:auto;align-self:center;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:#EFE3CB;color:#7A5A2E;padding:3px 8px;border-radius:50px;}
 
   /* summary */
   .sum-items{display:flex;flex-direction:column;gap:0;margin-bottom:6px;}
@@ -75,58 +94,58 @@
   .si:first-child{padding-top:0;}
   .si-thumb{width:54px;height:54px;border-radius:6px;background:var(--paper-2);border:1px solid var(--line);overflow:hidden;}
   .si-thumb img{width:100%;height:100%;object-fit:cover;}
-  .si-name{font-family:'Fraunces',serif;font-size:15px;color:var(--claret-deep);line-height:1.2;}
-  .si-q{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:#8A7359;margin-top:3px;}
-  .si-line{font-family:'Fraunces',serif;font-size:15px;color:var(--claret-deep);}
+  .si-name{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-size:15px;color:var(--claret-deep);line-height:1.2;}
+  .si-q{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9.5px;letter-spacing:.1em;color:#8A7359;margin-top:3px;}
+  .si-line{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-size:15px;color:var(--claret-deep);}
   .sum-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;}
-  .sum-row .k{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#5A4636;}
-  .sum-row .v{font-family:'Fraunces',serif;font-size:17px;color:var(--claret-deep);}
+  .sum-row .k{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#5A4636;}
+  .sum-row .v{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-size:17px;color:var(--claret-deep);}
   .sum-row.free .v{color:#1F8A5B;font-style:italic;}
   .sum-div{height:1px;background:var(--line);margin:8px 0;}
   .sum-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:8px;}
-  .sum-total .k{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--claret-deep);}
-  .sum-total .v{font-family:'Fraunces',serif;font-size:30px;color:var(--rust);}
-  .edit-cart{display:inline-flex;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--rust);background:none;border:none;}
+  .sum-total .k{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--claret-deep);}
+  .sum-total .v{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-size:30px;color:var(--rust);}
+  .edit-cart{display:inline-flex;margin-top:4px;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--rust);background:none;border:none;}
   .edit-cart:hover{color:#C0712F;}
 
-  .place{width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--rust);color:var(--bone-warm);border:none;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;padding:16px 22px;border-radius:50px;box-shadow:0 8px 24px -8px rgba(168,93,42,.5);transition:background .25s,transform .2s;}
+  .place{width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--rust);color:var(--bone-warm);border:none;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;padding:16px 22px;border-radius:50px;box-shadow:0 8px 24px -8px rgba(168,93,42,.5);transition:background .25s,transform .2s;}
   .place:hover{background:#C0712F;transform:translateY(-1px);}
   .place svg{width:15px;height:15px;}
-  .secure{margin-top:12px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);line-height:1.7;}
+  .secure{margin-top:12px;text-align:center;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);line-height:1.7;}
   /* discount code */
   .coupon-box{padding:4px 0 2px;}
   .coupon-row{display:flex;gap:8px;}
   .coupon-row input{flex:1;min-width:0;background:#fff;border:1px solid var(--line-strong);border-radius:6px;padding:10px 12px;
-    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--claret-deep);}
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--claret-deep);}
   .coupon-row input:focus{outline:none;border-color:var(--rust);}
   .coupon-row button{background:none;border:1px solid var(--rust);color:var(--rust);border-radius:6px;padding:0 16px;
-    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;transition:all .2s;}
+    font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;transition:all .2s;}
   .coupon-row button:hover{background:rgba(168,93,42,.08);}
-  .coupon-msg{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.06em;color:var(--ink-faint);margin-top:6px;min-height:12px;}
+  .coupon-msg{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:9.5px;letter-spacing:.06em;color:var(--ink-faint);margin-top:6px;min-height:12px;}
   .coupon-msg.bad{color:#A32D2D;}
   .coupon-on{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#E9F5EE;border:1px solid #BFE3CF;
-    border-radius:7px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#1F8A5B;}
+    border-radius:7px;padding:10px 12px;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10px;letter-spacing:.08em;color:#1F8A5B;}
   .coupon-on b{letter-spacing:.16em;}
   .coupon-on button{background:none;border:none;color:#5A4636;text-decoration:underline;font-family:inherit;font-size:9px;letter-spacing:.14em;text-transform:uppercase;}
   .sum-row.disc .v{color:#1F8A5B;}
-  .acc-line{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#8A7359;margin-top:12px;}
+  .acc-line{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10px;letter-spacing:.06em;color:#8A7359;margin-top:12px;}
   .acc-line a{color:var(--rust);text-decoration:underline;}
   .right-rail{position:sticky;top:92px;}
   @media(max-width:880px){ .right-rail{position:static;} }
 
   /* empty + confirmation */
   .empty,.confirm{max-width:620px;margin:0 auto;text-align:center;background:var(--paper);border:1px solid var(--line-strong);border-radius:12px;padding:54px 34px;}
-  .empty .e{font-family:'Fraunces',serif;font-style:italic;font-size:46px;color:var(--rust);margin-bottom:12px;}
-  .empty h2,.confirm h2{font-family:'Fraunces',serif;font-weight:300;font-size:32px;color:var(--claret-deep);margin-bottom:10px;}
+  .empty .e{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-style:italic;font-size:46px;color:var(--rust);margin-bottom:12px;}
+  .empty h2,.confirm h2{font-family:var(--xv-display,'Cormorant Garamond',Georgia,serif);font-weight:300;font-size:32px;color:var(--claret-deep);margin-bottom:10px;}
   .empty h2 em,.confirm h2 em{font-style:italic;color:var(--rust);}
   .empty p,.confirm p{color:#5A4636;margin:0 auto 24px;max-width:42ch;}
   .confirm .tick{width:62px;height:62px;border-radius:50%;background:#1F8A5B;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
   .confirm .tick svg{width:30px;height:30px;stroke:#fff;}
-  .confirm .oid{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;color:var(--rust);background:var(--paper-2);border:1px dashed var(--line-strong);border-radius:8px;padding:12px 16px;display:inline-block;margin-bottom:22px;}
+  .confirm .oid{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:12px;letter-spacing:.16em;color:var(--rust);background:var(--paper-2);border:1px dashed var(--line-strong);border-radius:8px;padding:12px 16px;display:inline-block;margin-bottom:22px;}
   .confirm .instr{text-align:left;background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:18px 20px;margin:0 auto 22px;font-size:15.5px;color:#43352B;line-height:1.7;}
   .confirm .instr b{color:var(--claret-deep);}
-  .confirm .instr .mono{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--rust);letter-spacing:.04em;}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;padding:14px 24px;border-radius:50px;transition:all .25s;border:1px solid transparent;cursor:pointer;}
+  .confirm .instr .mono{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:13px;color:var(--rust);letter-spacing:.04em;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;padding:14px 24px;border-radius:50px;transition:all .25s;border:1px solid transparent;cursor:pointer;}
   .btn-wa{background:#1FA855;color:#fff;border-color:#1FA855;}
   .btn-wa:hover{background:#188e47;transform:translateY(-1px);}
   .btn-ghost{background:transparent;border-color:var(--rust);color:var(--rust);}
@@ -135,11 +154,11 @@
   .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
 
   footer{background:var(--band);padding:40px 6vw;text-align:center;margin-top:70px;}
-  footer .f-legal{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:#C5B498;line-height:1.7;}
+  footer .f-legal{font-family:var(--xv-ui,'Jost','Inter',system-ui,sans-serif);font-size:10.5px;letter-spacing:.06em;color:#C5B498;line-height:1.7;}
   footer .f-legal a{color:#E7D7B4;}
 </style>
-<link rel="stylesheet" href="assets/site-chrome.css?v=10">
-<script src="assets/google-ads.js?v=1"></script>
+<link rel="stylesheet" href="assets/site-chrome.css?v=13">
+<script src="assets/google-ads.js?v=2"></script>
 <script src="assets/pinterest-tag.js?v=1"></script>
 
 </head>
@@ -148,7 +167,8 @@
 <nav>
   <a href="index.html" class="brand">XANVOR</a>
   <div class="links">
-    <a href="Hot-Serve Collection.html" class="hide-sm">Continue shopping</a>
+    <!-- Was "Continue shopping" — nothing is bought on this site; the link browses the catalogue. -->
+    <a href="Hot-Serve Collection.html" class="hide-sm">Browse the catalogue</a>
     <a href="index.html#contact" class="hide-sm">Help</a>
   </div>
 </nav>
@@ -163,8 +183,8 @@
 <script src="assets/products.js"></script>
 <script src="/api/products.js"></script>
 <script src="assets/mass-products.js?v=2"></script>
-<script src="assets/site-chrome.js?v=11"></script>
-<script src="shop-cart.js?v=hs3"></script>
+<script src="assets/site-chrome.js?v=16"></script>
+<script src="shop-cart.js?v=hs5"></script>
 <script>
 /* Google Shopping checkout link — /checkout?item_id={id}
    Reads the product id from the URL and drops that piece into the cart
@@ -179,8 +199,15 @@
     const prod = all.find(x => x.id === pid) || all.find(x => norm(x.id) === norm(pid) || norm(x.code) === norm(pid));
     if(!prod) return;
     const GSTrate = (parseFloat(prod.gst)/100) || (window.XANVOR_SHOPCFG && window.XANVOR_SHOPCFG.GST) || 0.18;
+    /* Export-only: Razorpay is removed, so no product may ever reach a payable
+       cart. This deep link (/checkout?item_id=...) was the one price gate on the
+       site that did not also require mrp — `prod.offer` alone satisfied it, so any
+       trade piece could be added to a payable cart at offer x (1+GST).
+       MIRRORED IN netlify/functions/lib/render.mjs (RETAIL_IDS) and product.js. */
+    const RETAIL_IDS = [];
+    if(RETAIL_IDS.indexOf(prod.id) === -1) return; // trade piece — RFQ only, never a cart
     const retail  = prod.retail || prod.offer;
-    if(!retail) return; // enquiry-only piece — leave cart untouched
+    if(!retail || !prod.mrp) return; // enquiry-only piece — leave cart untouched
     const incl = Math.round(retail * (1 + GSTrate));
     const inCart = window.XanvorShop.items().some(i => i.id === prod.id);
     if(!inCart){
@@ -192,12 +219,17 @@
   }catch(e){}
 })();
 </script>
-<script src="assets/account.js?v=1"></script>
+<script src="assets/account.js?v=2"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 (function(){
   const root = document.getElementById('root');
   const S = window.XanvorShop;
+  /* Export-only: shop-cart.js early-returns, so XanvorShop never exists and the
+     whole retail checkout below is dead. Bail out instead of throwing on S.cfg
+     while the redirect at the top of the page is still committing. Restoring
+     retail (RETAIL_ENABLED in shop-cart.js) makes this a no-op again. */
+  if(!S) return;
   const CFG = S.cfg;
   const fmt = S.fmt;
   const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -305,7 +337,9 @@
     const t = totals();
     root.innerHTML = `
       <div class="co-head">
-        <div class="eyebrow">Secure Checkout · Retail</div>
+        <!-- Unreachable: the redirect at the top of this file fires first. Kept
+             honest anyway so nothing here reads as a live retail checkout. -->
+        <div class="eyebrow">Request a Quotation</div>
         <h1>Almost <em>yours</em></h1>
         <div class="acc-line" id="accLine">${accLineHtml()}</div>
         <div id="intlNote"></div>
