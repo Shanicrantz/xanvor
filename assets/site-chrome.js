@@ -99,6 +99,7 @@
             </a>
           </div>
         </div>
+        <a class="xv-desktop-only${active(['tideline.html'])}" href="tideline.html">Tideline</a>
         <a class="xv-desktop-only${active(['new-designs.html'])}" href="new-designs.html">New designs</a>
         <a class="xv-desktop-only${active(['wholesale.html', 'oem-odm.html', 'faq.html'])}" href="wholesale.html">Wholesale</a>
         <a class="xv-desktop-only${active(['about.html'])}" href="${aboutHref}">About</a>
@@ -123,6 +124,7 @@
      the only navigation, so the section index lives there — home only, because
      these anchors resolve to index.html#… noise on every other page. */
   const HOME_SECTIONS = [
+    ['#tideline', 'TIDELINE range'],
     ['#about', 'About XANVOR'],
     ['#collections', 'The collections'],
     ['#lookbook', 'Lookbook'],
@@ -159,6 +161,10 @@
       </div>
       <div class="xv-drawer-body">
         <a href="all-products.html">All products</a>
+        <!-- The range page, linked from every page including home. The homepage
+             carries the same pieces in its own band, but that band is not a
+             destination anyone can send a buyer to. -->
+        <a href="tideline.html">TIDELINE &mdash; the range</a>
         <a href="new-designs.html">New designs</a>
         <a href="wholesale.html">Wholesale &amp; export</a>
         <a href="oem-odm.html">OEM / private label</a>

@@ -376,7 +376,23 @@ footer .f-legal a:hover{color:var(--xv-rust) !important;}
   .xv-shop-layout{grid-template-columns:1fr;}
   .xv-shop-filters{position:static;}
 }
-@media(max-width:820px){
+/* Between 820 and 1120 the text links no longer fit. Adding "Tideline" made the
+   row overflow the bar at ~1040 — the links ran past the nav's right edge
+   instead of wrapping. Tighten the gap through this band before handing over to
+   the burger, rather than raising the burger breakpoint and losing the desktop
+   menu on ordinary laptops. */
+@media(max-width:1120px) and (min-width:1001px){
+  nav.xv-nav .links{gap:15px !important;}
+  nav.xv-nav .links > a,
+  nav.xv-nav .links .nav-cat-btn,
+  nav.xv-nav .links .xv-cur{font-size:9.5px !important; letter-spacing:.12em !important;}
+  nav.xv-nav .links > a.xv-quote{padding:8px 13px !important; letter-spacing:.1em !important;}
+}
+/* Burger from 1000px, not 820. Even tightened, the eight text links plus the
+   currency control and the quote pill need about 1000px beside the wordmark —
+   below that they ran straight past the right edge of the bar. The drawer
+   carries every one of them, so nothing is lost by handing over earlier. */
+@media(max-width:1000px){
   .xv-burger{display:inline-flex !important;}
   nav.xv-nav .links{
     /* keep cart + account visible on mobile; hide text nav items via JS class */
