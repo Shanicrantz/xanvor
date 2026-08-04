@@ -8,13 +8,14 @@
 const fmt = (n) => '₹' + Number(Math.round(n || 0)).toLocaleString('en-IN');
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-/* The trade desk runs its own WhatsApp line, separate from the general
-   +91 98377 60615 number published everywhere else on the site. Every RFQ
-   touchpoint — the ack email, the form's failure fallbacks, the enquiry
-   basket — must hand the buyer THIS number, so quote follow-ups land with
-   the desk that owns the reference.
+/* ONE WhatsApp number for the whole site, RFQ path included.
+   A separate trade-desk line (+91 78957 21271) was tried here on 2026-08-04 and
+   reverted the same day: with two numbers published, incoming enquiries could not
+   be told apart — the buyer picks whichever they happen to see, so neither line
+   ever holds the full thread. Do not split this again without a way to route and
+   merge the two inboxes.
    MIRRORED IN: wholesale.html (RFQ form) and enquiry-basket.js. */
-const RFQ_WHATSAPP = '+91 78957 21271';
+const RFQ_WHATSAPP = '+91 98377 60615';
 
 const PAYMENT_NOTE = {
   paid: 'Payment received — thank you! We\'ll dispatch shortly and share tracking here on this email.',

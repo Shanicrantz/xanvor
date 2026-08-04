@@ -457,7 +457,7 @@
        +91 98377 60615 published elsewhere on the site. Quote follow-ups must
        reach the desk holding the reference. Mirrored in netlify/functions/lib/notify.mjs
        (RFQ_WHATSAPP) and enquiry-basket.js. -->
-  <p class="ws-lead" style="margin-top:-8px;">Prefer to talk? WhatsApp the trade desk on <a href="https://wa.me/917895721271">+91 78957 21271</a>.</p>
+  <p class="ws-lead" style="margin-top:-8px;">Prefer to talk? WhatsApp us on <a href="https://wa.me/919837760615">+91 98377 60615</a>.</p>
 
   <form id="rfq-form" class="rfq-shell" novalidate>
     <div class="rfq-grid">
@@ -532,7 +532,7 @@
     <div class="rid" id="rfq-rid">XV-RFQ-…</div>
     <p><strong>Your reference:</strong> quote it in any follow-up. We reply within one working day with pricing, MOQ, lead time and finish options.</p>
     <p>A confirmation email is on its way — please check your inbox (and spam folder).</p>
-    <p>In a hurry? WhatsApp the trade desk on <a href="https://wa.me/917895721271">+91 78957 21271</a>, quoting your reference.</p>
+    <p>In a hurry? WhatsApp us on <a href="https://wa.me/919837760615">+91 98377 60615</a>, quoting your reference.</p>
     <p>No payment on this site — orders are confirmed by Proforma Invoice.</p>
   </div>
 </section>
@@ -575,7 +575,7 @@
 <script src="assets/site-chrome.js?v=16"></script>
 <script src="shop-cart.js?v=hs5"></script>
 <script src="assets/account.js?v=2"></script>
-<script src="enquiry-basket.js?v=hs5"></script>
+<script src="enquiry-basket.js?v=hs6"></script>
 <script>
 (function(){
   var form = document.getElementById('rfq-form');
@@ -692,13 +692,13 @@
       } else if(res.data && res.data.rid === 'XV-RFQ-OK'){
         /* honeypot decoy tripped (autofill filled the hidden field) — nothing
            was saved; tell the buyer instead of faking success */
-        showError('Could not send — please try again, or WhatsApp the trade desk on +91 78957 21271.');
+        showError('Could not send — please try again, or WhatsApp us on +91 98377 60615.');
       } else {
         showError((res.data && res.data.error) ? res.data.error : 'Something went wrong — your details are still in the form. Please try again, or email hello@xanvor.com.');
       }
     })
     .catch(function(){
-      showError('Network error — nothing was lost, your details are still in the form. Please try again, or WhatsApp the trade desk on +91 78957 21271.');
+      showError('Network error — nothing was lost, your details are still in the form. Please try again, or WhatsApp us on +91 98377 60615.');
     });
   });
 })();

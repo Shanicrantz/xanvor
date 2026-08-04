@@ -588,10 +588,9 @@
         const serverMsg = err && err.message ? String(err.message) : '';
         showError(serverMsg && !/fetch|network|json/i.test(serverMsg)
           ? serverMsg + ' — your list is safe.'
-          /* Trade desk line, not the general +91 98377 60615 — this is the RFQ
-             path, so follow-ups must reach the desk that owns the reference.
-             Mirrored in wholesale.html and netlify/functions/lib/notify.mjs. */
-          : 'Could not send just now — your list is safe. Please try again, or WhatsApp our trade desk on +91 78957 21271.');
+          /* One number site-wide, RFQ path included — see RFQ_WHATSAPP in
+             netlify/functions/lib/notify.mjs for why a second line was reverted. */
+          : 'Could not send just now — your list is safe. Please try again, or WhatsApp us on +91 98377 60615.');
       });
   }
 
@@ -607,8 +606,8 @@
       Your reference: <span class="xb-rid">${esc(rid || '')}</span><br>
       We reply within one working day with pricing, MOQ, lead time and finish options —
       confirmed by Proforma Invoice. A copy is on its way to your email.<br>
-      In a hurry? WhatsApp our trade desk on
-      <a href="https://wa.me/917895721271" target="_blank" rel="noopener">+91 78957 21271</a>,
+      In a hurry? WhatsApp us on
+      <a href="https://wa.me/919837760615" target="_blank" rel="noopener">+91 98377 60615</a>,
       quoting that reference.
     `;
     ok.classList.add('show');
