@@ -922,9 +922,11 @@
       <div class="eyebrow">New Range &nbsp;·&nbsp; Coastal &nbsp;·&nbsp; Wholesale &amp; Export</div>
       <h2>TIDELINE — the sea, <em>cast and hammered</em></h2>
       <p>Shell, wave, coral and tide, worked in aluminium, brass and iron. Sand-cast as solid masses, drawn in bent rod, or cut as pierced profiles and tabbed into hammered plinths — one metal per piece, finished by hand.</p>
+      <!-- No "View the full range" link: the whole range is on this page now,
+           so a button that jumps somewhere else to see the same thing is just a
+           dead end. The grid below carries every piece. -->
       <div class="xv-tide-cta">
-        <a href="tideline.html" class="btn btn-primary">View the full range</a>
-        <a href="wholesale.html#rfq" class="btn btn-ghost">Request a quote</a>
+        <a href="wholesale.html#rfq" class="btn btn-primary">Request a quote</a>
       </div>
     </div>
   </div>
@@ -941,7 +943,9 @@
     var all = window.XANVOR_PRODUCTS || [];
     var items = all.filter(function(p){ return /^TIDELINE/.test(p.series || ''); });
     if(!items.length) return false;
-    grid.innerHTML = items.slice(0,10).map(function(p){
+    /* The full range, not a teaser — the homepage is where the whole
+       collection lives now, so there is no cap here. */
+    grid.innerHTML = items.map(function(p){
       var img = p.image || (p.images && p.images[0]) || '';
       /* srcset alongside src — assets/img-opt.js is not what fills this grid, but
          the same CDN sizing is wanted, and setting src alone elsewhere on this
