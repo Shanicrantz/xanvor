@@ -971,6 +971,74 @@
 })();
 </script>
 
+<!-- ============ FATHOM RANGE ============ -->
+<!-- Sister band to TIDELINE — the marine range that widens the coastal one:
+     creature, shell and seashore as barware and serveware. Reuses the .xv-tide
+     plate and card styles; only the hero changes. Same self-hiding contract:
+     display:none until FATHOM pieces are live in the catalogue (the range is in
+     the catalogue as drafts while the renders are made), so the homepage never
+     shows an empty grid. Filters on `series` starting with FATHOM. The full
+     concept sheet lives on fathom.html. -->
+<style>
+  /* No range photograph yet — drawn plate, same as fathom.html. Swap for
+     assets/fathom-hero.jpg the day a render exists. */
+  .xv-fm .xv-tide-hero{background-image:none;background-color:#1A0F09;overflow:hidden;}
+  .xv-fm .xv-tide-hero::before{content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(120% 70% at 85% 110%, rgba(182,139,92,.30) 0%, rgba(182,139,92,0) 60%),
+      radial-gradient(80% 50% at 10% 0%, rgba(58,39,24,.85) 0%, rgba(26,15,9,0) 70%),
+      linear-gradient(180deg,#1C110A 0%,#1A0F09 55%,#120A06 100%);}
+  .xv-fm .xv-tide-hero::after{background:linear-gradient(180deg,rgba(26,15,9,0) 0%,rgba(26,15,9,.1) 46%,rgba(26,15,9,.55) 100%);}
+  .xv-fm .xv-tide-hero h2{max-width:24ch;}
+  @media(max-width:640px){ .xv-fm .xv-tide-hero{background-image:none;} }
+</style>
+<section class="xv-tide xv-fm reveal xv-on-dark" id="fathom">
+  <div class="xv-tide-hero">
+    <div class="xv-tide-hero-in">
+      <div class="eyebrow">New Range &nbsp;·&nbsp; Marine &nbsp;·&nbsp; Wholesale &amp; Export</div>
+      <h2>FATHOM — the sea as <em>barware and serveware</em></h2>
+      <p>Octopus, crab, shell, coral, wave and tide — as champagne baths, coolers, bottle cradles, platters, bowls, tiered stands, candle, bar and wall pieces. One metal per piece: sand-cast aluminium, bent iron rod or pierced brass, hand-finished in Moradabad. A hundred concepts in ten function families.</p>
+      <div class="xv-tide-cta">
+        <a href="wholesale.html#rfq" class="btn btn-primary">Request a quote</a>
+        <a href="fathom.html#sheet" class="btn btn-ghost">The concept sheet &rarr;</a>
+      </div>
+    </div>
+  </div>
+  <div class="xv-tide-grid" id="fathomGrid"></div>
+  <div class="xv-tide-note">MOQ 50 per design &nbsp;·&nbsp; EXW Moradabad &nbsp;·&nbsp; Quoted per order</div>
+</section>
+<script>
+(function(){
+  var grid = document.getElementById('fathomGrid');
+  if(!grid) return;
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function paint(){
+    var all = window.XANVOR_PRODUCTS || [];
+    var items = all.filter(function(p){ return /^FATHOM/.test(p.series || '') && p.status !== 'draft'; });
+    if(!items.length) return false;
+    grid.innerHTML = items.map(function(p){
+      var img = p.image || (p.images && p.images[0]) || '';
+      var lo = window.xvImg ? window.xvImg(img,640) : img;
+      var hi = window.xvImg ? window.xvImg(img,1280) : img;
+      return '<a class="xt-card" href="product.html?id=' + encodeURIComponent(p.id) + '">'
+        + '<div class="xt-img">' + (img ? '<img src="' + esc(lo) + '" srcset="' + esc(hi) + ' 2x" alt="'
+            + esc(p.name) + '" loading="lazy" decoding="async">' : '') + '</div>'
+        + '<div class="xt-body">'
+        + '<div class="xt-name">' + esc(p.name) + '</div>'
+        + '<div class="xt-meta">' + esc(p.materials || '') + '</div>'
+        + '</div></a>';
+    }).join('');
+    document.getElementById('fathom').classList.add('is-on');
+    return true;
+  }
+  if(!paint()){
+    var tries = 0;
+    var t = setInterval(function(){ if(paint() || ++tries > 40) clearInterval(t); }, 150);
+  }
+})();
+</script>
+
 <!-- ============ HERO ============ -->
 <header class="hero" id="top">
   <div class="hero-frame"></div>
@@ -3167,7 +3235,7 @@
   }).join('');
 })();
 </script>
-<script src="assets/site-chrome.js?v=18"></script>
+<script src="assets/site-chrome.js?v=19"></script>
 <script src="shop-cart.js?v=hs5"></script>
 <script src="assets/account.js?v=2"></script>
 <script src="enquiry-basket.js?v=hs6"></script>

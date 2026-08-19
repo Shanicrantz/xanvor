@@ -72,6 +72,10 @@ export function renderSitemap(products, lastmod) {
     { loc: `${SITE}/oem-odm.html`, priority: '0.8' },
     { loc: `${SITE}/faq.html`, priority: '0.7' },
     { loc: `${SITE}/all-products.html`, priority: '0.8' },
+    /* Range pages: live and linked from the nav, so they need a crawl path of
+       their own — TIDELINE (87 pieces) and FATHOM (the marine concept sheet). */
+    { loc: `${SITE}/tideline.html`, priority: '0.9' },
+    { loc: `${SITE}/fathom.html`, priority: '0.9' },
     { loc: `${SITE}/Hot-Serve%20Collection.html`, priority: '0.8' },
     { loc: `${SITE}/about.html`, priority: '0.6' },
     { loc: `${SITE}/contact.html`, priority: '0.6' },
