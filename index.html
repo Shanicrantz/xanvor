@@ -3120,9 +3120,10 @@
 
   /* A range with its own band on this page must not also be dealt into the
      collection grids below — TIDELINE and FATHOM were each appearing twice,
-     202 duplicate cards and ~15,000px of page for nothing. The bands own
-     those pieces; the collection grids own everything else. */
-  var RANGE_BAND = /^(TIDELINE|FATHOM)/;
+     202 duplicate cards and ~15,000px of page for nothing, and NACRE had been
+     doing the same with 20. The bands own those pieces; the collection grids
+     own everything else. Add any future banded range here. */
+  var RANGE_BAND = /^(TIDELINE|FATHOM|NACRE)/;
 
   products.forEach(function(p){
     if(p.homepage==='hide') return;
@@ -3242,7 +3243,7 @@
   }).join('');
 })();
 </script>
-<script src="assets/site-chrome.js?v=20"></script>
+<script src="assets/site-chrome.js?v=21"></script>
 <script src="shop-cart.js?v=hs5"></script>
 <script src="assets/account.js?v=2"></script>
 <script src="enquiry-basket.js?v=hs6"></script>
