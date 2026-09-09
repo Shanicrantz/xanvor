@@ -866,6 +866,13 @@
   #wildform.xv-tide{display:none;} #wildform.xv-tide.is-on{display:block;}
   #wildform .xv-tide-hero{background-image:url('assets/wildform-hero.jpg?v=1');}
   @media(max-width:640px){ #wildform .xv-tide-hero{background-image:url('assets/wildform-hero-sm.jpg?v=1');} }
+  /* bigger teaser cards than the full-range bands below: four to a row, larger name */
+  #wildform .xv-tide-grid{grid-template-columns:repeat(4,1fr);gap:20px;}
+  #wildform .xt-body{padding:16px 18px 20px;}
+  #wildform .xt-name{font-size:20px;}
+  #wildform .xt-meta{font-size:10px;}
+  @media(max-width:1100px){ #wildform .xv-tide-grid{grid-template-columns:repeat(2,1fr);gap:16px;} }
+  @media(max-width:640px){ #wildform .xv-tide-grid{grid-template-columns:1fr 1fr;gap:12px;} #wildform .xt-name{font-size:17px;} }
 </style>
 <section class="xv-tide reveal xv-on-dark" id="wildform">
   <div class="xv-tide-hero">
@@ -895,9 +902,9 @@
     if(!items.length) return false;
     var total = items.length;
     /* Signature pieces lead — the catalogue's own flag, set in admin — then
-       catalogue order. Ten cards; the whole range lives on wildform.html. */
+       catalogue order. Eight cards, four to a row; the whole range lives on wildform.html. */
     items.sort(function(a, b){ return (b.signature ? 1 : 0) - (a.signature ? 1 : 0); });
-    items = items.slice(0, 10);
+    items = items.slice(0, 8);
     grid.innerHTML = items.map(function(p){
       var img = p.image || (p.images && p.images[0]) || '';
       var lo = window.xvImg ? window.xvImg(img,640) : img;
@@ -933,6 +940,13 @@
   #handwork.xv-tide{display:none;} #handwork.xv-tide.is-on{display:block;}
   #handwork .xv-tide-hero{background-image:url('assets/handwork-hero.jpg?v=1');}
   @media(max-width:640px){ #handwork .xv-tide-hero{background-image:url('assets/handwork-hero-sm.jpg?v=1');} }
+  /* bigger teaser cards than the full-range bands below: four to a row, larger name */
+  #handwork .xv-tide-grid{grid-template-columns:repeat(4,1fr);gap:20px;}
+  #handwork .xt-body{padding:16px 18px 20px;}
+  #handwork .xt-name{font-size:20px;}
+  #handwork .xt-meta{font-size:10px;}
+  @media(max-width:1100px){ #handwork .xv-tide-grid{grid-template-columns:repeat(2,1fr);gap:16px;} }
+  @media(max-width:640px){ #handwork .xv-tide-grid{grid-template-columns:1fr 1fr;gap:12px;} #handwork .xt-name{font-size:17px;} }
   #handwork.xv-tide{background:#121822;}
   #handwork .xv-tide-hero{background-color:#121822;}
   #handwork .xv-tide-hero::after{background:linear-gradient(180deg,rgba(18,24,34,.30) 0%,rgba(18,24,34,.50) 46%,rgba(18,24,34,.92) 100%);}
@@ -966,9 +980,9 @@
     if(!items.length) return false;
     var total = items.length;
     /* Signature pieces lead — the catalogue's own flag, set in admin — then
-       catalogue order. Ten cards; the whole range lives on handwork.html. */
+       catalogue order. Eight cards, four to a row; the whole range lives on handwork.html. */
     items.sort(function(a, b){ return (b.signature ? 1 : 0) - (a.signature ? 1 : 0); });
-    items = items.slice(0, 10);
+    items = items.slice(0, 8);
     grid.innerHTML = items.map(function(p){
       var img = p.image || (p.images && p.images[0]) || '';
       var lo = window.xvImg ? window.xvImg(img,640) : img;
@@ -1080,6 +1094,8 @@
   function paint(){
     var all = window.XANVOR_PRODUCTS || [];
     var items = all.filter(function(p){ return /^TIDELINE/.test(p.series || ''); });
+    /* signature pieces first — the catalogue's own flag, set in admin — then catalogue order */
+    items.sort(function(a, b){ return (b.signature ? 1 : 0) - (a.signature ? 1 : 0); });
     if(!items.length) return false;
     /* The full range, not a teaser — the homepage is where the whole
        collection lives now, so there is no cap here. */
@@ -1154,6 +1170,8 @@
   function paint(){
     var all = window.XANVOR_PRODUCTS || [];
     var items = all.filter(function(p){ return /^FATHOM/.test(p.series || '') && p.status !== 'draft'; });
+    /* signature pieces first — the catalogue's own flag, set in admin — then catalogue order */
+    items.sort(function(a, b){ return (b.signature ? 1 : 0) - (a.signature ? 1 : 0); });
     if(!items.length) return false;
     grid.innerHTML = items.map(function(p){
       var img = p.image || (p.images && p.images[0]) || '';
@@ -1410,6 +1428,8 @@
   function paint(){
     var all = window.XANVOR_PRODUCTS || [];
     var items = all.filter(function(p){ return /^NACRE/.test(p.series || ''); });
+    /* signature pieces first — the catalogue's own flag, set in admin — then catalogue order */
+    items.sort(function(a, b){ return (b.signature ? 1 : 0) - (a.signature ? 1 : 0); });
     if(!items.length) return false;
     grid.innerHTML = items.slice(0,20).map(function(p){
       var img = p.image || (p.images && p.images[0]) || '';
