@@ -125,6 +125,8 @@
      the only navigation, so the section index lives there — home only, because
      these anchors resolve to index.html#… noise on every other page. */
   const HOME_SECTIONS = [
+    ['#wildform', 'WILDFORM range'],
+    ['#handwork', 'HANDWORK range'],
     ['#tideline', 'TIDELINE range'],
     ['#fathom', 'FATHOM range'],
     ['#about', 'About XANVOR'],
@@ -168,6 +170,8 @@
              destination anyone can send a buyer to. -->
         <a href="tideline.html">TIDELINE &mdash; the coastal range</a>
         <a href="fathom.html">FATHOM &mdash; the marine range</a>
+        <a href="wildform.html">WILDFORM &mdash; sculptural hardware &amp; objects</a>
+        <a href="handwork.html">HANDWORK &mdash; brass &amp; steel, made in the workshop</a>
         <a href="new-designs.html">New designs</a>
         <a href="wholesale.html">Wholesale &amp; export</a>
         <a href="oem-odm.html">OEM / private label</a>

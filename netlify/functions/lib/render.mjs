@@ -76,6 +76,8 @@ export function renderSitemap(products, lastmod) {
        their own — TIDELINE (87 pieces) and FATHOM (the marine concept sheet). */
     { loc: `${SITE}/tideline.html`, priority: '0.9' },
     { loc: `${SITE}/fathom.html`, priority: '0.9' },
+    { loc: `${SITE}/wildform.html`, priority: '0.9' },
+    { loc: `${SITE}/handwork.html`, priority: '0.9' },
     { loc: `${SITE}/Hot-Serve%20Collection.html`, priority: '0.8' },
     { loc: `${SITE}/about.html`, priority: '0.6' },
     { loc: `${SITE}/contact.html`, priority: '0.6' },

@@ -856,6 +856,144 @@
   </div>
 </nav>
 
+<!-- ============ WILDFORM RANGE ============ -->
+<!-- New-season range band. Shares the .xv-tide classes with the TIDELINE band
+     below (the display:none default is repeated here because this band sits
+     above the block that defines them). Unlike TIDELINE and FATHOM this band is
+     a teaser: signature pieces first, ten cards, then a link to the full range
+     page. The range name lives in the data — `series` starting with WILDFORM. -->
+<style>
+  #wildform.xv-tide{display:none;} #wildform.xv-tide.is-on{display:block;}
+  #wildform .xv-tide-hero{background-image:url('assets/wildform-hero.jpg?v=1');}
+  @media(max-width:640px){ #wildform .xv-tide-hero{background-image:url('assets/wildform-hero-sm.jpg?v=1');} }
+</style>
+<section class="xv-tide reveal xv-on-dark" id="wildform">
+  <div class="xv-tide-hero">
+    <div class="xv-tide-hero-in">
+      <div class="eyebrow">New Season &nbsp;·&nbsp; Sculptural Hardware &amp; Objects &nbsp;·&nbsp; Wholesale &amp; Export</div>
+      <h2>WILDFORM — antler, wing and leaf, <em>cast for the hand</em></h2>
+      <p>From the Elk and Pheasant masters to a new family of sculptural hardware and objects — Woodland, Aviary, Botanical, Tidal and Bestiary — in sand-cast brass and formed stainless steel, hand-chased with calm grip zones.</p>
+      <div class="xv-tide-cta">
+        <a href="wildform.html" class="btn btn-primary">See the full range</a>
+        <a href="wholesale.html#rfq" class="btn btn-ghost">Request a quote</a>
+      </div>
+    </div>
+  </div>
+  <div class="xv-tide-grid" id="wildformGrid"></div>
+  <div class="xv-tide-cta" id="wildformMore"></div>
+  <div class="xv-tide-note">MOQ 50 per design &nbsp;·&nbsp; EXW Moradabad &nbsp;·&nbsp; Quoted per order</div>
+</section>
+<script>
+(function(){
+  var grid = document.getElementById('wildformGrid');
+  if(!grid) return;
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function paint(){
+    var all = window.XANVOR_PRODUCTS || [];
+    var items = all.filter(function(p){ return /^WILDFORM/.test(p.series || '') && p.status !== 'draft'; });
+    if(!items.length) return false;
+    var total = items.length;
+    /* Signature pieces lead — the catalogue's own flag, set in admin — then
+       catalogue order. Ten cards; the whole range lives on wildform.html. */
+    items.sort(function(a, b){ return (b.signature ? 1 : 0) - (a.signature ? 1 : 0); });
+    items = items.slice(0, 10);
+    grid.innerHTML = items.map(function(p){
+      var img = p.image || (p.images && p.images[0]) || '';
+      var lo = window.xvImg ? window.xvImg(img,640) : img;
+      var hi = window.xvImg ? window.xvImg(img,1280) : img;
+      return '<a class="xt-card" href="product.html?id=' + encodeURIComponent(p.id) + '">'
+        + '<div class="xt-img">' + (img ? '<img src="' + esc(lo) + '" srcset="' + esc(hi) + ' 2x" alt="'
+            + esc(p.name) + '" loading="lazy" decoding="async">' : '') + '</div>'
+        + '<div class="xt-body">'
+        + '<div class="xt-name">' + esc(p.name) + '</div>'
+        + '<div class="xt-meta">' + esc(p.materials || '') + '</div>'
+        + '</div></a>';
+    }).join('');
+    var more = document.getElementById('wildformMore');
+    if(more) more.innerHTML = '<a href="wildform.html" class="btn btn-primary">View the full range · ' + total + ' pieces &rarr;</a>';
+    document.getElementById('wildform').classList.add('is-on');
+    return true;
+  }
+  if(!paint()){
+    /* /api/products.js replaces XANVOR_PRODUCTS after this inline script runs. */
+    var tries = 0;
+    var t = setInterval(function(){ if(paint() || ++tries > 40) clearInterval(t); }, 150);
+  }
+})();
+</script>
+
+<!-- ============ HANDWORK RANGE ============ -->
+<!-- New-season range band. Shares the .xv-tide classes with the TIDELINE band
+     below (the display:none default is repeated here because this band sits
+     above the block that defines them). Unlike TIDELINE and FATHOM this band is
+     a teaser: signature pieces first, ten cards, then a link to the full range
+     page. The range name lives in the data — `series` starting with HANDWORK. -->
+<style>
+  #handwork.xv-tide{display:none;} #handwork.xv-tide.is-on{display:block;}
+  #handwork .xv-tide-hero{background-image:url('assets/handwork-hero.jpg?v=1');}
+  @media(max-width:640px){ #handwork .xv-tide-hero{background-image:url('assets/handwork-hero-sm.jpg?v=1');} }
+  #handwork.xv-tide{background:#121822;}
+  #handwork .xv-tide-hero{background-color:#121822;}
+  #handwork .xv-tide-hero::after{background:linear-gradient(180deg,rgba(18,24,34,.30) 0%,rgba(18,24,34,.50) 46%,rgba(18,24,34,.92) 100%);}
+  #handwork .xt-img{background:#1B2432;}
+</style>
+<section class="xv-tide reveal xv-on-dark" id="handwork">
+  <div class="xv-tide-hero">
+    <div class="xv-tide-hero-in">
+      <div class="eyebrow">New Season &nbsp;·&nbsp; Brass + Stainless Steel &nbsp;·&nbsp; Wholesale &amp; Export</div>
+      <h2>HANDWORK — an international design edit, <em>made in the workshop</em></h2>
+      <p>Hand raising, hammering, punch work, spinning, turning, die punching and sand casting — ten process-led families, sixty pieces in brass and sixty in stainless steel, each showing the mark of the operation that made it.</p>
+      <div class="xv-tide-cta">
+        <a href="handwork.html" class="btn btn-primary">See the full range</a>
+        <a href="wholesale.html#rfq" class="btn btn-ghost">Request a quote</a>
+      </div>
+    </div>
+  </div>
+  <div class="xv-tide-grid" id="handworkGrid"></div>
+  <div class="xv-tide-cta" id="handworkMore"></div>
+  <div class="xv-tide-note">MOQ 50 per design &nbsp;·&nbsp; EXW Moradabad &nbsp;·&nbsp; Quoted per order</div>
+</section>
+<script>
+(function(){
+  var grid = document.getElementById('handworkGrid');
+  if(!grid) return;
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function paint(){
+    var all = window.XANVOR_PRODUCTS || [];
+    var items = all.filter(function(p){ return /^HANDWORK/.test(p.series || '') && p.status !== 'draft'; });
+    if(!items.length) return false;
+    var total = items.length;
+    /* Signature pieces lead — the catalogue's own flag, set in admin — then
+       catalogue order. Ten cards; the whole range lives on handwork.html. */
+    items.sort(function(a, b){ return (b.signature ? 1 : 0) - (a.signature ? 1 : 0); });
+    items = items.slice(0, 10);
+    grid.innerHTML = items.map(function(p){
+      var img = p.image || (p.images && p.images[0]) || '';
+      var lo = window.xvImg ? window.xvImg(img,640) : img;
+      var hi = window.xvImg ? window.xvImg(img,1280) : img;
+      return '<a class="xt-card" href="product.html?id=' + encodeURIComponent(p.id) + '">'
+        + '<div class="xt-img">' + (img ? '<img src="' + esc(lo) + '" srcset="' + esc(hi) + ' 2x" alt="'
+            + esc(p.name) + '" loading="lazy" decoding="async">' : '') + '</div>'
+        + '<div class="xt-body">'
+        + '<div class="xt-name">' + esc(p.name) + '</div>'
+        + '<div class="xt-meta">' + esc(p.materials || '') + '</div>'
+        + '</div></a>';
+    }).join('');
+    var more = document.getElementById('handworkMore');
+    if(more) more.innerHTML = '<a href="handwork.html" class="btn btn-primary">View the full range · ' + total + ' pieces &rarr;</a>';
+    document.getElementById('handwork').classList.add('is-on');
+    return true;
+  }
+  if(!paint()){
+    /* /api/products.js replaces XANVOR_PRODUCTS after this inline script runs. */
+    var tries = 0;
+    var t = setInterval(function(){ if(paint() || ++tries > 40) clearInterval(t); }, 150);
+  }
+})();
+</script>
+
 <!-- ============ TIDELINE RANGE ============ -->
 <!-- A range band of its own, the way #nacre has one. Same self-hiding contract:
      it stays display:none until TIDELINE pieces are actually live in the
@@ -1303,34 +1441,37 @@
       <h2 class="display">Three to look at <em>first</em></h2>
     </div>
     <div class="featured-grid">
-      <a class="feat-card reveal" href="product.html?id=wa-110">
-        <span class="feat-pin">Signature</span>
-        <div class="feat-img"><img src="assets/products/xv-fw-101.jpg" alt="Midas Leaf Cascade" loading="lazy"></div>
+      <!-- September 2026 launch: the three featured pieces come from the new WILDFORM and
+           HANDWORK ranges. src is the uploaded catalogue photo; the script below still
+           re-points it at the live record, so a re-upload in admin updates it. -->
+      <a class="feat-card reveal" href="product.html?id=wf-n001">
+        <span class="feat-pin">Wildform</span>
+        <div class="feat-img"><img src="/img/wf-n001-mttwukgr.jpg" alt="Hart Antler Entrance Pull" loading="lazy"></div>
         <div class="feat-body">
           <span class="num">&#x2767;</span>
-          <h3>Midas Leaf <em>Cascade</em></h3>
-          <p>Our statement piece — a sweeping cascade of black-and-gold leaves nearly a metre wide, commanding sofas and beds.</p>
-          <div class="ft"><span class="code">XV·WA·110</span><span class="arr">View piece &rarr;</span></div>
+          <h3>Hart Antler <em>Entrance Pull</em></h3>
+          <p>Sand-cast brass antler pull, 52 cm — three blunt tines above a smooth central grip, hand-chased channels, antique brass. The Elk line, made for a door.</p>
+          <div class="ft"><span class="code">XV·WF·N001</span><span class="arr">View piece &rarr;</span></div>
         </div>
       </a>
-      <a class="feat-card reveal d1" href="product.html?id=jw-101">
-        <span class="feat-pin">Heirloom</span>
-        <div class="feat-img"><img src="assets/products/sg-211.jpg" alt="Zamarrud Gemstone Brass Tray" loading="lazy"></div>
+      <a class="feat-card reveal d1" href="product.html?id=hw-b057">
+        <span class="feat-pin">Handwork</span>
+        <div class="feat-img"><img src="/img/hw-b057-mttx4uzh.jpg" alt="Ratan Crescent Wrap" loading="lazy"></div>
         <div class="feat-body">
           <span class="num">&#x2767;</span>
-          <h3>Zamarrud Gemstone <em>Tray</em></h3>
-          <p>Polished brass gallery tray studded with green-stone cabochons — each stone hand-set, so no two are ever alike.</p>
-          <div class="ft"><span class="code">XV·JW·101</span><span class="arr">View piece &rarr;</span></div>
+          <h3>Ratan Crescent <em>Wrap</em></h3>
+          <p>Hand-formed brass crescent, 27 cm tall, hammered and wrapped around a compact translucent amber oval — a sculptural object for a shelf, in antique brass.</p>
+          <div class="ft"><span class="code">XV·HW·B057</span><span class="arr">View piece &rarr;</span></div>
         </div>
       </a>
-      <a class="feat-card reveal d2" href="product.html?id=cv-108">
-        <span class="feat-pin">Sculptural</span>
-        <div class="feat-img"><img src="assets/products/sg-211.jpg" alt="Hive Hexagonal Fluted Brass Box" loading="lazy" onerror="this.style.opacity=.3"></div>
+      <a class="feat-card reveal d2" href="product.html?id=hw-s048">
+        <span class="feat-pin">Handwork</span>
+        <div class="feat-img"><img src="/img/hw-s048-mttywmqz.jpg" alt="Kidney Tray Side Table" loading="lazy"></div>
         <div class="feat-body">
           <span class="num">&#x2767;</span>
-          <h3>Hive Hexagonal Fluted <em>Box</em></h3>
-          <p>Hexagonal cast-brass box with fine vertical fluting and a ribbed finial — sculptural storage for the vanity.</p>
-          <div class="ft"><span class="code">XV·CV·108</span><span class="arr">View piece &rarr;</span></div>
+          <h3>Kidney Tray <em>Side Table</em></h3>
+          <p>Polished stainless steel folded into a side table, 47 × 37 × 49 cm, with a dark-stained wood tray insert — the international edit, in steel.</p>
+          <div class="ft"><span class="code">XV·HW·S048</span><span class="arr">View piece &rarr;</span></div>
         </div>
       </a>
     </div>
@@ -3243,7 +3384,7 @@
   }).join('');
 })();
 </script>
-<script src="assets/site-chrome.js?v=21"></script>
+<script src="assets/site-chrome.js?v=22"></script>
 <script src="shop-cart.js?v=hs5"></script>
 <script src="assets/account.js?v=2"></script>
 <script src="enquiry-basket.js?v=hs6"></script>
